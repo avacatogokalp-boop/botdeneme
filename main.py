@@ -1,17 +1,34 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from datetime import datetime
+import os
+from flask import Flask
+from threading import Thread
 
-# --- TOKEN (GEÇİCİ KULLAN) ---
-TOKEN = "8789404565:AAGIjHVpJDrxvLeeCPSjqgUbtJ_zFGxqHH8"
+# --- RENDER İÇİN WEB SUNUCUSU ---
+app = Flask('')
 
+@app.route('/')
+def home():
+    return "Bot aktif ve yaşıyor!"
+
+def run():
+    # Render'ın verdiği portu kullanır
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+# --- BOT AYARLARI ---
+# Token'ı Render'daki Environment Variables'dan çeker
+TOKEN = os.environ.get('TOKEN', '8789404565:AAGIjHVpJDrxvLeeCPSjqgUbtJ_zFGxqHH8')
 bot = telebot.TeleBot(TOKEN)
 
-# --- AYARLAR ---
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/v4mK7P3/bonus-gif.gif"
 
-# --- USER LOG ---
+# --- KULLANICI LOGLAMA ---
 def log_user(user):
     try:
         with open("users.txt", "a", encoding="utf-8") as f:
@@ -19,14 +36,13 @@ def log_user(user):
     except:
         pass
 
-# --- START ---
+# --- START KOMUTU ---
 @bot.message_handler(commands=['start'])
 def start(message):
     try:
         user = message.from_user
         log_user(user)
 
-        # Buton
         markup = InlineKeyboardMarkup()
         web_app = WebAppInfo(url=SITE_LINKI)
 
@@ -34,10 +50,8 @@ def start(message):
             text="🔥 Hemen Oyna & Kazan 🎰",
             web_app=web_app
         )
-
         markup.add(button)
 
-        # Mesaj
         text = (
             "🎰 *Hoş Geldin!*\n\n"
             "💸 En yüksek oranlar burada!\n"
@@ -46,7 +60,6 @@ def start(message):
             "👇 Hemen başlamak için tıkla!"
         )
 
-        # GIF + mesaj
         bot.send_animation(
             chat_id=message.chat.id,
             animation=GIF_URL,
@@ -54,17 +67,16 @@ def start(message):
             reply_markup=markup,
             parse_mode="Markdown"
         )
-
     except Exception as e:
         print("HATA:", e)
-        bot.send_message(message.chat.id, "Bir hata oluştu.")
 
-# --- FALLBACK ---
+# --- BOŞ MESAJLARI YAKALA ---
 @bot.message_handler(func=lambda m: True)
 def fallback(message):
-    bot.send_message(message.chat.id, "Komut için /start yaz.")
+    bot.send_message(message.chat.id, "Komut için /start yaz kanka.")
 
-# --- RUN ---
+# --- ANA ÇALIŞTIRICI ---
 if __name__ == "__main__":
-    print("🚀 Bot aktif çalışıyor...")
-    bot.infinity_polling(skip_pending=True)
+    print("🚀 Bot ve Web Sunucu ateşleniyor...")
+    keep_alive()  # Web sunucusunu yan koldan başlatır
+    bot.infinity_polling(skip_pending=True) # Botu ana koldan çalıştırır
