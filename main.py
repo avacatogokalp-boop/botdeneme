@@ -22,7 +22,7 @@ def keep_alive():
     t.start()
 
 # --- BOT AYARLARI ---
-TOKEN = "8789404565:AAGIjHVpJDrxvLeeCPSjqgUbtJ_zFGxqHH8"
+TOKEN = "8789404565:AAGL0IG4MgGRPS3BibA2ZEq0Heksq72Rubw"
 bot = telebot.TeleBot(TOKEN)
 
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
