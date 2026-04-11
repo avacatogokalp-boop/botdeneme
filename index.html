@@ -455,8 +455,13 @@ function showResult(){
 }
 
 function goSite(){
-  // Mini App'i kapat, bot zaten linki atacak
-  if(tg) tg.close();
+  document.getElementById('overlay').classList.remove('show');
+  if(tg) {
+    tg.close();
+    setTimeout(() => tg.openLink('https://cutt.ly/deoKNC0g'), 300);
+  } else {
+    window.open('https://cutt.ly/deoKNC0g', '_blank');
+  }
 }
 
 function goSiteDirect(){
