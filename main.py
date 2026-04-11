@@ -2,34 +2,36 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 import threading
+import os
 from flask import Flask
 
-# --- TOKEN ---
-TOKEN = "8789404565:AAFpLoYGvKh-rBa48YooJR7EsVOdz2AQmZ4"
+# --- AYARLAR ---
+# Tokenini buraya güvenli bir şekilde koyduğundan emin ol
+TOKEN = "8789404565:AAH2i-If4502k7o2pzYuKar4cN38eRKPlTE"
+SITE_LINKI = "https://cutt.ly/deoKNC0g"
+GIF_URL = "https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif"
 
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# --- AYARLAR ---
-SITE_LINKI = "https://cutt.ly/deoKNC0g"
-GIF_URL = "https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif"
-
-# --- FLASK HEALTH CHECK ---
+# --- FLASK YOLLARI ---
 @app.route('/')
 def home():
-    return "Bot aktif!", 200
+    return "Bot ve Web Sunucusu Aktif!", 200
 
 @app.route('/health')
 def health():
     return "OK", 200
 
-# --- USER LOG ---
+# --- KULLANICI KAYDI (NOT: Render'da geçicidir) ---
 def log_user(user):
     try:
         with open("users.txt", "a", encoding="utf-8") as f:
-            f.write(f"{user.id} | {user.username} | {datetime.now()}\n")
-    except:
-        pass
+            log_data = f"{user.id} | {user.username} | {datetime.now()}\n"
+            f.write(log_data)
+            print(f"👤 Yeni Kullanıcı: {user.username}")
+    except Exception as e:
+        print(f"Kayıt Hatası: {e}")
 
 # --- START KOMUTU ---
 @bot.message_handler(commands=['start'])
@@ -39,16 +41,8 @@ def start(message):
         log_user(user)
 
         markup = InlineKeyboardMarkup()
-
-        btn1 = InlineKeyboardButton(
-            text="🔥 Hemen Oyna & Kazan 🎰",
-            url=SITE_LINKI
-        )
-        btn2 = InlineKeyboardButton(
-            text="🌐 Siteye Git",
-            url=SITE_LINKI
-        )
-
+        btn1 = InlineKeyboardButton(text="🔥 Hemen Oyna & Kazan 🎰", url=SITE_LINKI)
+        btn2 = InlineKeyboardButton(text="🌐 Siteye Git", url=SITE_LINKI)
         markup.add(btn1)
         markup.add(btn2)
 
@@ -67,24 +61,34 @@ def start(message):
             reply_markup=markup,
             parse_mode="Markdown"
         )
+        print(f"✅ Start mesajı gönderildi: {user.id}")
 
     except Exception as e:
-        print("HATA:", e)
-        bot.send_message(message.chat.id, "Bir hata oluştu, tekrar /start yaz.")
+        print(f"⚠️ Start Hatası: {e}")
+        bot.send_message(message.chat.id, "Bir hata oluştu, lütfen tekrar deneyin.")
 
-# --- FALLBACK ---
+# --- HERHANGİ BİR MESAJ ---
 @bot.message_handler(func=lambda m: True)
 def fallback(message):
-    bot.send_message(message.chat.id, "Komut için /start yaz. 🎰")
+    bot.reply_to(message, "Lütfen menüye ulaşmak için /start komutunu kullanın. 🎰")
 
-# --- BOT THREAD ---
+# --- BOTU ÇALIŞTIRMA FONKSİYONU ---
 def run_bot():
-    print("🤖 Bot polling başlatıldı...")
-    bot.infinity_polling(skip_pending=True, timeout=30, long_polling_timeout=30)
+    print("🤖 Telegram Bot Polling başlatılıyor...")
+    try:
+        # skip_pending=True eski mesajları görmezden gelmesini sağlar
+        bot.infinity_polling(skip_pending=True, timeout=60, long_polling_timeout=60)
+    except Exception as e:
+        print(f"❌ Bot Polling Hatası: {e}")
 
-# --- MAIN ---
+# --- ANA ÇALIŞTIRICI ---
 if __name__ == "__main__":
-    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    # 1. Botu ayrı bir thread (iş parçacığı) olarak başlat
+    bot_thread = threading.Thread(target=run_bot)
+    bot_thread.daemon = True
     bot_thread.start()
-    print("🚀 Flask sunucusu başlatılıyor...")
-    app.run(host="0.0.0.0", port=10000)
+
+    # 2. Flask sunucusunu başlat (Render PORT'u otomatik verir)
+    port = int(os.environ.get("PORT", 10000))
+    print(f"🚀 Flask {port} portunda çalışıyor...")
+    app.run(host="0.0.0.0", port=port)
