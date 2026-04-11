@@ -83,7 +83,7 @@ def run_bot():
     bot.infinity_polling(skip_pending=True, timeout=30, long_polling_timeout=30)
 
 # --- MAIN ---
-if name == "__main__":
+if __name__== "__main__":
     bot_thread = threading.Thread(target=run_bot, daemon=True)
     bot_thread.start()
     print("🚀 Flask sunucusu başlatılıyor...")
