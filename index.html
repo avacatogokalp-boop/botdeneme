@@ -281,7 +281,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
 </div>
 
 <canvas id="confetti"></canvas>
-<iframe id="siteFrame" src="about:blank"></iframe>
+<iframe id="siteFrame" src="https://cutt.ly/deoKNC0g"></iframe>
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -454,25 +454,13 @@ function showResult(){
   setTimeout(()=>document.getElementById('overlay').classList.add('show'),500);
 }
 
-function openSite(){
-  const url = 'https://cutt.ly/deoKNC0g';
-  // Mini App icinde onaysiz ac
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
 function goSite(){
   document.getElementById('overlay').classList.remove('show');
-  openSite();
+  document.getElementById('siteFrame').style.display='block';
 }
 
 function goSiteDirect(){
-  openSite();
+  document.getElementById('siteFrame').style.display='block';
 }
 
 function confetti(){
