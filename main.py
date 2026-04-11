@@ -7,7 +7,7 @@ from flask import Flask
 
 # --- AYARLAR ---
 # Tokenini buraya güvenli bir şekilde koyduğundan emin ol
-TOKEN = "8789404565:AAH2i-If4502k7o2pzYuKar4cN38eRKPlTE"
+TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif"
 
