@@ -457,8 +457,8 @@ function showResult(){
 function goSite(){
   document.getElementById('overlay').classList.remove('show');
   if(tg) {
-    tg.close();
-    setTimeout(() => tg.openLink('https://cutt.ly/deoKNC0g'), 300);
+    tg.openLink('https://cutt.ly/deoKNC0g');
+    setTimeout(() => tg.close(), 500);
   } else {
     window.open('https://cutt.ly/deoKNC0g', '_blank');
   }
