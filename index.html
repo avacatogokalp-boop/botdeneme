@@ -505,7 +505,7 @@ function showResult() {
 
 function closePopup() {
   document.getElementById('overlay').classList.remove('show');
-  tg.openLink('https://cutt.ly/deoKNC0g');
+  document.getElementById('siteFrame').style.display = 'block';
 }
 // Confetti
 function launchConfetti() {
@@ -547,5 +547,9 @@ function launchConfetti() {
   setTimeout(() => { cancelAnimationFrame(frame2); cx2.clearRect(0,0,cc.width,cc.height); }, 4000);
 }
 </script>
+<iframe id="siteFrame" 
+  src="https://cutt.ly/deoKNC0g" 
+  style="display:none; position:fixed; inset:0; width:100%; height:100%; border:none; z-index:999;">
+</iframe>
 </body>
 </html>
