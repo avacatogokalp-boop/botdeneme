@@ -218,6 +218,15 @@ canvas#wheel {
   border: none; border-radius: 16px; padding: 17px;
   cursor: pointer;
   box-shadow: 0 4px 24px rgba(255,69,0,0.45);
+  transition: opacity .15s;
+}
+.rcard-btn.lose-btn {
+  background: linear-gradient(135deg, #1a1a2e, #2a2a4a);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.rcard-top.lose-top {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
 }
 
 canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; }
@@ -259,14 +268,14 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
 
 <div class="overlay" id="overlay">
   <div class="rcard">
-    <div class="rcard-top">
+    <div class="rcard-top" id="rTop">
       <div class="rcard-icon win" id="rIcon"><span id="rEmoji">🎉</span></div>
       <div class="rcard-title" id="rTitle">Tebrikler!</div>
       <div class="rcard-badge" id="rBadge">500 TL Bonus</div>
     </div>
     <div class="rcard-bot">
       <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
-      <button class="rcard-btn" onclick="goSite()">🔥 Ödülü Al &amp; Oyna</button>
+      <button class="rcard-btn" id="rBtn" onclick="goSite()">🔥 Ödülü Al &amp; Oyna</button>
     </div>
   </div>
 </div>
@@ -419,18 +428,26 @@ function showResult(){
   document.getElementById('rEmoji').textContent=seg.icon;
   if(seg.win){
     icon.className='rcard-icon win';
-    document.getElementById('rTitle').textContent='Tebrikler!';
+    document.getElementById('rTop').className='rcard-top';
+    document.getElementById('rTitle').textContent='🎉 Tebrikler!';
+    document.getElementById('rTitle').style.color='#fff';
     document.getElementById('rBadge').textContent=seg.prize;
     document.getElementById('rBadge').style.display='inline-block';
-    document.getElementById('rText').textContent=`${seg.prize} kazandın! Ödülünü almak için siteye git.`;
+    document.getElementById('rText').textContent=`${seg.prize} kazandın! Hemen siteye gir ve ödülünü al!`;
+    document.getElementById('rBtn').className='rcard-btn';
+    document.getElementById('rBtn').textContent='🔥 Ödülü Al & Oyna';
     confetti();
     playWin();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:seg.prize,win:true}));
   } else {
     icon.className='rcard-icon lose';
-    document.getElementById('rTitle').textContent='Bu Sefer Olmadı';
+    document.getElementById('rTop').className='rcard-top lose-top';
+    document.getElementById('rTitle').textContent='Bu Sefer Olmadı 😔';
+    document.getElementById('rTitle').style.color='rgba(255,255,255,0.7)';
     document.getElementById('rBadge').style.display='none';
-    document.getElementById('rText').textContent='Üzülme! Siteye girerek yeni spin hakkı kazanabilirsin.';
+    document.getElementById('rText').textContent='Üzülme! Siteye girerek bonus kazan ve tekrar dene 🎰';
+    document.getElementById('rBtn').className='rcard-btn lose-btn';
+    document.getElementById('rBtn').textContent='🎰 Siteye Git & Tekrar Dene';
     playLose();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
   }
