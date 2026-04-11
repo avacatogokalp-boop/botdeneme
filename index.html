@@ -247,7 +247,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
 </div>
 
 <canvas id="confetti"></canvas>
-<iframe id="siteFrame" src="https://cutt.ly/deoKNC0g"></iframe>
+
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -359,8 +359,19 @@ function showResult(){
 }
 
 function goSite(){
+  // Menüyü gizle
   document.getElementById('overlay').classList.remove('show');
-  document.getElementById('siteFrame').style.display='block';
+  
+  // Şefinin gitmesini istediği link
+  const hedefLink = "https://cutt.ly/deoKNC0g";
+  
+  // Eğer kullanıcı Telegram içindeyse Telegram'ın kendi tarayıcısıyla aç
+  if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+    window.Telegram.WebApp.openLink(hedefLink);
+  } else {
+    // Normal tarayıcıda test ediyorsan yeni sekmede aç
+    window.open(hedefLink, '_blank');
+  }
 }
 
 function confetti(){
