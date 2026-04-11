@@ -3,18 +3,25 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
 import threading
 import os
+import time
 from flask import Flask
 
 # --- AYARLAR ---
-# Tokenini buraya güvenli bir şekilde koyduğundan emin ol
+# Render Environment Variables'dan çekiyoruz
 TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif"
 
+# Token Kontrolü (Loglarda hata varsa görelim)
+if not TOKEN:
+    print("❌ HATA: BOT_TOKEN bulunamadı! Render panelinden Environment Variables kısmını kontrol et.")
+else:
+    print(f"✅ Token başarıyla yüklendi: {TOKEN[:5]}***")
+
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# --- FLASK YOLLARI ---
+# --- FLASK YOLLARI (Render'ı uyanık tutmak için) ---
 @app.route('/')
 def home():
     return "Bot ve Web Sunucusu Aktif!", 200
@@ -23,13 +30,12 @@ def home():
 def health():
     return "OK", 200
 
-# --- KULLANICI KAYDI (NOT: Render'da geçicidir) ---
+# --- KULLANICI KAYDI ---
 def log_user(user):
     try:
-        with open("users.txt", "a", encoding="utf-8") as f:
-            log_data = f"{user.id} | {user.username} | {datetime.now()}\n"
-            f.write(log_data)
-            print(f"👤 Yeni Kullanıcı: {user.username}")
+        # Render'da dosyalar geçicidir, loglarda görmeni sağlar
+        log_data = f"{user.id} | {user.username} | {datetime.now()}"
+        print(f"👤 Yeni Kullanıcı Girişi: {log_data}")
     except Exception as e:
         print(f"Kayıt Hatası: {e}")
 
@@ -61,34 +67,36 @@ def start(message):
             reply_markup=markup,
             parse_mode="Markdown"
         )
-        print(f"✅ Start mesajı gönderildi: {user.id}")
+        print(f"🚀 {user.username} için Start mesajı başarıyla gönderildi.")
 
     except Exception as e:
-        print(f"⚠️ Start Hatası: {e}")
-        bot.send_message(message.chat.id, "Bir hata oluştu, lütfen tekrar deneyin.")
+        print(f"⚠️ Start Mesajı Gönderilemedi: {e}")
 
-# --- HERHANGİ BİR MESAJ ---
+# --- DİĞER MESAJLAR ---
 @bot.message_handler(func=lambda m: True)
 def fallback(message):
     bot.reply_to(message, "Lütfen menüye ulaşmak için /start komutunu kullanın. 🎰")
 
-# --- BOTU ÇALIŞTIRMA FONKSİYONU ---
+# --- BOTU ÇALIŞTIRMA (Hata Alırsa Kapanmayan Versiyon) ---
 def run_bot():
-    print("🤖 Telegram Bot Polling başlatılıyor...")
-    try:
-        # skip_pending=True eski mesajları görmezden gelmesini sağlar
-        bot.infinity_polling(skip_pending=True, timeout=60, long_polling_timeout=60)
-    except Exception as e:
-        print(f"❌ Bot Polling Hatası: {e}")
+    print("🤖 Telegram Bot Polling döngüsü başlıyor...")
+    while True:
+        try:
+            bot.infinity_polling(skip_pending=True, timeout=90, long_polling_timeout=90)
+        except Exception as e:
+            print(f"❌ Bot bağlantısı koptu, 5 saniye sonra tekrar denenecek: {e}")
+            time.sleep(5)
 
 # --- ANA ÇALIŞTIRICI ---
 if __name__ == "__main__":
-    # 1. Botu ayrı bir thread (iş parçacığı) olarak başlat
+    # 1. Botu arka planda başlat
     bot_thread = threading.Thread(target=run_bot)
     bot_thread.daemon = True
     bot_thread.start()
 
-    # 2. Flask sunucusunu başlat (Render PORT'u otomatik verir)
+    # 2. Flask sunucusunu başlat
     port = int(os.environ.get("PORT", 10000))
-    print(f"🚀 Flask {port} portunda çalışıyor...")
-    app.run(host="0.0.0.0", port=port)
+    print(f"🌐 Flask sunucusu {port} portunda ayağa kalkıyor...")
+    
+    # Render üzerinde debug=False olmalı
+    app.run(host="0.0.0.0", port=port, debug=False)
