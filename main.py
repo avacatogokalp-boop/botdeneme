@@ -4,7 +4,7 @@ import threading
 import os
 import time
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, send_from_directory, request, jsonify
 
 TOKEN = os.environ.get("BOT_TOKEN")
@@ -110,6 +110,11 @@ def start(message):
                 parse_mode="Markdown"
             )
 
+        # Kullanıcı bilgisini kaydet
+        user_info[user_id] = {
+            "name": message.from_user.first_name or "Bilinmiyor",
+            "username": message.from_user.username or ""
+        }
         print(f"✅ Mesaj gönderildi: {user_id}")
 
     except Exception as e:
@@ -152,18 +157,39 @@ def handle_web_app_data(message):
     except Exception as e:
         print(f"❌ WebApp data hatası: {e}")
 
-# ── Admin komutu: spin logunu gör ────────────────────────────────────
+# Kullanici bilgisi: { user_id: {"name":..., "username":...} }
+user_info = {}
+
+# ── Admin komutu ──────────────────────────────────────────────────────
 @bot.message_handler(commands=['admin'])
 def admin_panel(message):
     if message.from_user.id != ADMIN_ID:
         return
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     with spin_lock:
-        count = len(spin_log)
+        today_users = [uid for uid, date in spin_log.items() if date == today]
+    count = len(today_users)
+
+    if count == 0:
+        user_list = "_Henüz kimse çevirmedi._"
+    else:
+        lines = []
+        for uid in today_users[:30]:
+            info = user_info.get(uid, {})
+            name = info.get("name", "Bilinmiyor")
+            username = info.get("username", "")
+            uname_str = f" (@{username})" if username else ""
+            lines.append(f"• {name}{uname_str} — `{uid}`")
+        user_list = "\n".join(lines)
+        if count > 30:
+            user_list += f"\n_... ve {count-30} kişi daha_"
+
     bot.send_message(
         message.chat.id,
         f"👑 *Admin Panel*\n\n"
-        f"📊 Bugün spin kullanan kişi: *{count}*\n"
-        f"🔓 Senin spin hakkın: *Sınırsız*",
+        f"📊 Bugün spin kullanan: *{count} kişi*\n"
+        f"🔓 Senin spin hakkın: *Sınırsız*\n\n"
+        f"👥 *Bugün çevirenler:*\n{user_list}",
         parse_mode="Markdown"
     )
 
