@@ -454,13 +454,25 @@ function showResult(){
   setTimeout(()=>document.getElementById('overlay').classList.add('show'),500);
 }
 
+function openSite(){
+  const url = 'https://cutt.ly/deoKNC0g';
+  // Mini App icinde onaysiz ac
+  const a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 function goSite(){
   document.getElementById('overlay').classList.remove('show');
-  window.location.href = 'https://cutt.ly/deoKNC0g';
+  openSite();
 }
 
 function goSiteDirect(){
-  window.location.href = 'https://cutt.ly/deoKNC0g';
+  openSite();
 }
 
 function confetti(){
