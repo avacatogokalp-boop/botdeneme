@@ -398,6 +398,7 @@ function spin(){
     }).catch(()=>{});
   }
 
+  playSpinStart();
   const total=(6+Math.random()*4)*2*Math.PI+Math.random()*2*Math.PI;
   const dur=4500, start=angle; let t0=null;
   function frame(ts){
@@ -405,6 +406,7 @@ function spin(){
     const prog=Math.min((ts-t0)/dur,1);
     angle=start+total*easeOut(prog);
     draw(angle);
+    checkTick(angle);
     prog<1?requestAnimationFrame(frame):(spinning=false,showResult());
   }
   requestAnimationFrame(frame);
@@ -422,12 +424,14 @@ function showResult(){
     document.getElementById('rBadge').style.display='inline-block';
     document.getElementById('rText').textContent=`${seg.prize} kazandın! Ödülünü almak için siteye git.`;
     confetti();
+    playWin();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:seg.prize,win:true}));
   } else {
     icon.className='rcard-icon lose';
     document.getElementById('rTitle').textContent='Bu Sefer Olmadı';
     document.getElementById('rBadge').style.display='none';
     document.getElementById('rText').textContent='Üzülme! Siteye girerek yeni spin hakkı kazanabilirsin.';
+    playLose();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
   }
   setTimeout(()=>document.getElementById('overlay').classList.add('show'),500);
@@ -473,6 +477,104 @@ function confetti(){
   cancelAnimationFrame(raf); go();
   setTimeout(()=>{cancelAnimationFrame(raf);cx2.clearRect(0,0,cc.width,cc.height);},5000);
 }
+// ── Ses & Titreşim ────────────────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx = null;
+
+function getACtx() {
+  if (!actx) actx = new AudioCtx();
+  return actx;
+}
+
+function vibrate(pattern) {
+  if (navigator.vibrate) navigator.vibrate(pattern);
+  if (tg && tg.HapticFeedback) {
+    if (Array.isArray(pattern)) tg.HapticFeedback.impactOccurred('medium');
+    else tg.HapticFeedback.impactOccurred('light');
+  }
+}
+
+function playTick() {
+  try {
+    const a = getACtx();
+    const o = a.createOscillator();
+    const g = a.createGain();
+    o.connect(g); g.connect(a.destination);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(600, a.currentTime);
+    o.frequency.exponentialRampToValueAtTime(200, a.currentTime + 0.06);
+    g.gain.setValueAtTime(0.18, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.06);
+    o.start(); o.stop(a.currentTime + 0.06);
+  } catch(e) {}
+}
+
+function playWin() {
+  try {
+    const a = getACtx();
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      const o = a.createOscillator();
+      const g = a.createGain();
+      o.connect(g); g.connect(a.destination);
+      o.type = 'triangle';
+      const t = a.currentTime + i * 0.13;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.22, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+      o.start(t); o.stop(t + 0.25);
+    });
+    vibrate([50, 30, 80, 30, 150]);
+  } catch(e) {}
+}
+
+function playLose() {
+  try {
+    const a = getACtx();
+    const notes = [300, 220];
+    notes.forEach((freq, i) => {
+      const o = a.createOscillator();
+      const g = a.createGain();
+      o.connect(g); g.connect(a.destination);
+      o.type = 'sawtooth';
+      const t = a.currentTime + i * 0.18;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.15, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      o.start(t); o.stop(t + 0.3);
+    });
+    vibrate([100, 50, 100]);
+  } catch(e) {}
+}
+
+function playSpinStart() {
+  try {
+    const a = getACtx();
+    const o = a.createOscillator();
+    const g = a.createGain();
+    o.connect(g); g.connect(a.destination);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(200, a.currentTime);
+    o.frequency.exponentialRampToValueAtTime(600, a.currentTime + 0.3);
+    g.gain.setValueAtTime(0.15, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.3);
+    o.start(); o.stop(a.currentTime + 0.3);
+    vibrate([30, 20, 30]);
+  } catch(e) {}
+}
+
+// Çark dönerken tik sesi
+let lastTickAngle = 0;
+const TICK_INTERVAL = (2 * Math.PI) / 12;
+function checkTick(currentAngle) {
+  const delta = Math.abs(currentAngle - lastTickAngle);
+  if (delta >= TICK_INTERVAL) {
+    lastTickAngle = currentAngle;
+    playTick();
+    vibrate(8);
+  }
+}
+
 </script>
 </body>
 </html>
