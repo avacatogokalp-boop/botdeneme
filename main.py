@@ -12,7 +12,6 @@ app = Flask(__name__)
 
 # --- AYARLAR ---
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
-GIF_URL = "https://i.ibb.co/v4mK7P3/bonus-gif.gif"
 
 # --- FLASK HEALTH CHECK ---
 @app.route('/')
@@ -60,10 +59,9 @@ def start(message):
             "👇 Hemen başlamak için tıkla!"
         )
 
-        bot.send_animation(
+        bot.send_message(
             chat_id=message.chat.id,
-            animation=GIF_URL,
-            caption=text,
+            text=text,
             reply_markup=markup,
             parse_mode="Markdown"
         )
@@ -83,7 +81,7 @@ def run_bot():
     bot.infinity_polling(skip_pending=True, timeout=30, long_polling_timeout=30)
 
 # --- MAIN ---
-if __name__== "__main__":
+if name == "__main__":
     bot_thread = threading.Thread(target=run_bot, daemon=True)
     bot_thread.start()
     print("🚀 Flask sunucusu başlatılıyor...")
