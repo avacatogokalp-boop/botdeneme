@@ -1,33 +1,29 @@
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from datetime import datetime
-import os
+import threading
 from flask import Flask
-from threading import Thread
 
-# --- RENDER HATASINI ÇÖZEN WEB SUNUCUSU ---
-app = Flask('')
+# --- TOKEN ---
+TOKEN = "8789404565:AAGIjHVpJDrxvLeeCPSjqgUbtJ_zFGxqHH8"
 
-@app.route('/')
-def home():
-    return "Bot aktif!"
-
-def run():
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host='0.0.0.0', port=port)
-
-def keep_alive():
-    t = Thread(target=run)
-    t.daemon = True
-    t.start()
-
-# --- BOT AYARLARI ---
-TOKEN = "8789404565:AAGL0IG4MgGRPS3BibA2ZEq0Heksq72Rubw"
 bot = telebot.TeleBot(TOKEN)
+app = Flask(__name__)
 
+# --- AYARLAR ---
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/v4mK7P3/bonus-gif.gif"
 
+# --- FLASK HEALTH CHECK (Render için zorunlu) ---
+@app.route('/')
+def home():
+    return "Bot aktif!", 200
+
+@app.route('/health')
+def health():
+    return "OK", 200
+
+# --- USER LOG ---
 def log_user(user):
     try:
         with open("users.txt", "a", encoding="utf-8") as f:
@@ -35,26 +31,63 @@ def log_user(user):
     except:
         pass
 
+# --- START KOMUTU ---
 @bot.message_handler(commands=['start'])
 def start(message):
     try:
         user = message.from_user
         log_user(user)
+
         markup = InlineKeyboardMarkup()
-        web_app = WebAppInfo(url=SITE_LINKI)
-        button = InlineKeyboardButton(text="🔥 Hemen Oyna & Kazan 🎰", web_app=web_app)
-        markup.add(button)
-        text = ("🎰 *Hoş Geldin!*\n\n💸 En yüksek oranlar burada!\n"
-                "⚡ Anında çekim fırsatı\n🎁 *%300 Hoş Geldin Bonusu*\n\n"
-                "👇 Hemen başlamak için tıkla!")
-        bot.send_animation(chat_id=message.chat.id, animation=GIF_URL, 
-                          caption=text, reply_markup=markup, parse_mode="Markdown")
+
+        # Normal URL butonu (WebAppInfo yerine - daha güvenilir)
+        btn1 = InlineKeyboardButton(
+            text="🔥 Hemen Oyna & Kazan 🎰",
+            url=SITE_LINKI
+        )
+        btn2 = InlineKeyboardButton(
+            text="🌐 Siteye Git",
+            url=SITE_LINKI
+        )
+
+        markup.add(btn1)
+        markup.add(btn2)
+
+        text = (
+            "🎰 *Hoş Geldin!*\n\n"
+            "💸 En yüksek oranlar burada!\n"
+            "⚡ Anında çekim fırsatı\n"
+            "🎁 *%300 Hoş Geldin Bonusu*\n\n"
+            "👇 Hemen başlamak için tıkla!"
+        )
+
+        bot.send_animation(
+            chat_id=message.chat.id,
+            animation=GIF_URL,
+            caption=text,
+            reply_markup=markup,
+            parse_mode="Markdown"
+        )
+
     except Exception as e:
         print("HATA:", e)
+        bot.send_message(message.chat.id, "Bir hata oluştu, tekrar /start yaz.")
 
-# --- ÇALIŞTIRMA ---
+# --- FALLBACK ---
+@bot.message_handler(func=lambda m: True)
+def fallback(message):
+    bot.send_message(message.chat.id, "Komut için /start yaz. 🎰")
+
+# --- BOT THREAD ---
+def run_bot():
+    print("🤖 Bot polling başlatıldı...")
+    bot.infinity_polling(skip_pending=True, timeout=30, long_polling_timeout=30)
+
+# --- MAIN ---
 if __name__ == "__main__":
-    print("🚀 Web sunucusu başlatılıyor...")
-    keep_alive() # Bu satır Render'ın port hatasını engeller
-    print("🚀 Bot aktif çalışıyor...")
-    bot.infinity_polling(skip_pending=True)
+    # Botu ayrı thread'de başlat
+    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    bot_thread.start()
+    print("🚀 Flask sunucusu başlatılıyor...")
+    # Flask'ı ana thread'de çalıştır
+    app.run(host="0.0.0.0", port=10000)
