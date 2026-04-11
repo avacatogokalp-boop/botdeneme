@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # --- AYARLAR ---
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
-GIF_URL = "https://s1.ezgif.com/tmp/ezgif-1c646590cba29e91.gif"
+GIF_URL = "<a href="https://imgbb.com/"><img src="https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif" alt="14 07 25 Bonus Gif Betor Spin 250x250" border="0"></a>"
 
 # --- FLASK HEALTH CHECK ---
 @app.route('/')
