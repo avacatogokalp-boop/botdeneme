@@ -14,7 +14,7 @@ app = Flask(__name__)
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/v4mK7P3/bonus-gif.gif"
 
-# --- FLASK HEALTH CHECK (Render için zorunlu) ---
+# --- FLASK HEALTH CHECK ---
 @app.route('/')
 def home():
     return "Bot aktif!", 200
@@ -40,7 +40,6 @@ def start(message):
 
         markup = InlineKeyboardMarkup()
 
-        # Normal URL butonu (WebAppInfo yerine - daha güvenilir)
         btn1 = InlineKeyboardButton(
             text="🔥 Hemen Oyna & Kazan 🎰",
             url=SITE_LINKI
@@ -84,10 +83,8 @@ def run_bot():
     bot.infinity_polling(skip_pending=True, timeout=30, long_polling_timeout=30)
 
 # --- MAIN ---
-if __name__ == "__main__":
-    # Botu ayrı thread'de başlat
+if name == "__main__":
     bot_thread = threading.Thread(target=run_bot, daemon=True)
     bot_thread.start()
     print("🚀 Flask sunucusu başlatılıyor...")
-    # Flask'ı ana thread'de çalıştır
     app.run(host="0.0.0.0", port=10000)
