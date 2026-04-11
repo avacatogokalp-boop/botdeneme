@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 # --- AYARLAR ---
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
+GIF_URL = "https://s1.ezgif.com/tmp/ezgif-1c646590cba29e91.gif"
 
 # --- FLASK HEALTH CHECK ---
 @app.route('/')
@@ -59,9 +60,10 @@ def start(message):
             "👇 Hemen başlamak için tıkla!"
         )
 
-        bot.send_message(
+        bot.send_animation(
             chat_id=message.chat.id,
-            text=text,
+            animation=GIF_URL,
+            caption=text,
             reply_markup=markup,
             parse_mode="Markdown"
         )
