@@ -281,7 +281,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
 </div>
 
 <canvas id="confetti"></canvas>
-<iframe id="siteFrame" src="https://cutt.ly/deoKNC0g"></iframe>
+
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -455,12 +455,12 @@ function showResult(){
 }
 
 function goSite(){
-  document.getElementById('overlay').classList.remove('show');
-  document.getElementById('siteFrame').style.display='block';
+  // Mini App'i kapat, bot zaten linki atacak
+  if(tg) tg.close();
 }
 
 function goSiteDirect(){
-  document.getElementById('siteFrame').style.display='block';
+  if(tg) tg.close();
 }
 
 function confetti(){
