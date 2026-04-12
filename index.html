@@ -31,10 +31,7 @@ body {
   padding: 28px 16px 40px;
 }
 
-.logo {
-  font-size: 26px; font-weight: 900; letter-spacing: -0.5px;
-  margin-bottom: 4px;
-}
+.logo { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
 .logo .w { color: #fff; }
 .logo .o { color: #ff4500; }
 .logo .d { color: #ff8c00; }
@@ -72,12 +69,10 @@ body {
 .ring-glow-mask { position: absolute; inset: -5px; border-radius: 50%; background: #0a0a0a; }
 @keyframes spinRing { to { transform: rotate(360deg); } }
 
-/* Spotlight overlay on canvas */
 #spotlight {
   position: absolute; inset: 0; border-radius: 50%;
   pointer-events: none; z-index: 10;
-  opacity: 0;
-  transition: opacity 0.3s;
+  opacity: 0; transition: opacity 0.3s;
 }
 
 .pointer {
@@ -116,9 +111,7 @@ canvas#wheel {
 }
 @keyframes shine { to { background-position: 300% center; } }
 
-#spinBtn {
-  position: relative; background: none; border: none; cursor: pointer; outline: none;
-}
+#spinBtn { position: relative; background: none; border: none; cursor: pointer; outline: none; }
 .btn-body {
   position: relative;
   background: linear-gradient(180deg, #ff5500 0%, #cc2200 45%, #991500 100%);
@@ -175,10 +168,30 @@ canvas#wheel {
   padding: 18px 22px;
   text-align: center;
   max-width: 300px;
+  width: 100%;
 }
 .no-spin-banner .ns-icon { font-size: 36px; margin-bottom: 8px; }
 .no-spin-banner .ns-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-.no-spin-banner .ns-text { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.5; margin-bottom: 14px; }
+.no-spin-banner .ns-text { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.5; margin-bottom: 10px; }
+
+/* Countdown */
+.ns-countdown-wrap {
+  margin-bottom: 14px;
+}
+.ns-countdown-label {
+  font-size: 11px; font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.ns-countdown {
+  font-size: 32px; font-weight: 900;
+  color: #ff4500;
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px rgba(255,69,0,0.5);
+  font-variant-numeric: tabular-nums;
+}
+
 .no-spin-banner .ns-btn {
   background: linear-gradient(135deg, #ff4500, #ff6a00);
   color: #fff; font-family: inherit; font-size: 14px; font-weight: 900;
@@ -296,12 +309,17 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     <span class="invite-badge">+1 Spin</span>
   </button>
 
+  <!-- No spin banner — countdown burada -->
   <div class="no-spin-banner" id="noSpinBanner">
     <div class="ns-icon">⏳</div>
     <div class="ns-title">Bugünkü Hakkını Kullandın!</div>
-    <div class="ns-text">Her gün 1 spin hakkın var. Yarın gel ya da arkadaşını davet et!</div>
+    <div class="ns-text">Yeni spin hakkın için kalan süre:</div>
+    <div class="ns-countdown-wrap">
+      <div class="ns-countdown-label">Yenileniyor</div>
+      <div class="ns-countdown" id="nsCountdown">00:00:00</div>
+    </div>
     <button class="ns-btn" onclick="goSite()">🔥 Şimdi Oyna &amp; Kazan</button>
-    <button class="ns-invite" onclick="shareInvite()">👥 Davet Et → +1 Spin Kazan</button>
+    <button class="ns-invite" onclick="shareInvite()">👥 Davet Et → Hemen +1 Spin Kazan</button>
   </div>
 </div>
 
@@ -349,6 +367,39 @@ const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
+let countdownInterval = null;
+
+// ── Countdown timer ───────────────────────────────────────────────────
+function updateCountdown() {
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setUTCHours(24, 0, 0, 0);
+  const diff = midnight - now;
+
+  if (diff <= 0) {
+    // Gece yarısı geçti, spin hakkı yenilendi
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    checkSpinRight();
+    return;
+  }
+
+  const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+  const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+  const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+  const el = document.getElementById('nsCountdown');
+  if (el) el.textContent = `${h}:${m}:${s}`;
+}
+
+function startCountdown() {
+  updateCountdown();
+  if (countdownInterval) clearInterval(countdownInterval);
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function stopCountdown() {
+  if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+}
 
 // ── Draw wheel ────────────────────────────────────────────────────────
 function draw(a) {
@@ -390,69 +441,33 @@ function draw(a) {
 }
 draw(angle);
 
-// ── Spotlight animasyonu ──────────────────────────────────────────────
+// ── Spotlight ─────────────────────────────────────────────────────────
 function drawSpotlight(a, idx, alpha) {
   sctx.clearRect(0,0,286,286);
   if(alpha <= 0) return;
-
-  // Karartma — kazanan dilim dışını karart
   sctx.save();
   sctx.fillStyle = `rgba(0,0,0,${alpha * 0.72})`;
-  sctx.beginPath();
-  sctx.arc(CX,CY,R,0,2*Math.PI);
-  sctx.fill();
-
-  // Kazanan dilimi aydınlat (composite ile kesip çıkar)
-  const s = a + idx * ARC;
-  const e = s + ARC;
+  sctx.beginPath(); sctx.arc(CX,CY,R,0,2*Math.PI); sctx.fill();
+  const s = a + idx * ARC, e = s + ARC;
   sctx.globalCompositeOperation = 'destination-out';
-  sctx.beginPath();
-  sctx.moveTo(CX,CY);
-  sctx.arc(CX,CY,R,s,e);
-  sctx.closePath();
-  sctx.fillStyle = `rgba(255,255,255,${alpha})`;
-  sctx.fill();
+  sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R,s,e); sctx.closePath();
+  sctx.fillStyle = `rgba(255,255,255,${alpha})`; sctx.fill();
   sctx.restore();
-
-  // Parlak kenar efekti
   sctx.save();
   sctx.globalAlpha = alpha * 0.9;
-  const seg = SEGS[idx];
-  const mid = s + ARC/2;
-  const grd = sctx.createRadialGradient(
-    CX + (R*0.6)*Math.cos(mid), CY + (R*0.6)*Math.sin(mid), 2,
-    CX + (R*0.6)*Math.cos(mid), CY + (R*0.6)*Math.sin(mid), R*0.5
-  );
-  grd.addColorStop(0, seg.tc + 'aa');
-  grd.addColorStop(1, 'transparent');
-  sctx.beginPath();
-  sctx.moveTo(CX,CY);
-  sctx.arc(CX,CY,R,s,e);
-  sctx.closePath();
-  sctx.fillStyle = grd;
-  sctx.globalCompositeOperation = 'source-over';
-  sctx.fill();
+  const seg = SEGS[idx], mid = s + ARC/2;
+  const grd = sctx.createRadialGradient(CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),2,CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),R*0.5);
+  grd.addColorStop(0, seg.tc+'aa'); grd.addColorStop(1, 'transparent');
+  sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R,s,e); sctx.closePath();
+  sctx.fillStyle=grd; sctx.globalCompositeOperation='source-over'; sctx.fill();
   sctx.restore();
 }
-
 function animateSpotlight(a, idx) {
-  sc.style.opacity = '1';
-  let alpha = 0;
-  const dur = 600;
-  let t0 = null;
-  function frame(ts) {
-    if(!t0) t0 = ts;
-    alpha = Math.min((ts-t0)/dur, 1);
-    drawSpotlight(a, idx, alpha);
-    if(alpha < 1) requestAnimationFrame(frame);
-  }
+  sc.style.opacity='1'; let alpha=0, t0=null;
+  function frame(ts){ if(!t0)t0=ts; alpha=Math.min((ts-t0)/600,1); drawSpotlight(a,idx,alpha); if(alpha<1)requestAnimationFrame(frame); }
   requestAnimationFrame(frame);
 }
-
-function clearSpotlight() {
-  sc.style.opacity = '0';
-  sctx.clearRect(0,0,286,286);
-}
+function clearSpotlight() { sc.style.opacity='0'; sctx.clearRect(0,0,286,286); }
 
 // ── Spin hakkı kontrolü ───────────────────────────────────────────────
 async function checkSpinRight() {
@@ -471,6 +486,7 @@ function enableSpin(spins) {
   const s = spins || 1;
   document.getElementById('spinInfo').textContent = `${s} Çevirme Hakkın Var 🎯`;
   document.getElementById('noSpinBanner').style.display = 'none';
+  stopCountdown();
 }
 
 function disableSpin() {
@@ -478,6 +494,7 @@ function disableSpin() {
   document.getElementById('spinBtn').disabled = true;
   document.getElementById('spinInfo').textContent = 'Bugünkü hakkını kullandın ⏳';
   document.getElementById('noSpinBanner').style.display = 'block';
+  startCountdown();
 }
 
 checkSpinRight();
@@ -499,23 +516,18 @@ function spin() {
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
     angle=start+total*easeOut(prog);
-    draw(angle);
-    checkTick(angle);
+    draw(angle); checkTick(angle);
     if(prog<1) requestAnimationFrame(frame);
     else { spinning=false; showResult(); }
   }
   requestAnimationFrame(frame);
 }
-
 function easeOut(t){ return 1-Math.pow(1-t,4.5); }
 
 function showResult() {
   const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
   const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
-
-  // Spotlight animasyonu
   animateSpotlight(angle, idx);
-
   document.getElementById('rEmoji').textContent=seg.icon;
   if(seg.win){
     document.getElementById('rIcon').className='rcard-icon win';
@@ -542,19 +554,22 @@ function showResult() {
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
   }
   setTimeout(()=>document.getElementById('overlay').classList.add('show'), 800);
+  // Spin bittikten sonra countdown başlat (bonus spin yoksa)
+  setTimeout(()=>{ if(!spinAllowed) disableSpin(); }, 1000);
 }
 
 // ── Davet linki ───────────────────────────────────────────────────────
 function shareInvite() {
   if(!USER_ID){ goSiteDirect(); return; }
-  const botUsername = 'Theavacato'; // bot kullanıcı adın
+  const botUsername = 'PrimeXBos_bot';
   const link = `https://t.me/${botUsername}?start=ref_${USER_ID}`;
-  const text = `🎰 Betorspin Şans Çarkı'nı dene! Günlük spin çevir, bonus kazan!\n${link}`;
   if(tg) {
     tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('🎰 Betorspin Şans Çarkı\'nı dene! Günlük spin çevir, bonus kazan!')}`);
   } else {
     navigator.clipboard?.writeText(link).then(()=>alert('Davet linki kopyalandı!')).catch(()=>{});
   }
+  // Davet paylaşıldıktan sonra spin hakkını kontrol et (bonus geldiyse timer sıfırlansın)
+  setTimeout(()=>checkSpinRight(), 3000);
 }
 
 function goSite(){
