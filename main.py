@@ -239,7 +239,9 @@ def send_invite_link(call):
 # ── /stats admin komutu ───────────────────────────────────────────────
 @bot.message_handler(commands=['stats'])
 def stats(message):
-    if message.from_user.id != ADMIN_ID:
+    print(f"📊 /stats komutu: {message.from_user.id} (admin: {ADMIN_ID})")
+    if int(message.from_user.id) != int(ADMIN_ID):
+        bot.reply_to(message, "⛔ Yetkisiz erişim.")
         return
 
     today_users = today_spin_users()
@@ -272,9 +274,13 @@ def stats(message):
         parse_mode="Markdown"
     )
 
-# ── /admin (eski komut, stats'a yönlendir) ────────────────────────────
+# ── /admin komutu ────────────────────────────────────────────────────
 @bot.message_handler(commands=['admin'])
 def admin_panel(message):
+    print(f"👑 /admin komutu: {message.from_user.id} (admin: {ADMIN_ID})")
+    if int(message.from_user.id) != int(ADMIN_ID):
+        bot.reply_to(message, "⛔ Yetkisiz erişim.")
+        return
     stats(message)
 
 # ── Mini App spin sonucu ──────────────────────────────────────────────
@@ -320,7 +326,7 @@ def handle_web_app_data(message):
         print(f"❌ WebApp data hatası: {e}")
 
 # ── Diğer mesajlar ────────────────────────────────────────────────────
-@bot.message_handler(func=lambda m: True)
+@bot.message_handler(func=lambda m: m.text and not m.text.startswith('/'))
 def fallback(message):
     bot.reply_to(message, "Lütfen /start yazın. 🎰")
 
