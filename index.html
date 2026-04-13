@@ -9,15 +9,15 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
-  background: #000; /* [cite: 2, 3] */
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  background: #000;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 .bg {
   position: fixed; inset: 0;
-  background: radial-gradient(circle at center, #1a1408 0%, #000 75%); /* [cite: 3] */
+  background: radial-gradient(circle at center, #1a1408 0%, #000 75%);
   z-index: 0;
 }
 
@@ -25,152 +25,120 @@ body {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; align-items: center;
   min-height: 100vh;
-  padding: 28px 16px 40px; /* [cite: 5] */
+  padding: 28px 16px 40px;
 }
 
 .logo { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
-.logo .w { color: #d4af37; } /* Altın rengi [cite: 6] */
-.logo .o { color: #fff; } /* [cite: 6] */
-.logo .d { color: #d4af37; } /* [cite: 6] */
+.logo .w { color: #d4af37; } /* Altın rengi */
+.logo .o { color: #fff; }
+.logo .d { color: #d4af37; }
 
 .logo-line {
   width: 48px; height: 2px;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent); /* [cite: 7] */
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
   margin: 8px auto 6px;
 }
 .logo-sub {
   font-size: 11px; font-weight: 700;
-  color: rgba(212, 175, 55, 0.5); /* [cite: 8] */
+  color: rgba(212, 175, 55, 0.5);
   letter-spacing: 4px;
   text-transform: uppercase;
   margin-bottom: 22px;
 }
 .main-title {
   font-size: 30px; font-weight: 900; color: #fff;
-  text-align: center; margin-bottom: 22px; line-height: 1.2; /* [cite: 9] */
+  text-align: center; margin-bottom: 22px; line-height: 1.2;
 }
-.main-title em { font-style: normal; color: #d4af37; } /* [cite: 9] */
+.main-title em { font-style: normal; color: #d4af37; }
 
 .wheel-wrap {
   position: relative;
   width: 300px; height: 300px;
   display: flex; align-items: center;
-  justify-content: center; /* [cite: 10] */
+  justify-content: center;
   margin-bottom: 28px;
 }
 .ring-glow {
   position: absolute; inset: -10px; border-radius: 50%;
-  background: conic-gradient(#d4af37, #8b6508, #fcc201, #8b6508, #d4af37); /* Altın yansıma [cite: 11] */
+  background: conic-gradient(#d4af37, #8b6508, #fcc201, #8b6508, #d4af37);
   animation: spinRing 5s linear infinite;
   opacity: 0.8;
 }
-.ring-glow-mask { position: absolute; inset: -5px; border-radius: 50%; background: #000; } /* [cite: 12] */
+.ring-glow-mask { position: absolute; inset: -5px; border-radius: 50%; background: #000; }
 @keyframes spinRing { to { transform: rotate(360deg); } }
-
-#spotlight {
-  position: absolute; inset: 0; border-radius: 50%;
-  pointer-events: none; z-index: 10;
-  opacity: 0; transition: opacity 0.3s; /* [cite: 13] */
-}
 
 .pointer {
   position: absolute; top: -8px; left: 50%;
   transform: translateX(-50%);
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
-  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.8)); /* [cite: 14, 15] */
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.8));
 }
 .ptr-ball {
   width: 16px; height: 16px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fff 0%, #d4af37 100%); /* [cite: 16] */
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #d4af37 100%);
   border: 2px solid rgba(255,255,255,0.6);
 }
 .ptr-tri {
   width: 0; height: 0;
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
-  border-top: 20px solid #d4af37; /* [cite: 17] */
+  border-top: 20px solid #d4af37;
 }
 
 canvas#wheel {
   border-radius: 50%; position: relative; z-index: 5;
-  box-shadow: 0 0 0 4px #000, 0 0 30px rgba(212, 175, 55, 0.2); /* [cite: 18] */
+  box-shadow: 0 0 0 4px #000, 0 0 30px rgba(212, 175, 55, 0.2);
 }
 
-.btn-area { position: relative; margin-bottom: 14px; } /* [cite: 19] */
 .btn-shine {
   position: absolute; inset: -4px; border-radius: 50px;
-  background: linear-gradient(90deg, #d4af37, #fcc201, #d4af37); /* [cite: 20] */
+  background: linear-gradient(90deg, #d4af37, #fcc201, #d4af37);
   background-size: 300% auto;
   animation: shine 2.5s linear infinite;
   filter: blur(10px); opacity: 0.4;
 }
-@keyframes shine { to { background-position: 300% center; } } /* [cite: 21] */
+@keyframes shine { to { background-position: 300% center; } }
 
 #spinBtn { position: relative; background: none; border: none; cursor: pointer; outline: none; }
 .btn-body {
   position: relative;
-  background: linear-gradient(180deg, #d4af37 0%, #8b6508 100%); /* Premium Gold Button [cite: 22] */
+  background: linear-gradient(180deg, #d4af37 0%, #8b6508 100%);
   color: #000;
   font-family: inherit; font-size: 22px; font-weight: 900;
   letter-spacing: 5px; text-transform: uppercase;
-  border-radius: 50px; padding: 17px 88px; /* [cite: 23] */
+  border-radius: 50px; padding: 17px 88px;
   border: 1px solid rgba(255,255,255,0.3);
   box-shadow: 0 6px 0 #4a3504, inset 0 1px 0 rgba(255,255,255,0.4);
-  transition: transform .12s, box-shadow .12s; /* [cite: 24] */
 }
-#spinBtn:active:not(:disabled) .btn-body { transform: translateY(5px); box-shadow: 0 1px 0 #4a3504; }
-
-.invite-btn {
-  margin-top: 14px;
-  background: rgba(212, 175, 55, 0.05); /* [cite: 25, 26] */
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  border-radius: 14px; padding: 13px 28px;
-  color: #d4af37; font-size: 14px; font-weight: 700;
-  width: 100%; max-width: 300px;
-} /* [cite: 27] */
-
-.spin-info {
-  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.4);
-  margin-top: 10px;
-} /* [cite: 29] */
 
 .overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.95); z-index: 200; align-items: center; justify-content: center;
   backdrop-filter: blur(10px);
-} /* [cite: 39, 40] */
-
+}
 .rcard {
   width: 88%; max-width: 310px; background: #0a0a0a;
   border-radius: 26px; border: 1px solid #d4af37;
   box-shadow: 0 0 50px rgba(212, 175, 55, 0.15);
-  animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
-} /* [cite: 41, 42] */
-
-.rcard-top { padding: 30px 24px 22px; text-align: center; border-bottom: 1px solid rgba(212, 175, 55, 0.1); } /* [cite: 43] */
+}
 .rcard-badge {
   background: linear-gradient(135deg, #d4af37, #8b6508); color: #000;
   font-weight: 800; padding: 6px 18px; border-radius: 20px;
-} /* [cite: 47] */
-
+}
 .rcard-btn {
   width: 100%; background: linear-gradient(135deg, #d4af37, #8b6508);
   color: #000; font-weight: 900; border: none; border-radius: 16px; padding: 17px;
-} /* [cite: 49, 50] */
-
-canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; } /* [cite: 53] */
+}
 </style>
 </head>
 <body>
 <div class="bg"></div>
-
 <div class="container">
   <div class="logo"><span class="w">betor</span><span class="o">spin</span><span class="d">.</span></div>
   <div class="logo-line"></div>
   <div class="logo-sub">Şans Çarkı</div>
   <div class="main-title">Çevir &amp; <em>Kazan!</em></div>
-
   <div class="wheel-wrap">
     <div class="ring-glow"></div>
     <div class="ring-glow-mask"></div>
@@ -178,41 +146,27 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     <canvas id="wheel" width="286" height="286"></canvas>
     <canvas id="spotlight" width="286" height="286"></canvas>
   </div>
-
-  <div class="btn-area">
+  <div class="btn-area" style="position:relative">
     <div class="btn-shine"></div>
     <button id="spinBtn" onclick="spin()" disabled>
       <div class="btn-body">ÇEVİR</div>
     </button>
   </div>
-
-  <div class="spin-info" id="spinInfo">Yükleniyor...</div>
-
-  <button class="invite-btn" onclick="shareInvite()">
-    👥 Arkadaşını Davet Et
-    <span style="background:#d4af37; color:#000; font-size:10px; padding:2px 6px; border-radius:6px; margin-left:5px">+1 Spin</span>
-  </button>
-
-  <div class="no-spin-banner" id="noSpinBanner" style="display:none; color:#fff; text-align:center; margin-top:20px;">
-    <div id="nsCountdown" style="font-size:24px; color:#d4af37; font-weight:900;">00:00:00</div>
-  </div>
+  <div class="spin-info" id="spinInfo" style="color:#d4af37; margin-top:15px">Hakkın Var! 🎯</div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="rcard">
-    <div class="rcard-top" id="rTop">
-      <div class="rcard-icon win" id="rIcon" style="font-size:40px; margin-bottom:10px;"><span id="rEmoji">🎉</span></div>
-      <div class="rcard-title" id="rTitle" style="color:#fff; font-size:24px; font-weight:900;">Tebrikler!</div>
+    <div class="rcard-top" style="text-align:center; padding:30px;">
+      <div style="font-size:40px; margin-bottom:10px;">🎉</div>
+      <div style="color:#fff; font-size:24px; font-weight:900; margin-bottom:10px;">Tebrikler!</div>
       <div class="rcard-badge" id="rBadge">Ödülün Hazır</div>
     </div>
-    <div class="rcard-bot" style="padding:20px; text-align:center;">
-      <div class="rcard-text" id="rText" style="color:rgba(255,255,255,0.6); margin-bottom:15px;">Ödülün hesabına tanımlandı!</div>
-      <button class="rcard-btn" id="rBtn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
+    <div style="padding:20px; text-align:center;">
+      <button class="rcard-btn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
     </div>
   </div>
 </div>
-
-<canvas id="confetti"></canvas>
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -231,9 +185,8 @@ const SEGS = [
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
 const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
-const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
 const CX=143, CY=143, R=138;
-let angle=0, spinning=false, spinAllowed=false;
+let angle=0, spinning=false;
 
 function draw(a) {
   ctx.clearRect(0,0,286,286);
@@ -247,15 +200,11 @@ function draw(a) {
     ctx.fillText(seg.lines[0], R-15, -4); ctx.fillText(seg.lines[1], R-15, 8);
     ctx.restore();
   }
-  // Merkez Altın Göbek
   ctx.beginPath(); ctx.arc(CX,CY,34,0,2*Math.PI);
   ctx.fillStyle='#000'; ctx.fill();
   ctx.strokeStyle='#d4af37'; ctx.lineWidth=3; ctx.stroke();
-  ctx.textAlign='center'; ctx.font='900 8px sans-serif'; ctx.fillStyle='#d4af37'; ctx.fillText('BETOR',CX,CY-2);
-  ctx.fillStyle='#fff'; ctx.fillText('SPIN',CX,CY+8);
 }
 
-// -- MEKANİK VE DİĞER FONKSİYONLAR AYNI KALDI --
 function easeOut(t){ return 1-Math.pow(1-t,4.5); }
 function spin() {
   if(spinning) return;
@@ -266,23 +215,15 @@ function spin() {
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/4500,1);
     angle=start+total*easeOut(prog);
-    draw(angle); if(prog<1) requestAnimationFrame(frame); else { spinning=false; showResult(); }
+    draw(angle);
+    if(prog<1) requestAnimationFrame(frame);
+    else { spinning=false; document.getElementById('overlay').style.display='flex'; }
   }
   requestAnimationFrame(frame);
 }
-function showResult() {
-  const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
-  const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
-  document.getElementById('rEmoji').textContent=seg.icon;
-  document.getElementById('rBadge').textContent=seg.win ? seg.prize : 'Yarın Tekrar Dene';
-  document.getElementById('overlay').style.display='flex';
-  if(seg.win) confetti();
-}
+
 function goSite(){ window.open('https://cutt.ly/7tF5Ow3K','_blank'); }
-function shareInvite(){ alert('Link kopyalandı!'); }
-function confetti(){ /* Basitleştirilmiş konfeti efekti buraya gelebilir */ }
 document.getElementById('spinBtn').disabled=false;
-document.getElementById('spinInfo').textContent='Hakkın Var! 🎯';
 draw(angle);
 </script>
 </body>
