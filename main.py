@@ -175,11 +175,11 @@ def start(message):
         spins = available_spins(user_id)
         spin_status = f"🎡 *{spins} spin hakkın seni bekliyor!*" if spins > 0 else "⏳ *Bugünkü spin hakkını kullandın. Yarın tekrar gel!*"
 
-       markup = InlineKeyboardMarkup(row_width=1)
-markup.add(InlineKeyboardButton(
-    text="🎰 Şans Çarkını Çevir!",
-    web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")
-)
+        markup = InlineKeyboardMarkup(row_width=1)
+        markup.add(InlineKeyboardButton(
+            text="🎰 Şans Çarkını Çevir!",
+            web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")
+        ))
 
         text = (
             "🎰 *Hoş Geldin!*\n\n"
