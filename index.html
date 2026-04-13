@@ -155,7 +155,6 @@ canvas#wheel {
   background: #ff4500; flex-shrink: 0;
 }
 
-/* No spin banner */
 .no-spin-banner {
   display: none;
   margin-top: 18px;
@@ -202,7 +201,6 @@ canvas#wheel {
   cursor: pointer; display: block; width: 100%;
 }
 
-/* Result overlay */
 .overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.9);
@@ -339,6 +337,8 @@ if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#0a0a0a'); tg.setBackgroun
 
 const urlParams = new URLSearchParams(window.location.search);
 const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.id || null;
+const USER_NAME = tg?.initDataUnsafe?.user?.first_name || '';
+const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
 
 const SEGS = [
   { lines:['500 TL','BONUS'],  bg:'#1c1100', stroke:'#d49500', tc:'#ffc200', icon:'🪙', win:true,  prize:'500 TL Bonus' },
@@ -361,47 +361,35 @@ const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
 let countdownInterval=null;
 
-// ── Countdown — spin kullanıldıktan 24 saat sonra ─────────────────────
 function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
 
 function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
-
   const lastSpin = localStorage.getItem(getSpinKey());
   let target;
   if (lastSpin) {
     target = new Date(parseInt(lastSpin) + 24 * 60 * 60 * 1000);
   } else {
-    // localStorage yoksa gece yarısı UTC hedef al
     target = new Date();
     target.setUTCHours(24, 0, 0, 0);
   }
-
   const diff = target - new Date();
-  if (diff <= 0) {
-    clearInterval(countdownInterval);
-    countdownInterval = null;
-    checkSpinRight();
-    return;
-  }
+  if (diff <= 0) { clearInterval(countdownInterval); countdownInterval = null; checkSpinRight(); return; }
   const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
   const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
   const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
   el.textContent = `${h}:${m}:${s}`;
 }
-
 function startCountdown() {
   updateCountdown();
   if (countdownInterval) clearInterval(countdownInterval);
   countdownInterval = setInterval(updateCountdown, 1000);
 }
-
 function stopCountdown() {
   if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
 }
 
-// ── Draw wheel ────────────────────────────────────────────────────────
 function draw(a) {
   ctx.clearRect(0,0,286,286);
   for(let i=0;i<N;i++){
@@ -441,7 +429,6 @@ function draw(a) {
 }
 draw(angle);
 
-// ── Spotlight ─────────────────────────────────────────────────────────
 function drawSpotlight(a, idx, alpha) {
   sctx.clearRect(0,0,286,286);
   if(alpha<=0) return;
@@ -469,7 +456,6 @@ function animateSpotlight(a,idx){
 }
 function clearSpotlight(){ sc.style.opacity='0'; sctx.clearRect(0,0,286,286); }
 
-// ── Spin hakkı kontrolü ───────────────────────────────────────────────
 async function checkSpinRight() {
   if(!USER_ID){ enableSpin(); return; }
   try {
@@ -499,7 +485,6 @@ function disableSpin() {
 
 checkSpinRight();
 
-// ── Spin ──────────────────────────────────────────────────────────────
 function spin() {
   if(spinning||!spinAllowed) return;
   spinning=true; spinAllowed=false;
@@ -508,8 +493,16 @@ function spin() {
   document.getElementById('spinInfo').textContent='İyi şanslar! 🍀';
 
   if(USER_ID) {
-    fetch('/api/use_spin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:USER_ID})}).catch(()=>{});
-    // 24 saat sayacı için zamanı kaydet
+    // İsim ve username de gönderiliyor — /start yazmadan çevirenlerin ismi kaydedilsin
+    fetch('/api/use_spin', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        user_id: USER_ID,
+        name: USER_NAME,
+        username: USER_USERNAME
+      })
+    }).catch(()=>{});
     localStorage.setItem(getSpinKey(), Date.now().toString());
   }
 
@@ -561,7 +554,6 @@ function showResult() {
   setTimeout(()=>{ if(!spinAllowed) disableSpin(); }, 1000);
 }
 
-// ── Davet ─────────────────────────────────────────────────────────────
 function shareInvite() {
   if(!USER_ID){ goSiteDirect(); return; }
   const botUsername = 'PrimeXBos_bot';
@@ -571,7 +563,6 @@ function shareInvite() {
   } else {
     navigator.clipboard?.writeText(link).then(()=>alert('Davet linki kopyalandı!')).catch(()=>{});
   }
-  // Davet sonrası 3sn bekle, bonus spin geldiyse timer sıfırlansın
   setTimeout(()=>checkSpinRight(), 3000);
 }
 
@@ -586,7 +577,6 @@ function goSiteDirect(){
   else window.open('https://cutt.ly/deoKNC0g','_blank');
 }
 
-// ── Confetti ──────────────────────────────────────────────────────────
 function confetti(){
   const cc=document.getElementById('confetti');
   cc.width=window.innerWidth; cc.height=window.innerHeight;
@@ -616,7 +606,6 @@ function confetti(){
   setTimeout(()=>{cancelAnimationFrame(raf);cx2.clearRect(0,0,cc.width,cc.height);},5000);
 }
 
-// ── Ses & Titreşim ────────────────────────────────────────────────────
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 let actx=null;
 function getACtx(){ if(!actx) actx=new AudioCtx(); return actx; }
