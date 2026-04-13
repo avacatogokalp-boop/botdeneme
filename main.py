@@ -9,7 +9,7 @@ from flask import Flask, send_from_directory, request, jsonify
 
 TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/deoKNC0g"
-GIF_URL = "<a href="https://ibb.co/pBT71SGg"><img src="https://i.ibb.co/Q3VgJ4zZ/denemeeeee.png" alt="denemeeeee" border="0"></a>"
+GIF_URL = "https://i.ibb.co/Q3VgJ4zZ/denemeeeee.png"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
 ADMIN_IDS = [6943377103]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
