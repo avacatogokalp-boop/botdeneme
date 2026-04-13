@@ -139,13 +139,12 @@ def start(message):
         args      = message.text.split()
         ref_param = args[1] if len(args) > 1 else None
 
-        # YENİ EKLENEN KISIM: Kullanıcının daha önce botu kullanıp kullanmadığını kontrol et
+        # Kullanıcının daha önce botu kullanıp kullanmadığını kontrol et
         is_new_user = user_id not in user_info
 
         if ref_param and ref_param.startswith("ref_"):
             try:
                 inviter_id = int(ref_param.split("_")[1])
-                # DEĞİŞEN KISIM: is_new_user şartı eklendi
                 if inviter_id != user_id and is_new_user and user_id not in invite_map:
                     invite_map[user_id] = inviter_id
                     with spin_lock:
