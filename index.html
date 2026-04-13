@@ -342,18 +342,17 @@ const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin'          },
-  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0a00', stroke:'#cc6600', tc:'#ffaa33', icon:'💰', win:true,  prize:'Özel Yatırım Bonusu'   },
-  { lines:['100₺','BAKİYE'],         bg:'#051a09', stroke:'#0a8a35', tc:'#22ee66', icon:'💵', win:true,  prize:'100₺ Bakiye'            },
-  { lines:['VİP','HEDİYE'],          bg:'#120818', stroke:'#8800cc', tc:'#dd55ff', icon:'👑', win:true,  prize:'VİP Hediye'            },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['100₺','BONUS BUY'],      bg:'#1c0f00', stroke:'#d49500', tc:'#ffc200', icon:'🎁', win:true,  prize:'100₺ Bonus Buy'        },
-  { lines:['200','FREESPIN'],         bg:'#060d1c', stroke:'#1155cc', tc:'#4488ff', icon:'🎰', win:true,  prize:'200 Freespin'          },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['200₺','BONUS BUY'],      bg:'#1c1200', stroke:'#bb8800', tc:'#ffcc00', icon:'🎁', win:true,  prize:'200₺ Bonus Buy'        },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
+  { lines:['100 FS'],      bg:'#2c3e50', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'100 Freespin' },
+  { lines:['BONUS'],       bg:'#d35400', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'Özel Yatırım Bonusu' },
+  { lines:['100₺ NAKİT'],  bg:'#27ae60', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'100₺ Bakiye' },
+  { lines:['VİP HEDİYE'],  bg:'#8e44ad', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'VİP Hediye' },
+  { lines:['TEKRAR DENE'], bg:'#1a1a1a', stroke:'#ffffff', tc:'#ffffff', win:false, prize:null },
+  { lines:['100₺ B.BUY'],  bg:'#f39c12', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'100₺ Bonus Buy' },
+  { lines:['200 FS'],      bg:'#2980b9', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'200 Freespin' },
+  { lines:['TEKRAR DENE'], bg:'#1a1a1a', stroke:'#ffffff', tc:'#ffffff', win:false, prize:null },
+  { lines:['200₺ B.BUY'],  bg:'#c0392b', stroke:'#ffffff', tc:'#ffffff', win:true,  prize:'200₺ Bonus Buy' },
+  { lines:['TEKRAR DENE'], bg:'#1a1a1a', stroke:'#ffffff', tc:'#ffffff', win:false, prize:null },
 ];
-
 const N=SEGS.length, ARC=(2*Math.PI)/N;
 const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
