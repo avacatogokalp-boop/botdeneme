@@ -3,237 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Premium Fortune - Betorspin</title>
+<title>Royal Fortune - Betorspin</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Inter', -apple-system, sans-serif; }
 
-body { background: #050505; min-height: 100vh; overflow: hidden; color: #fff; }
+body { background: #000; color: #fff; overflow: hidden; height: 100vh; }
 
-/* Ultra-Premium Background */
-.bg {
+/* Görseldeki o derin siyah-turuncu atmosfer */
+.royal-bg {
   position: fixed; inset: 0;
   background: 
-    radial-gradient(circle at 50% 40%, rgba(255, 69, 0, 0.15) 0%, transparent 65%),
-    radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.01) 0%, transparent 30%),
-    #050505;
+    radial-gradient(circle at 50% 45%, rgba(255, 69, 0, 0.2) 0%, transparent 60%),
+    linear-gradient(180deg, #0a0a0a 0%, #000 100%);
   z-index: 0;
 }
 
-.container {
+.app-container {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; align-items: center;
-  padding: 40px 20px;
+  padding-top: 50px; height: 100vh;
 }
 
-/* Elegant Typography */
-.logo { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; }
-.logo .o { color: #ff4500; text-shadow: 0 0 15px rgba(255,69,0,0.5); }
-.logo-sub {
-  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3);
-  letter-spacing: 6px; text-transform: uppercase; margin-bottom: 30px;
+/* Gold/Turuncu Premium Logo */
+.brand { text-align: center; margin-bottom: 40px; }
+.brand h1 { 
+    font-size: 32px; font-weight: 900; letter-spacing: -1px;
+    background: linear-gradient(180deg, #fff 30%, #ff4500 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
+.brand p { font-size: 10px; letter-spacing: 5px; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-top: 5px; }
 
-.main-title {
-  font-size: 34px; font-weight: 900; text-align: center; margin-bottom: 40px;
-  background: linear-gradient(180deg, #fff 0%, #888 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-/* Wheel Master Design */
-.wheel-wrap {
-  position: relative; width: 320px; height: 320px;
+/* Wheel - Görseldeki o 3D Derinlik */
+.wheel-master {
+  position: relative; width: 340px; height: 340px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 45px;
 }
 
-.wheel-outer-ring {
-  position: absolute; inset: -12px; border-radius: 50%;
-  background: linear-gradient(145deg, #1a1a1a, #000);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.05);
-  z-index: 1;
+/* Dış Metal Çerçeve */
+.wheel-bezel {
+  position: absolute; inset: -15px; border-radius: 50%;
+  background: linear-gradient(145deg, #1f1f1f, #000);
+  box-shadow: 
+    0 30px 60px rgba(0,0,0,1), 
+    inset 0 2px 3px rgba(255,255,255,0.1),
+    0 0 20px rgba(255,69,0,0.15);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Pointer Design */
-.pointer {
-  position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-  z-index: 30; filter: drop-shadow(0 0 10px rgba(255,69,0,0.5));
+/* Pointer - Daha keskin ve agresif */
+.royal-pointer {
+  position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+  z-index: 100; filter: drop-shadow(0 0 15px rgba(255,69,0,0.8));
 }
-.ptr-head {
-  width: 24px; height: 30px; background: #ff4500;
+.ptr-shape {
+  width: 28px; height: 35px;
+  background: linear-gradient(180deg, #fff, #ff4500);
   clip-path: polygon(50% 100%, 0 0, 100% 0);
-  background: linear-gradient(180deg, #ff8c00, #ff4500);
 }
 
-canvas#wheel {
-  border-radius: 50%; position: relative; z-index: 10;
-  border: 4px solid #111;
+/* Spin Button - Görseldeki o "Bas beni" diyen buton */
+.action-area { margin-top: 50px; }
+.royal-btn {
+  background: linear-gradient(180deg, #ff8c00 0%, #ff4500 50%, #991500 100%);
+  border: none; border-radius: 16px;
+  padding: 22px 100px; color: #fff;
+  font-size: 22px; font-weight: 900; letter-spacing: 4px;
+  box-shadow: 0 15px 40px rgba(255,69,0,0.3), inset 0 2px 5px rgba(255,255,255,0.5);
+  cursor: pointer; text-transform: uppercase;
+  transition: 0.2s;
 }
+.royal-btn:active { transform: translateY(5px) scale(0.98); box-shadow: 0 5px 15px rgba(255,69,0,0.4); }
 
-/* Premium Spin Button */
-.btn-area { position: relative; margin-top: 10px; }
-#spinBtn {
-  background: linear-gradient(180deg, #ff6a00 0%, #d42a00 100%);
-  border: none; border-radius: 12px;
-  padding: 20px 80px; color: #fff;
-  font-size: 20px; font-weight: 800; letter-spacing: 4px;
-  cursor: pointer; position: relative; overflow: hidden;
-  box-shadow: 0 10px 30px rgba(212, 42, 0, 0.3), inset 0 2px 2px rgba(255,255,255,0.4);
-  transition: all 0.2s ease;
+/* Sonuç Ekranı - Sıfır Emoji, Tam Asalet */
+.modal {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+  z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(20px);
 }
-#spinBtn:active { transform: translateY(4px); box-shadow: 0 5px 15px rgba(212, 42, 0, 0.4); }
-#spinBtn:disabled { filter: grayscale(1); opacity: 0.3; }
-
-/* Info Text */
-.spin-info {
-  margin-top: 25px; font-size: 12px; color: rgba(255,255,255,0.4);
-  letter-spacing: 1px; text-transform: uppercase;
+.modal-content {
+  width: 85%; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 30px; text-align: center; padding: 50px 20px;
 }
-
-/* Overlay & Results */
-.overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-  z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(15px);
-}
-.overlay.show { display: flex; }
-.rcard {
-  width: 85%; max-width: 320px; background: #0f0f0f; border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.05); text-align: center; overflow: hidden;
-}
-.rcard-top { padding: 40px 20px; background: radial-gradient(circle at 50% 0%, rgba(255,69,0,0.15), transparent); }
-.rcard-title { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 15px; }
-.rcard-prize { font-size: 32px; font-weight: 900; color: #ff4500; margin-bottom: 25px; }
-.rcard-btn {
-  width: 100%; padding: 20px; background: #fff; color: #000;
-  border: none; font-weight: 800; cursor: pointer; text-transform: uppercase;
+.modal-title { font-size: 14px; color: rgba(255,255,255,0.4); letter-spacing: 3px; margin-bottom: 10px; }
+.modal-prize { font-size: 36px; font-weight: 900; color: #ff4500; margin-bottom: 30px; text-shadow: 0 0 20px rgba(255,69,0,0.3); }
+.modal-close {
+  background: #fff; color: #000; padding: 20px 60px; border-radius: 15px;
+  font-weight: 900; border: none; cursor: pointer; text-transform: uppercase;
 }
 </style>
 </head>
 <body>
-<div class="bg"></div>
+<div class="royal-bg"></div>
 
-<div class="container">
-  <div class="logo">BETOR<span class="o">SPIN</span></div>
-  <div class="logo-sub">PREMIUM FORTUNE</div>
-  <h1 class="main-title">GÜNLÜK ŞANS</h1>
-
-  <div class="wheel-wrap">
-    <div class="wheel-outer-ring"></div>
-    <div class="pointer"><div class="ptr-head"></div></div>
-    <canvas id="wheel" width="300" height="300"></canvas>
+<div class="app-container">
+  <div class="brand">
+    <h1>BETORSPIN</h1>
+    <p>PRIVÉ CASINO</p>
   </div>
 
-  <div class="btn-area">
-    <button id="spinBtn" onclick="spin()" disabled>ÇEVİR</button>
+  <div class="wheel-master">
+    <div class="wheel-bezel"></div>
+    <div class="royal-pointer"><div class="ptr-shape"></div></div>
+    <canvas id="mainWheel" width="310" height="310" style="z-index:10; position:relative;"></canvas>
   </div>
-  <div class="spin-info" id="spinInfo">SİSTEM BAĞLANTISI KURULUYOR</div>
+
+  <div class="action-area">
+    <button class="royal-btn" id="spinTrigger" onclick="startSpin()">ÇEVİR</button>
+  </div>
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="rcard">
-    <div class="rcard-top">
-      <div class="rcard-title" id="rTitle">SONUÇ</div>
-      <div class="rcard-prize" id="rPrize">-</div>
-      <p id="rText" style="color:rgba(255,255,255,0.5); font-size:14px; margin-bottom:20px;">Ödülünüz hesabınıza tanımlanmıştır.</p>
-    </div>
-    <button class="rcard-btn" onclick="goSite()">DEVAM ET</button>
+<div class="modal" id="resultModal">
+  <div class="modal-content">
+    <div class="modal-title">ELDE EDİLEN ÖDÜL</div>
+    <div class="modal-prize" id="prizeText">-</div>
+    <button class="modal-close" onclick="location.reload()">TAMAM</button>
   </div>
 </div>
 
 <script>
-const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#050505'); tg.setBackgroundColor('#050505'); }
-
-const SEGS = [
-  { t: '100 FREESPIN',      bg: '#080808', c: '#ff4500', win: true },
-  { t: 'YATIRIM BONUSU',    bg: '#111111', c: '#ffffff', win: true },
-  { t: '100₺ BAKİYE',       bg: '#080808', c: '#ff4500', win: true },
-  { t: 'VİP HEDİYE',        bg: '#111111', c: '#ffffff', win: true },
-  { t: 'TEKRAR DENE',       bg: '#050505', c: '#444444', win: false },
-  { t: '100₺ BONUS BUY',    bg: '#080808', c: '#ff4500', win: true },
-  { t: '200 FREESPIN',      bg: '#111111', c: '#ffffff', win: true },
-  { t: 'TEKRAR DENE',       bg: '#050505', c: '#444444', win: false },
-  { t: '200₺ BONUS BUY',    bg: '#080808', c: '#ff4500', win: true },
-  { t: 'TEKRAR DENE',       bg: '#050505', c: '#444444', win: false }
+const cv = document.getElementById('mainWheel'), ctx = cv.getContext('2d');
+const segments = [
+    "100 FREESPIN", "YATIRIM BONUSU", "100₺ BAKİYE", "VIP HEDİYE", "TEKRAR DENE", 
+    "100₺ BONUS BUY", "200 FREESPIN", "TEKRAR DENE", "200₺ BONUS BUY", "TEKRAR DENE"
 ];
+const colors = ["#000", "#111"];
+const n = segments.length, arc = (Math.PI * 2) / n;
+let currentAngle = 0;
 
-const cv = document.getElementById('wheel'), ctx = cv.getContext('2d');
-const N = SEGS.length, ARC = (Math.PI * 2) / N;
-let angle = 0, spinning = false;
+function drawWheel(angle) {
+    ctx.clearRect(0,0,310,310);
+    const cx = 155, cy = 155, r = 150;
 
-function draw(a) {
-  ctx.clearRect(0,0,300,300);
-  const CX = 150, CY = 150, R = 145;
+    segments.forEach((text, i) => {
+        const start = angle + i * arc, end = start + arc;
+        
+        // Dilim
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, start, end);
+        ctx.fillStyle = colors[i % 2]; ctx.fill();
+        
+        // Gold Kenarlık
+        ctx.strokeStyle = "rgba(255, 69, 0, 0.2)"; ctx.lineWidth = 1; ctx.stroke();
 
-  SEGS.forEach((s, i) => {
-    const sA = a + i * ARC, eA = sA + ARC;
+        // Metin Çizimi
+        ctx.save(); ctx.translate(cx, cy); ctx.rotate(start + arc/2);
+        ctx.textAlign = "right"; ctx.fillStyle = (i % 2 === 0) ? "#ff4500" : "#fff";
+        ctx.font = "bold 11px Inter";
+        ctx.fillText(text, r - 25, 5);
+        ctx.restore();
+    });
+
+    // Center Cap
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 45);
+    grad.addColorStop(0, "#333"); grad.addColorStop(1, "#000");
+    ctx.beginPath(); ctx.arc(cx, cy, 45, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = "#ff4500"; ctx.lineWidth = 2; ctx.stroke();
+}
+
+function startSpin() {
+    const btn = document.getElementById('spinTrigger');
+    btn.disabled = true;
     
-    // Dilim
-    ctx.beginPath(); ctx.moveTo(CX, CY); ctx.arc(CX, CY, R, sA, eA);
-    ctx.fillStyle = s.bg; ctx.fill();
-    
-    // Premium Inner Shadow
-    const g = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    g.addColorStop(0.7, 'transparent');
-    g.addColorStop(1, 'rgba(0,0,0,0.6)');
-    ctx.fillStyle = g; ctx.fill();
+    const startTime = Date.now(), duration = 6000;
+    const totalRotation = (10 + Math.random() * 5) * Math.PI * 2;
 
-    // Metin
-    ctx.save(); ctx.translate(CX, CY); ctx.rotate(sA + ARC/2);
-    ctx.textAlign = 'right'; ctx.fillStyle = s.c;
-    ctx.font = '900 11px sans-serif';
-    ctx.fillText(s.t, R - 20, 4);
-    ctx.restore();
-  });
+    function animate() {
+        const elapsed = Date.now() - startTime, progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 4); // Smooth stop
+        
+        currentAngle = ease * totalRotation;
+        drawWheel(currentAngle);
 
-  // Center Hub
-  const h = ctx.createRadialGradient(CX, CY, 0, CX, CY, 40);
-  h.addColorStop(0, '#222'); h.addColorStop(1, '#000');
-  ctx.beginPath(); ctx.arc(CX, CY, 40, 0, Math.PI*2);
-  ctx.fillStyle = h; ctx.fill();
-  ctx.strokeStyle = '#ff4500'; ctx.lineWidth = 2; ctx.stroke();
+        if (progress < 1) requestAnimationFrame(animate);
+        else finalize();
+    }
+    animate();
 }
 
-function spin() {
-  if (spinning) return;
-  spinning = true;
-  document.getElementById('spinBtn').disabled = true;
-  
-  const total = (8 + Math.random() * 5) * Math.PI * 2;
-  const start = Date.now(), dur = 5000;
-
-  function animate() {
-    const now = Date.now(), p = Math.min((now - start) / dur, 1);
-    const ease = 1 - Math.pow(1 - p, 4);
-    angle += ease * 0.5; 
-    draw(angle);
-    if (p < 1) requestAnimationFrame(animate);
-    else finishSpin();
-  }
-  animate();
+function finalize() {
+    const norm = ((-Math.PI/2 - currentAngle) % (Math.PI*2) + (Math.PI*2)) % (Math.PI*2);
+    const idx = Math.floor(norm / arc) % n;
+    document.getElementById('prizeText').textContent = segments[idx];
+    document.getElementById('resultModal').style.display = 'flex';
 }
 
-function finishSpin() {
-  spinning = false;
-  const norm = ((-Math.PI/2 - angle) % (Math.PI*2) + (Math.PI*2)) % (Math.PI*2);
-  const idx = Math.floor(norm / ARC) % N;
-  const res = SEGS[idx];
-
-  document.getElementById('rPrize').textContent = res.t;
-  document.getElementById('rTitle').textContent = res.win ? 'TEBRİKLER' : 'KISMET DEĞİLMİŞ';
-  document.getElementById('overlay').classList.add('show');
-}
-
-function goSite() {
-  location.reload(); // Örnek aksiyon
-}
-
-// Başlangıç
-draw(0);
-setTimeout(() => {
-  document.getElementById('spinBtn').disabled = false;
-  document.getElementById('spinInfo').textContent = 'SİSTEM HAZIR - ÇEVİREBİLİRSİN';
-}, 1500);
+drawWheel(0);
 </script>
 </body>
 </html>
