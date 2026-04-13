@@ -12,15 +12,8 @@ SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_ID = 6943377103
+ADMIN_IDS = [6943377103]  # Buraya şefin ID'sini de ekleyebilirsin: [6943377103, SEFİN_ID]
 
-# ── Storage ───────────────────────────────────────────────────────────
-# spin_log:     { user_id: "YYYY-MM-DD" }
-# bonus_spins:  { user_id: int }          ← davet bonusu
-# invite_map:   { invitee_id: inviter_id } ← kim kimi davet etti
-# invite_count: { inviter_id: int }        ← kaç kişi davet etti
-# user_info:    { user_id: {"name":..., "username":...} }
-# total_wins:   { prize_name: count }
 spin_log     = {}
 bonus_spins  = {}
 invite_map   = {}
@@ -32,14 +25,16 @@ spin_lock    = threading.Lock()
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
-# ── Yardımcı fonksiyonlar ─────────────────────────────────────────────
+# ── Yardımcı ─────────────────────────────────────────────────────────
+def is_admin(user_id: int) -> bool:
+    return int(user_id) in ADMIN_IDS
+
 def get_today():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 def can_spin(user_id: int) -> bool:
-    if user_id == ADMIN_ID:
+    if is_admin(user_id):
         return True
-    # Bonus spin varsa her zaman izin ver
     if bonus_spins.get(user_id, 0) > 0:
         return True
     today = get_today()
@@ -47,9 +42,8 @@ def can_spin(user_id: int) -> bool:
         return spin_log.get(user_id) != today
 
 def use_spin(user_id: int):
-    if user_id == ADMIN_ID:
+    if is_admin(user_id):
         return
-    # Önce bonus spinleri tüket
     if bonus_spins.get(user_id, 0) > 0:
         with spin_lock:
             bonus_spins[user_id] -= 1
@@ -59,7 +53,7 @@ def use_spin(user_id: int):
         spin_log[user_id] = today
 
 def available_spins(user_id: int) -> int:
-    if user_id == ADMIN_ID:
+    if is_admin(user_id):
         return 99
     today = get_today()
     with spin_lock:
@@ -76,7 +70,40 @@ def today_spin_users():
     with spin_lock:
         return [uid for uid, date in spin_log.items() if date == today]
 
-# ── Flask rotaları ─────────────────────────────────────────────────────
+def send_stats(chat_id):
+    today_users   = today_spin_users()
+    total_users   = len(user_info)
+    total_invites = sum(invite_count.values())
+
+    win_lines = "\n".join(
+        [f"• {k}: *{v}* kez" for k, v in sorted(total_wins.items(), key=lambda x: -x[1])]
+    ) or "_Henüz veri yok_"
+
+    user_lines = []
+    for uid in today_users[:20]:
+        info  = user_info.get(uid, {})
+        name  = info.get("name", "?")
+        uname = f" @{info['username']}" if info.get("username") else ""
+        bonus = bonus_spins.get(uid, 0)
+        bonus_str = f" (+{bonus}🎡)" if bonus else ""
+        user_lines.append(f"• {name}{uname}{bonus_str} `{uid}`")
+
+    user_list = "\n".join(user_lines) if user_lines else "_Henüz kimse çevirmedi_"
+    if len(today_users) > 20:
+        user_list += f"\n_... ve {len(today_users)-20} kişi daha_"
+
+    bot.send_message(
+        chat_id,
+        f"📊 *Bot İstatistikleri*\n\n"
+        f"👥 Toplam kullanıcı: *{total_users}*\n"
+        f"🎡 Bugün spin: *{len(today_users)}*\n"
+        f"📤 Toplam davet: *{total_invites}*\n\n"
+        f"🏆 *Kazanılan Ödüller:*\n{win_lines}\n\n"
+        f"📅 *Bugün Çevirenler:*\n{user_list}",
+        parse_mode="Markdown"
+    )
+
+# ── Flask rotaları ────────────────────────────────────────────────────
 @app.route('/')
 def home():
     return "Bot Aktif!", 200
@@ -102,7 +129,7 @@ def api_use_spin():
     use_spin(int(user_id))
     return jsonify({"ok": True})
 
-# ── /start komutu ──────────────────────────────────────────────────────
+# ── /start ────────────────────────────────────────────────────────────
 @bot.message_handler(commands=['start'])
 def start(message):
     try:
@@ -110,7 +137,6 @@ def start(message):
         args      = message.text.split()
         ref_param = args[1] if len(args) > 1 else None
 
-        # Davet linki ile geldiyse
         if ref_param and ref_param.startswith("ref_"):
             try:
                 inviter_id = int(ref_param.split("_")[1])
@@ -119,16 +145,14 @@ def start(message):
                     with spin_lock:
                         invite_count[inviter_id] = invite_count.get(inviter_id, 0) + 1
                     add_bonus_spin(inviter_id, 1)
-                    # Davet eden kişiye bildir
                     try:
-                        inviter_name = user_info.get(inviter_id, {}).get("name", "Kullanıcı")
                         new_name = message.from_user.first_name or "Biri"
                         bot.send_message(
                             inviter_id,
                             f"🎉 *Tebrikler!*\n\n"
                             f"👤 *{new_name}* davet linkinle katıldı!\n"
                             f"🎡 *+1 Ekstra Spin Hakkı* kazandın!\n\n"
-                            f"Toplam davet ettiğin kişi: *{invite_count.get(inviter_id, 0)}*",
+                            f"Toplam davet: *{invite_count.get(inviter_id, 0)}*",
                             parse_mode="Markdown"
                         )
                     except:
@@ -136,33 +160,27 @@ def start(message):
             except:
                 pass
 
-        # Kullanıcı bilgisini kaydet
         user_info[user_id] = {
             "name": message.from_user.first_name or "Bilinmiyor",
             "username": message.from_user.username or ""
         }
 
         spins = available_spins(user_id)
-        if spins > 0:
-            spin_status = f"🎡 *{spins} spin hakkın seni bekliyor!*"
-        else:
-            spin_status = "⏳ *Bugünkü spin hakkını kullandın. Yarın tekrar gel!*"
+        spin_status = f"🎡 *{spins} spin hakkın seni bekliyor!*" if spins > 0 else "⏳ *Bugünkü spin hakkını kullandın. Yarın tekrar gel!*"
 
         markup = InlineKeyboardMarkup(row_width=1)
-        btn_wheel = InlineKeyboardButton(
+        markup.add(InlineKeyboardButton(
             text="🎰 Şans Çarkını Çevir!",
             web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")
-        )
-        btn_invite = InlineKeyboardButton(
+        ))
+        markup.add(InlineKeyboardButton(
             text="👥 Arkadaşını Davet Et → +1 Spin",
             callback_data="get_invite_link"
+        ))
+        markup.row(
+            InlineKeyboardButton(text="🔥 Hemen Oyna & Kazan 🎰", url=SITE_LINKI),
+            InlineKeyboardButton(text="🌐 Siteye Git", url=SITE_LINKI)
         )
-        btn_play = InlineKeyboardButton(text="🔥 Hemen Oyna & Kazan 🎰", url=SITE_LINKI)
-        btn_site = InlineKeyboardButton(text="🌐 Siteye Git", url=SITE_LINKI)
-
-        markup.add(btn_wheel)
-        markup.add(btn_invite)
-        markup.row(btn_play, btn_site)
 
         text = (
             "🎰 *Hoş Geldin!*\n\n"
@@ -172,35 +190,23 @@ def start(message):
         )
 
         try:
-            bot.send_animation(
-                chat_id=message.chat.id,
-                animation=GIF_URL,
-                caption=text,
-                reply_markup=markup,
-                parse_mode="Markdown"
-            )
+            bot.send_animation(chat_id=message.chat.id, animation=GIF_URL, caption=text, reply_markup=markup, parse_mode="Markdown")
         except:
-            bot.send_message(
-                chat_id=message.chat.id,
-                text=text,
-                reply_markup=markup,
-                parse_mode="Markdown"
-            )
+            bot.send_message(chat_id=message.chat.id, text=text, reply_markup=markup, parse_mode="Markdown")
 
-        print(f"✅ Mesaj gönderildi: {user_id}")
-
+        print(f"✅ /start: {user_id}")
     except Exception as e:
         print(f"❌ HATA: {e}")
-        bot.send_message(message.chat.id, "Teknik bir sorun var, logları kontrol et.")
+        bot.send_message(message.chat.id, "Teknik bir sorun var.")
 
-# ── /davet komutu ──────────────────────────────────────────────────────
+# ── /davet ────────────────────────────────────────────────────────────
 @bot.message_handler(commands=['davet'])
 def davet(message):
-    user_id  = message.from_user.id
+    user_id = message.from_user.id
     bot_info = bot.get_me()
     invite_link = f"https://t.me/{bot_info.username}?start=ref_{user_id}"
-    count    = invite_count.get(user_id, 0)
-    bonus    = bonus_spins.get(user_id, 0)
+    count = invite_count.get(user_id, 0)
+    bonus = bonus_spins.get(user_id, 0)
 
     bot.send_message(
         message.chat.id,
@@ -212,18 +218,18 @@ def davet(message):
         f"• Mevcut bonus spin: *{bonus}*",
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup().add(
-            InlineKeyboardButton("📤 Linki Paylaş", switch_inline_query=f"Betorspin Şans Çarkı'nı dene ve ödül kazan! {invite_link}")
+            InlineKeyboardButton("📤 Linki Paylaş", switch_inline_query=f"Betorspin Şans Çarkı'nı dene! {invite_link}")
         )
     )
 
-# ── Davet butonu callback ──────────────────────────────────────────────
+# ── Davet callback ────────────────────────────────────────────────────
 @bot.callback_query_handler(func=lambda c: c.data == "get_invite_link")
 def send_invite_link(call):
-    user_id  = call.from_user.id
+    user_id = call.from_user.id
     bot_info = bot.get_me()
     invite_link = f"https://t.me/{bot_info.username}?start=ref_{user_id}"
-    count    = invite_count.get(user_id, 0)
-    bonus    = bonus_spins.get(user_id, 0)
+    count = invite_count.get(user_id, 0)
+    bonus = bonus_spins.get(user_id, 0)
 
     bot.answer_callback_query(call.id)
     bot.send_message(
@@ -236,54 +242,17 @@ def send_invite_link(call):
         parse_mode="Markdown"
     )
 
-# ── /stats admin komutu ───────────────────────────────────────────────
-@bot.message_handler(commands=['stats'])
-def stats(message):
-    print(f"📊 /stats komutu: {message.from_user.id} (admin: {ADMIN_ID})")
-    if int(message.from_user.id) != int(ADMIN_ID):
+# ── /stats ve /admin — ikisi de aynı fonksiyonu çağırır ──────────────
+@bot.message_handler(commands=['stats', 'admin'])
+def admin_stats(message):
+    user_id = message.from_user.id
+    print(f"📊 /{message.text.split()[0][1:]} komutu: {user_id} | Admin listesi: {ADMIN_IDS}")
+    if not is_admin(user_id):
         bot.reply_to(message, "⛔ Yetkisiz erişim.")
         return
+    send_stats(message.chat.id)
 
-    today_users = today_spin_users()
-    total_users = len(user_info)
-    total_invites = sum(invite_count.values())
-
-    win_lines = "\n".join([f"• {k}: *{v}* kez" for k, v in sorted(total_wins.items(), key=lambda x: -x[1])]) or "_Henüz veri yok_"
-
-    user_lines = []
-    for uid in today_users[:20]:
-        info = user_info.get(uid, {})
-        name = info.get("name", "?")
-        uname = f" @{info['username']}" if info.get("username") else ""
-        bonus = bonus_spins.get(uid, 0)
-        bonus_str = f" (+{bonus}🎡)" if bonus else ""
-        user_lines.append(f"• {name}{uname}{bonus_str} `{uid}`")
-
-    user_list = "\n".join(user_lines) if user_lines else "_Henüz kimse çevirmedi_"
-    if len(today_users) > 20:
-        user_list += f"\n_... ve {len(today_users)-20} kişi daha_"
-
-    bot.send_message(
-        message.chat.id,
-        f"📊 *Bot İstatistikleri*\n\n"
-        f"👥 Toplam kullanıcı: *{total_users}*\n"
-        f"🎡 Bugün spin: *{len(today_users)}*\n"
-        f"📤 Toplam davet: *{total_invites}*\n\n"
-        f"🏆 *Kazanılan Ödüller:*\n{win_lines}\n\n"
-        f"📅 *Bugün Çevirenler:*\n{user_list}",
-        parse_mode="Markdown"
-    )
-
-# ── /admin komutu ────────────────────────────────────────────────────
-@bot.message_handler(commands=['admin'])
-def admin_panel(message):
-    print(f"👑 /admin komutu: {message.from_user.id} (admin: {ADMIN_ID})")
-    if int(message.from_user.id) != int(ADMIN_ID):
-        bot.reply_to(message, "⛔ Yetkisiz erişim.")
-        return
-    stats(message)
-
-# ── Mini App spin sonucu ──────────────────────────────────────────────
+# ── Web app data ──────────────────────────────────────────────────────
 @bot.message_handler(content_types=['web_app_data'])
 def handle_web_app_data(message):
     try:
@@ -293,10 +262,8 @@ def handle_web_app_data(message):
 
         if data.get("win") and data.get("prize"):
             prize = data["prize"]
-            # İstatistik
             with spin_lock:
                 total_wins[prize] = total_wins.get(prize, 0) + 1
-
             bot.send_message(
                 message.chat.id,
                 f"🎉 *Tebrikler {name}!*\n\n"
@@ -319,9 +286,7 @@ def handle_web_app_data(message):
                     InlineKeyboardButton("🔥 Siteye Git", url=SITE_LINKI)
                 )
             )
-
         print(f"🎡 Spin sonucu: {user.id} -> {data}")
-
     except Exception as e:
         print(f"❌ WebApp data hatası: {e}")
 
