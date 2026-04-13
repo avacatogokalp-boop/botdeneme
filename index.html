@@ -319,7 +319,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     <div class="rcard-top" id="rTop">
       <div class="rcard-icon win" id="rIcon"><span id="rEmoji">🎉</span></div>
       <div class="rcard-title" id="rTitle">Tebrikler!</div>
-      <div class="rcard-badge" id="rBadge">500 TL Bonus</div>
+      <div class="rcard-badge" id="rBadge">100 Freespin</div>
     </div>
     <div class="rcard-bot">
       <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
@@ -340,20 +340,20 @@ const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.
 const USER_NAME = tg?.initDataUnsafe?.user?.first_name || '';
 const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
 
+// ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['500 TL','BONUS'],  bg:'#1c1100', stroke:'#d49500', tc:'#ffc200', icon:'🪙', win:true,  prize:'500 TL Bonus' },
-  { lines:['100','FREESPIN'],  bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin' },
-  { lines:['BÜYÜK','ÖDÜL'],    bg:'#180404', stroke:'#aa1515', tc:'#ff5555', icon:'🏆', win:true,  prize:'Büyük Ödül'   },
-  { lines:['10 TL','BELEŞ'],   bg:'#041209', stroke:'#0a7a35', tc:'#22ee66', icon:'💎', win:true,  prize:'10 TL Bedava' },
-  { lines:['ÖZEL','ÖDÜL'],     bg:'#120818', stroke:'#7a15aa', tc:'#cc44ff', icon:'🎁', win:true,  prize:'Özel Ödül'    },
-  { lines:['KAYBETTİN',''],    bg:'#101010', stroke:'#2a2a2a', tc:'#444',    icon:'😐', win:false, prize:null           },
-  { lines:['500 TL','BONUS'],  bg:'#1c1100', stroke:'#d49500', tc:'#ffc200', icon:'🪙', win:true,  prize:'500 TL Bonus' },
-  { lines:['100','FREESPIN'],  bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin' },
-  { lines:['BÜYÜK','ÖDÜL'],    bg:'#180404', stroke:'#aa1515', tc:'#ff5555', icon:'🏆', win:true,  prize:'Büyük Ödül'   },
-  { lines:['KAYBETTİN',''],    bg:'#101010', stroke:'#2a2a2a', tc:'#444',    icon:'😐', win:false, prize:null           },
-  { lines:['10 TL','BELEŞ'],   bg:'#041209', stroke:'#0a7a35', tc:'#22ee66', icon:'💎', win:true,  prize:'10 TL Bedava' },
-  { lines:['ÖZEL','ÖDÜL'],     bg:'#120818', stroke:'#7a15aa', tc:'#cc44ff', icon:'🎁', win:true,  prize:'Özel Ödül'    },
+  { lines:['100','FREESPIN'],        bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin'          },
+  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0a00', stroke:'#cc6600', tc:'#ffaa33', icon:'💰', win:true,  prize:'Özel Yatırım Bonusu'   },
+  { lines:['100₺','BAKİYE'],         bg:'#051a09', stroke:'#0a8a35', tc:'#22ee66', icon:'💵', win:true,  prize:'100₺ Bakiye'           },
+  { lines:['VİP','HEDİYE'],          bg:'#120818', stroke:'#8800cc', tc:'#dd55ff', icon:'👑', win:true,  prize:'VİP Hediye'            },
+  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
+  { lines:['100₺','BONUS BUY'],      bg:'#1c0f00', stroke:'#d49500', tc:'#ffc200', icon:'🎁', win:true,  prize:'100₺ Bonus Buy'        },
+  { lines:['200','FREESPIN'],        bg:'#060d1c', stroke:'#1155cc', tc:'#4488ff', icon:'🎰', win:true,  prize:'200 Freespin'          },
+  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
+  { lines:['200₺','BONUS BUY'],      bg:'#1c1200', stroke:'#bb8800', tc:'#ffcc00', icon:'🎁', win:true,  prize:'200₺ Bonus Buy'        },
+  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
 ];
+
 const N=SEGS.length, ARC=(2*Math.PI)/N;
 const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
@@ -493,15 +493,10 @@ function spin() {
   document.getElementById('spinInfo').textContent='İyi şanslar! 🍀';
 
   if(USER_ID) {
-    // İsim ve username de gönderiliyor — /start yazmadan çevirenlerin ismi kaydedilsin
     fetch('/api/use_spin', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        user_id: USER_ID,
-        name: USER_NAME,
-        username: USER_USERNAME
-      })
+      body: JSON.stringify({ user_id: USER_ID, name: USER_NAME, username: USER_USERNAME })
     }).catch(()=>{});
     localStorage.setItem(getSpinKey(), Date.now().toString());
   }
@@ -658,7 +653,7 @@ function playSpinStart(){
 }
 
 let lastTickAngle=0;
-const TICK_INTERVAL=(2*Math.PI)/12;
+const TICK_INTERVAL=(2*Math.PI)/10;
 function checkTick(a){
   if(Math.abs(a-lastTickAngle)>=TICK_INTERVAL){ lastTickAngle=a; playTick(); vibrate(8); }
 }
