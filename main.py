@@ -275,7 +275,7 @@ def handle_web_app_data(message):
                 f"👇 Ödülünü almak için siteye gir!",
                 parse_mode="Markdown",
                 reply_markup=InlineKeyboardMarkup().add(
-                    InlineKeyboardButton("🎁 Ödülü Al!", url=SITE_LINKI)
+                    InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
                 )
             )
         else:
@@ -287,7 +287,7 @@ def handle_web_app_data(message):
                 reply_markup=InlineKeyboardMarkup().add(
                     InlineKeyboardButton("👥 Arkadaşını Davet Et → +1 Spin", callback_data="get_invite_link")
                 ).add(
-                    InlineKeyboardButton("🔥 Siteye Git", url=SITE_LINKI)
+                    InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
                 )
             )
         print(f"🎡 Spin sonucu: {user.id} -> {data}")
