@@ -12,7 +12,7 @@ SITE_LINKI = "https://cutt.ly/deoKNC0g"
 GIF_URL = "https://i.ibb.co/QvJ5mZCY/14-07-25-Bonus-Gif-Betor-Spin-250x250.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_IDS = [6943377103]  # Buraya şefin ID'sini de ekleyebilirsin: [6943377103, SEFİN_ID]
+ADMIN_IDS = [6943377103]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
 
 spin_log     = {}
 bonus_spins  = {}
@@ -33,17 +33,14 @@ def get_today():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 def can_spin(user_id: int) -> bool:
-    if is_admin(user_id):
-        return True
-    if bonus_spins.get(user_id, 0) > 0:
-        return True
+    if is_admin(user_id): return True
+    if bonus_spins.get(user_id, 0) > 0: return True
     today = get_today()
     with spin_lock:
         return spin_log.get(user_id) != today
 
 def use_spin(user_id: int):
-    if is_admin(user_id):
-        return
+    if is_admin(user_id): return
     if bonus_spins.get(user_id, 0) > 0:
         with spin_lock:
             bonus_spins[user_id] -= 1
@@ -53,8 +50,7 @@ def use_spin(user_id: int):
         spin_log[user_id] = today
 
 def available_spins(user_id: int) -> int:
-    if is_admin(user_id):
-        return 99
+    if is_admin(user_id): return 99
     today = get_today()
     with spin_lock:
         daily = 0 if spin_log.get(user_id) == today else 1
@@ -126,7 +122,14 @@ def api_use_spin():
     user_id = data.get('user_id')
     if not user_id:
         return jsonify({"ok": False})
-    use_spin(int(user_id))
+    user_id = int(user_id)
+    # Kullanıcı /start yazmadan çark çevirdiyse burada isim kaydet
+    if user_id not in user_info:
+        user_info[user_id] = {
+            "name": data.get('name') or 'Bilinmiyor',
+            "username": data.get('username') or ''
+        }
+    use_spin(user_id)
     return jsonify({"ok": True})
 
 # ── /start ────────────────────────────────────────────────────────────
@@ -160,6 +163,7 @@ def start(message):
             except:
                 pass
 
+        # Kullanıcı bilgisini kaydet (her zaman güncelle)
         user_info[user_id] = {
             "name": message.from_user.first_name or "Bilinmiyor",
             "username": message.from_user.username or ""
@@ -242,11 +246,11 @@ def send_invite_link(call):
         parse_mode="Markdown"
     )
 
-# ── /stats ve /admin — ikisi de aynı fonksiyonu çağırır ──────────────
+# ── /stats ve /admin ──────────────────────────────────────────────────
 @bot.message_handler(commands=['stats', 'admin'])
 def admin_stats(message):
     user_id = message.from_user.id
-    print(f"📊 /{message.text.split()[0][1:]} komutu: {user_id} | Admin listesi: {ADMIN_IDS}")
+    print(f"📊 /{message.text.split()[0][1:]} komutu: {user_id} | Adminler: {ADMIN_IDS}")
     if not is_admin(user_id):
         bot.reply_to(message, "⛔ Yetkisiz erişim.")
         return
