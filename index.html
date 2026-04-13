@@ -3,298 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BetorSpin Premium</title>
+    <title>BetorSpin - Şans Çarkı</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* TEMEL AYARLAR - PREMIUM DARK MOD */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: radial-gradient(circle at center, #2a1810 0%, #000000 100%);
+            font-family: Arial, sans-serif;
+            background-color: #0c0c0c;
             color: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             height: 100vh;
             overflow: hidden;
-            -webkit-user-select: none;
         }
 
-        /* LOGO VE BAŞLIK */
         .header {
-            margin-top: 20px;
             text-align: center;
+            margin-bottom: 20px;
         }
+
         .logo {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             color: #fff;
-            letter-spacing: -1px;
-        }
-        .logo span { color: #ff6a00; }
-        .subtitle {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: #a08a7e;
-            margin-top: 5px;
-        }
-        .headline {
-            font-size: 24px;
-            margin-top: 15px;
-            font-weight: 300;
-            background: linear-gradient(to bottom, #fff, #a08a7e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
-        /* ÇARK ALANI - BAKIR ÇERÇEVE */
+        .logo span {
+            color: #ff4500;
+        }
+
         .wheel-container {
             position: relative;
-            width: 340px;
-            height: 340px;
-            margin: 30px 0;
-            padding: 10px;
-            background: linear-gradient(145deg, #4e3528, #1a0f0a);
-            border-radius: 50%;
-            box-shadow: 0 0 50px rgba(255, 106, 0, 0.2), inset 0 0 20px rgba(0,0,0,0.5);
+            width: 320px;
+            height: 320px;
         }
 
-        /* ÇARKIN KENDİSİ */
         #wheel {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 8px solid #b37e5f; /* Bakır Çerçeve */
+            border: 5px solid #ff4500;
             transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
-            overflow: hidden;
-            box-sizing: border-box;
-            background: #111;
         }
 
-        /* GÖSTERGE (OK) */
         .pointer {
             position: absolute;
             top: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             z-index: 10;
-            filter: drop-shadow(0 0 10px rgba(255,106,0,0.8));
         }
 
-        /* MERKEZ LOGO SÜSÜ */
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, #4e3528, #111);
-            border: 3px solid #b37e5f;
-            border-radius: 50%;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-            text-align: center;
-            color: #b37e5f;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-        }
-
-        /* ANA BUTON - KRİSTAL TURUNCU */
         .spin-button {
-            width: 280px;
-            height: 65px;
-            background: linear-gradient(180deg, #ff8c3a 0%, #d45500 100%);
+            margin-top: 30px;
+            width: 250px;
+            padding: 15px;
+            background-color: #ff4500;
             border: none;
-            border-radius: 50px;
-            color: white;
-            font-size: 22px;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 20px;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(212, 85, 0, 0.4), inset 0 2px 5px rgba(255,255,255,0.5);
-            transition: 0.2s;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
         }
 
-        .spin-button:active {
-            transform: scale(0.96);
-            box-shadow: 0 5px 15px rgba(212, 85, 0, 0.3);
-        }
-
-        /* ALT BİLGİ VE DAVET */
-        .info-text {
+        .info {
             margin-top: 20px;
             font-size: 14px;
-            color: #a08a7e;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            color: #aaa;
         }
 
-        .invite-button {
-            width: 280px;
-            padding: 15px;
+        .invite-btn {
             margin-top: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(160, 138, 126, 0.3);
-            border-radius: 15px;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .invite-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .invite-badge {
-            background: #ff6a00;
-            padding: 2px 10px;
+            padding: 10px 20px;
+            background-color: #222;
+            border: 1px solid #444;
             border-radius: 10px;
-            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            background-color: #ff4500;
+            padding: 2px 8px;
+            border-radius: 5px;
             font-size: 12px;
         }
-
-        canvas { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo">betor<span>spin.</span></div>
-        <div class="subtitle">Şans Çarkı</div>
-        <div class="headline">Çevir & KAZAN!</div>
+        <p>ŞANS ÇARKI</p>
+        <h2>Çevir & Kazan!</h2>
     </div>
 
     <div class="wheel-container">
-        <svg class="pointer" viewBox="0 0 50 50">
-            <path d="M25 50 L45 10 L25 20 L5 10 Z" fill="#ff6a00"/>
-            <circle cx="25" cy="10" r="5" fill="#fff"/>
-        </svg>
-        <div id="wheel">
-            <canvas id="wheelCanvas"></canvas>
-        </div>
-        <div class="wheel-center">betor<br>spin.</div>
+        <img src="https://img.freepik.com/free-vector/wheel-fortune-concept_23-2148467406.jpg" id="wheel" alt="Çark">
+        <div class="pointer">▼</div>
     </div>
 
-    <button id="spinBtn" class="spin-button" onclick="spinWheel()">ÇEVİR</button>
+    <button class="spin-button" onclick="spin()">ÇEVİR</button>
 
-    <div class="info-text">
-        <span id="spinCount">99</span> Çevirme Hakkın Var 🎯
+    <div class="info">
+        • 99 Çevirme Hakkın Var 🎯 •
     </div>
 
-    <a href="#" class="invite-button" onclick="inviteFriend()">
-        <span>👥 Arkadaşını Davet Et</span>
-        <span class="invite-badge">+1 Spin</span>
+    <a href="#" class="invite-btn">
+        👥 Arkadaşını Davet Et <span class="badge">+1 Spin</span>
     </a>
 
     <script>
-        // MOTOR AYARLARI (SENİN SİSTEMİNLE AYNI)
-        const canvas = document.getElementById('wheelCanvas');
-        const ctx = canvas.getContext('2d');
-        const spinBtn = document.getElementById('spinBtn');
-        const wheel = document.getElementById('wheel');
-        
-        // Çark Dilimleri (Renkler ve Yazılar Görsele Göre Modernize Edildi)
-        const segments = [
-            { text: "200 FS", color: "#1a2a3a", textColor: "#4dabff" }, // Mavi Neon
-            { text: "KAYBETTİN", color: "#111111", textColor: "#444" },
-            { text: "200₺ BONUS", color: "#2d1e15", textColor: "#ff9d6a" }, // Turuncu Neon
-            { text: "KAYBETTİN", color: "#111111", textColor: "#444" },
-            { text: "100 FS", color: "#1a2a3a", textColor: "#4dabff" },
-            { text: "YATIRIM BON.", color: "#2d1e15", textColor: "#ff9d6a" },
-            { text: "100₺ BAKIYE", color: "#1a2d1a", textColor: "#50ff50" }, // Yeşil Neon
-            { text: "VIP HEDİYE", color: "#2a1a2d", textColor: "#e050ff" }, // Mor Neon
-            { text: "KAYBETTİN", color: "#111111", textColor: "#444" },
-            { text: "100₺ BONUS", color: "#2d1e15", textColor: "#ff9d6a" }
-        ];
+        const webapp = window.Telegram.WebApp;
+        webapp.expand();
 
-        function drawWheel() {
-            const size = 500;
-            canvas.width = size;
-            canvas.height = size;
-            const center = size / 2;
-            const angleStep = (Math.PI * 2) / segments.length;
+        function spin() {
+            const wheel = document.getElementById('wheel');
+            const randomDegree = Math.floor(Math.random() * 360) + 1800;
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
 
-            segments.forEach((seg, i) => {
-                const angle = i * angleStep;
-                
-                // Dilim Çizimi
-                ctx.beginPath();
-                ctx.fillStyle = seg.color;
-                ctx.moveTo(center, center);
-                ctx.arc(center, center, center, angle, angle + angleStep);
-                ctx.fill();
-                
-                // Kenar Çizgisi
-                ctx.strokeStyle = "rgba(179, 126, 95, 0.2)";
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Yazı Çizimi
-                ctx.save();
-                ctx.translate(center, center);
-                ctx.rotate(angle + angleStep / 2);
-                ctx.textAlign = "right";
-                ctx.fillStyle = seg.textColor;
-                ctx.font = "bold 22px Arial";
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = seg.textColor;
-                ctx.fillText(seg.text, center - 40, 10);
-                ctx.restore();
-            });
-        }
-
-        let isSpinning = false;
-        function spinWheel() {
-            if (isSpinning) return;
-            isSpinning = true;
-            
-            // Senin Yönlendirme Mantığın Buraya Gelecek
-            // Simülasyon için rastgele döndürüyoruz:
-            const randomRotation = Math.floor(Math.random() * 360) + 1440; 
-            wheel.style.transform = `rotate(${randomRotation}px)`; // Kodunla uyumlu olsun diye dokunmadım
-
-            // Telegram Titreşim Efekti
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
-            }
-
-            // Çark durduğunda yönlendirme (Senin kodundaki redirect mantığı)
             setTimeout(() => {
-                // BURASI ÖNEMLİ: Senin mevcut "window.location.href" kodunu buraya ekleyebilirsin
-                // Örnek: window.location.href = "https://seninsiten.com";
-                isSpinning = false;
-                alert("Tebrikler! Siteye yönlendiriliyorsunuz...");
-            }, 5000);
-        }
-
-        function inviteFriend() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.openTelegramLink("https://t.me/share/url?url=BOTA_LINKIN");
-            }
-        }
-
-        drawWheel();
-        // Telegram WebApp Ayarları
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.expand();
-            window.Telegram.WebApp.ready();
+                // Senin orijinal yönlendirme kodun buraya gelecek
+                window.location.href = "SENIN_SITE_LINKIN"; 
+            }, 5500);
         }
     </script>
 </body>
