@@ -182,10 +182,16 @@ def start(message):
         ))
 
         text = (
-            "🎰 *Hoş Geldin!*\n\n"
-            f"{spin_status}\n"
-            "🎁 *%300 Hoş Geldin Bonusu*\n\n"
-            "👇 Şans çarkını çevirmek için butona tıkla!"
+            "🎰 *HOŞ GELDİN, KAZANMAYA HAZIR MISIN?*\n\n"
+            f"{spin_status}\n\n"
+            "✨ *BetorSpin* çarkına adım attın, şansını deneme zamanı!\n\n"
+            "🎡 *Şans Çarkın seni bekliyor:*\n"
+            "• 500 TL Bonus\n"
+            "• 100 Freespin\n"
+            "• Büyük Ödül\n"
+            "• ve daha fazlası...\n\n"
+            "⚡ Gecikmeden çevir, kazanmaya hemen başla!\n"
+            "👇 Aşağıdaki butona bas ve ilk spini ücretsiz kazan!"
         )
 
         try:
