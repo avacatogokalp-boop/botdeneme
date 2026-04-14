@@ -3,23 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Şans Çarkı - Betorspin</title>
+<title>Şans Çarkı - Betorspin Elite</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+/* Rajdhani Fontu - Profesyonel ve Keskin */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Rajdhani', -apple-system, sans-serif;
   background: #0a0a0a;
   min-height: 100vh;
   overflow-x: hidden;
+  color: #fff;
 }
 
 .bg {
   position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,69,0,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(255,120,0,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,69,0,0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(255,120,0,0.1) 0%, transparent 50%),
     #0a0a0a;
   z-index: 0;
 }
@@ -31,25 +35,26 @@ body {
   padding: 28px 16px 40px;
 }
 
-.logo { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
+.logo { font-size: 30px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; text-transform: uppercase; }
 .logo .w { color: #fff; }
 .logo .o { color: #ff4500; }
 .logo .d { color: #ff8c00; }
 
 .logo-line {
-  width: 48px; height: 2px;
+  width: 60px; height: 3px;
   background: linear-gradient(90deg, transparent, #ff4500, transparent);
   margin: 8px auto 6px;
 }
 .logo-sub {
-  font-size: 11px; font-weight: 700;
-  color: rgba(255,255,255,0.3);
-  letter-spacing: 4px; text-transform: uppercase;
+  font-size: 12px; font-weight: 600;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 5px; text-transform: uppercase;
   margin-bottom: 22px;
 }
 .main-title {
-  font-size: 30px; font-weight: 900; color: #fff;
-  text-align: center; margin-bottom: 22px; line-height: 1.2;
+  font-size: 34px; font-weight: 700; color: #fff;
+  text-align: center; margin-bottom: 22px; line-height: 1;
+  text-transform: uppercase;
 }
 .main-title em { font-style: normal; color: #ff4500; }
 
@@ -57,164 +62,129 @@ body {
   position: relative;
   width: 300px; height: 300px;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 .ring-glow {
-  position: absolute; inset: -10px; border-radius: 50%;
+  position: absolute; inset: -12px; border-radius: 50%;
   background: conic-gradient(#ff4500, #ff8c00, #ffc200, #ff8c00, #ff4500, #cc2200, #ff4500);
-  animation: spinRing 5s linear infinite;
-  opacity: 0.6;
+  animation: spinRing 6s linear infinite;
+  opacity: 0.7;
 }
-.ring-glow-mask { position: absolute; inset: -5px; border-radius: 50%; background: #0a0a0a; }
+.ring-glow-mask { position: absolute; inset: -6px; border-radius: 50%; background: #0a0a0a; }
 @keyframes spinRing { to { transform: rotate(360deg); } }
 
-#spotlight {
-  position: absolute; inset: 0; border-radius: 50%;
-  pointer-events: none; z-index: 10;
-  opacity: 0; transition: opacity 0.3s;
-}
-
 .pointer {
-  position: absolute; top: -8px; left: 50%;
+  position: absolute; top: -10px; left: 50%;
   transform: translateX(-50%);
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
-  filter: drop-shadow(0 3px 8px rgba(255,69,0,0.9));
+  filter: drop-shadow(0 4px 10px rgba(255,69,0,1));
 }
 .ptr-ball {
-  width: 16px; height: 16px; border-radius: 50%;
+  width: 18px; height: 18px; border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #fff 0%, #ff8c00 100%);
-  border: 2px solid rgba(255,255,255,0.6);
+  border: 2px solid rgba(255,255,255,0.8);
   margin-bottom: -2px; z-index: 1;
 }
 .ptr-tri {
   width: 0; height: 0;
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 20px solid #ff4500;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 24px solid #ff4500;
 }
 
 canvas#wheel {
   border-radius: 50%; position: relative; z-index: 5;
-  box-shadow: 0 0 0 3px #111, 0 0 0 5px rgba(255,69,0,0.25), 0 20px 50px rgba(0,0,0,0.9);
+  box-shadow: 0 0 0 4px #111, 0 0 0 7px rgba(255,69,0,0.3), 0 25px 60px rgba(0,0,0,1);
 }
 
-.btn-area { position: relative; margin-bottom: 14px; }
+.btn-area { position: relative; margin-bottom: 16px; width: 100%; max-width: 300px; }
 .btn-shine {
-  position: absolute; inset: -4px; border-radius: 50px;
+  position: absolute; inset: -5px; border-radius: 50px;
   background: linear-gradient(90deg, #ff4500, #ff8c00, #ffc200, #ff8c00, #ff4500);
   background-size: 300% auto;
-  animation: shine 2.5s linear infinite;
-  filter: blur(10px); opacity: 0.6;
+  animation: shine 3s linear infinite;
+  filter: blur(12px); opacity: 0.7;
 }
 @keyframes shine { to { background-position: 300% center; } }
 
-#spinBtn { position: relative; background: none; border: none; cursor: pointer; outline: none; }
+#spinBtn { position: relative; width: 100%; background: none; border: none; cursor: pointer; outline: none; }
 .btn-body {
   position: relative;
   background: linear-gradient(180deg, #ff5500 0%, #cc2200 45%, #991500 100%);
   color: #fff;
-  font-family: inherit; font-size: 22px; font-weight: 900;
-  letter-spacing: 5px; text-transform: uppercase;
-  border-radius: 50px; padding: 17px 88px;
-  border: 1px solid rgba(255,150,50,0.25);
-  box-shadow: 0 6px 0 #5a0800, inset 0 1px 0 rgba(255,255,255,0.12);
-  transition: transform .12s, box-shadow .12s;
+  font-family: inherit; font-size: 24px; font-weight: 700;
+  letter-spacing: 6px; text-transform: uppercase;
+  border-radius: 50px; padding: 18px 0;
+  border: 1px solid rgba(255,150,50,0.3);
+  box-shadow: 0 8px 0 #5a0800, inset 0 1px 0 rgba(255,255,255,0.2);
+  transition: transform .1s, box-shadow .1s;
 }
-#spinBtn:active:not(:disabled) .btn-body { transform: translateY(5px); box-shadow: 0 1px 0 #5a0800; }
+#spinBtn:active:not(:disabled) .btn-body { transform: translateY(6px); box-shadow: 0 2px 0 #5a0800; }
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; }
 
 .invite-btn {
-  margin-top: 14px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  background: rgba(255,255,255,0.04);
+  margin-top: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 14px;
-  padding: 13px 28px;
-  color: #fff; font-family: inherit; font-size: 14px; font-weight: 700;
+  border-radius: 16px;
+  padding: 14px 28px;
+  color: #fff; font-family: inherit; font-size: 15px; font-weight: 600;
   cursor: pointer; width: 100%; max-width: 300px;
-  transition: background .15s, border-color .15s;
 }
-.invite-btn:active { background: rgba(255,255,255,0.08); }
 .invite-badge {
   background: linear-gradient(135deg, #ff4500, #ff8c00);
-  color: #fff; font-size: 11px; font-weight: 800;
-  padding: 3px 8px; border-radius: 8px; letter-spacing: .5px;
-  white-space: nowrap;
+  color: #fff; font-size: 12px; font-weight: 700;
+  padding: 4px 10px; border-radius: 8px;
 }
 
 .spin-info {
-  font-size: 13px; font-weight: 600;
-  color: rgba(255,255,255,0.4);
-  display: flex; align-items: center; gap: 7px;
-  text-align: center; margin-top: 10px;
+  font-size: 14px; font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  display: flex; align-items: center; gap: 8px;
+  text-align: center; margin-top: 12px;
+  text-transform: uppercase; letter-spacing: 1px;
 }
 .spin-info::before, .spin-info::after {
   content: ''; display: block;
-  width: 5px; height: 5px; border-radius: 50%;
-  background: #ff4500; flex-shrink: 0;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #ff4500;
 }
 
 .no-spin-banner {
   display: none;
-  margin-top: 18px;
-  background: rgba(255,69,0,0.08);
+  margin-top: 20px;
+  background: rgba(255,69,0,0.1);
   border: 1px solid rgba(255,69,0,0.2);
-  border-radius: 16px;
-  padding: 18px 22px;
+  border-radius: 20px;
+  padding: 22px;
   text-align: center;
-  max-width: 300px;
+  max-width: 320px;
   width: 100%;
 }
-.no-spin-banner .ns-icon { font-size: 32px; margin-bottom: 6px; }
-.no-spin-banner .ns-title { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 4px; }
-.no-spin-banner .ns-text { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; margin-bottom: 10px; }
-
-.ns-countdown-wrap { margin-bottom: 12px; }
-.ns-countdown-label {
-  font-size: 10px; font-weight: 700;
-  color: rgba(255,255,255,0.25);
-  letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 4px;
-}
 .ns-countdown {
-  font-size: 22px; font-weight: 900;
+  font-size: 26px; font-weight: 700;
   color: #ff4500;
-  letter-spacing: 3px;
-  text-shadow: 0 0 14px rgba(255,69,0,0.4);
+  letter-spacing: 4px;
   font-variant-numeric: tabular-nums;
-}
-
-.no-spin-banner .ns-btn {
-  background: linear-gradient(135deg, #ff4500, #ff6a00);
-  color: #fff; font-family: inherit; font-size: 14px; font-weight: 900;
-  border: none; border-radius: 12px; padding: 12px 28px;
-  cursor: pointer; letter-spacing: 0.5px;
-  display: block; width: 100%; margin-bottom: 10px;
-}
-.no-spin-banner .ns-invite {
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.7);
-  font-family: inherit; font-size: 13px; font-weight: 700;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px; padding: 11px 28px;
-  cursor: pointer; display: block; width: 100%;
+  text-shadow: 0 0 15px rgba(255,69,0,0.5);
 }
 
 .overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.95);
   z-index: 200; align-items: center; justify-content: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
 }
 .overlay.show { display: flex; }
 
 .rcard {
-  width: 88%; max-width: 310px;
-  background: #141414;
-  border-radius: 26px; overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.07);
-  box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+  width: 90%; max-width: 340px;
+  background: #111;
+  border-radius: 32px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 50px 100px rgba(0,0,0,0.8);
   animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes popIn {
@@ -222,56 +192,42 @@ canvas#wheel {
   to   { transform: scale(1) translateY(0); opacity: 1; }
 }
 .rcard-top {
-  padding: 30px 24px 22px; text-align: center;
-  background: linear-gradient(180deg, rgba(255,69,0,0.12) 0%, transparent 100%);
+  padding: 40px 24px 30px; text-align: center;
+  background: linear-gradient(180deg, rgba(255,69,0,0.15) 0%, transparent 100%);
   border-bottom: 1px solid rgba(255,255,255,0.05);
 }
-.rcard-top.lose-top { background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%); }
-.rcard-icon {
-  width: 76px; height: 76px; border-radius: 22px;
-  margin: 0 auto 16px;
-  display: flex; align-items: center; justify-content: center; font-size: 38px;
-}
-.rcard-icon.win  { background: rgba(255,140,0,0.12); border: 1px solid rgba(255,140,0,0.25); }
-.rcard-icon.lose { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
-.rcard-title { font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 10px; }
+.rcard-title { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 15px; text-transform: uppercase; }
 .rcard-badge {
   display: inline-block;
   background: linear-gradient(135deg, #ff4500, #ff8c00);
-  color: #fff; font-size: 13px; font-weight: 800;
-  padding: 6px 18px; border-radius: 20px; letter-spacing: .5px;
+  color: #fff; font-size: 18px; font-weight: 700;
+  padding: 10px 28px; border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(255,69,0,0.4);
+  text-transform: uppercase;
 }
-.rcard-bot { padding: 20px 24px 26px; text-align: center; }
-.rcard-text { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 14px; }
+.rcard-bot { padding: 30px 28px 35px; text-align: center; }
 .rcard-btn {
   width: 100%;
   background: linear-gradient(135deg, #ff4500, #ff6a00);
-  color: #fff; font-family: inherit; font-size: 16px; font-weight: 900;
-  letter-spacing: 1px; text-transform: uppercase;
-  border: none; border-radius: 16px; padding: 17px;
-  cursor: pointer; box-shadow: 0 4px 24px rgba(255,69,0,0.45);
-  margin-bottom: 10px;
-}
-.rcard-btn.lose-btn {
-  background: linear-gradient(135deg, #1a1a2e, #2a2a4a);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-.rcard-invite-btn {
-  width: 100%;
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.75);
-  font-family: inherit; font-size: 14px; font-weight: 700;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 14px; padding: 13px;
-  cursor: pointer;
+  color: #fff; font-family: inherit; font-size: 18px; font-weight: 700;
+  border: none; border-radius: 18px; padding: 20px;
+  cursor: pointer; box-shadow: 0 15px 35px rgba(255,69,0,0.5);
+  text-transform: uppercase; letter-spacing: 1px;
 }
 
-canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; }
+#adminBadge {
+  position: fixed; top: 12px; right: 12px;
+  background: rgba(255,69,0,0.2);
+  border: 1px solid #ff4500;
+  padding: 5px 12px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; color: #ff4500;
+  z-index: 100; display: none; letter-spacing: 1px;
+}
 </style>
 </head>
 <body>
 <div class="bg"></div>
+<div id="adminBadge">ADMIN MODE</div>
 
 <div class="container">
   <div class="logo"><span class="w">betor</span><span class="o">spin</span><span class="d">.</span></div>
@@ -284,7 +240,6 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     <div class="ring-glow-mask"></div>
     <div class="pointer"><div class="ptr-ball"></div><div class="ptr-tri"></div></div>
     <canvas id="wheel" width="286" height="286"></canvas>
-    <canvas id="spotlight" width="286" height="286"></canvas>
   </div>
 
   <div class="btn-area">
@@ -297,98 +252,114 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
   <div class="spin-info" id="spinInfo">Yükleniyor...</div>
 
   <button class="invite-btn" onclick="shareInvite()">
-    👥 Arkadaşını Davet Et
+    Arkadaşını Davet Et
     <span class="invite-badge">+1 Spin</span>
   </button>
 
   <div class="no-spin-banner" id="noSpinBanner">
-    <div class="ns-icon">⏳</div>
-    <div class="ns-title">Bugünkü Hakkını Kullandın!</div>
-    <div class="ns-text">Yeni spin hakkın için kalan süre:</div>
-    <div class="ns-countdown-wrap">
-      <div class="ns-countdown-label">Yenileniyor</div>
-      <div class="ns-countdown" id="nsCountdown">00:00:00</div>
-    </div>
-    <button class="ns-btn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
-    <button class="ns-invite" onclick="shareInvite()">👥 Davet Et → Hemen +1 Spin Kazan</button>
+    <div class="ns-title" style="font-weight:700; margin-bottom:10px; color:rgba(255,255,255,0.6);">BUGÜNKÜ HAKKIN BİTTİ</div>
+    <div class="ns-countdown" id="nsCountdown">00:00:00</div>
+    <button class="rcard-btn" style="margin-top:20px;" onclick="goSite()">SİTEYE GİT VE OYNA</button>
   </div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="rcard">
     <div class="rcard-top" id="rTop">
-      <div class="rcard-icon win" id="rIcon"><span id="rEmoji">🎉</span></div>
-      <div class="rcard-title" id="rTitle">Tebrikler!</div>
-      <div class="rcard-badge" id="rBadge">100 Freespin</div>
+      <div class="rcard-title" id="rTitle">TEBRİKLER!</div>
+      <div id="rBadge" class="rcard-badge">ÖDÜL</div>
     </div>
     <div class="rcard-bot">
-      <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
+      <div id="rText" style="color:rgba(255,255,255,0.5); margin-bottom:25px; font-size:15px; font-weight:500;">Ödülün hesabına tanımlandı!</div>
       <button class="rcard-btn" id="rBtn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
-      <button class="rcard-invite-btn" id="rInviteBtn" onclick="shareInvite()">👥 Arkadaşını Davet Et → +1 Spin</button>
+      <button onclick="closeOverlay()" style="background:none; border:none; color:rgba(255,255,255,0.3); margin-top:15px; font-weight:600; cursor:pointer;">KAPAT</button>
     </div>
   </div>
 </div>
 
-<canvas id="confetti"></canvas>
-
 <script>
 const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#0a0a0a'); tg.setBackgroundColor('#0a0a0a'); }
+const ADMIN_ID = "243111766253";
+const USER_ID = String(tg?.initDataUnsafe?.user?.id || 'guest');
 
-const urlParams = new URLSearchParams(window.location.search);
-const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.id || null;
-const USER_NAME = tg?.initDataUnsafe?.user?.first_name || '';
-const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
+if (tg) { tg.ready(); tg.expand(); }
+if (USER_ID === ADMIN_ID) document.getElementById('adminBadge').style.display = 'block';
+
+// ── SES VE TİTREŞİM ──────────────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx = null;
+function getACtx() { if (!actx) actx = new AudioCtx(); return actx; }
+function vibrate(p) { if (navigator.vibrate) navigator.vibrate(p); if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
+
+function playTick() {
+  try {
+    const a = getACtx();
+    const o = a.createOscillator();
+    const g = a.createGain();
+    o.connect(g); g.connect(a.destination);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(500, a.currentTime);
+    o.frequency.exponentialRampToValueAtTime(150, a.currentTime + 0.07);
+    g.gain.setValueAtTime(0.18, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.07);
+    o.start(); o.stop(a.currentTime + 0.07);
+  } catch (e) {}
+}
+
+function playWin() {
+  try {
+    const a = getACtx();
+    [523, 659, 784, 1047].forEach((freq, i) => {
+      const o = a.createOscillator();
+      const g = a.createGain();
+      o.connect(g); g.connect(a.destination);
+      o.type = 'triangle';
+      const t = a.currentTime + i * 0.12;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.25, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      o.start(t); o.stop(t + 0.4);
+    });
+    vibrate([50, 30, 80, 30, 150]);
+  } catch (e) {}
+}
+
+function playLose() {
+  try {
+    const a = getACtx();
+    [300, 220].forEach((freq, i) => {
+      const o = a.createOscillator();
+      const g = a.createGain();
+      o.connect(g); g.connect(a.destination);
+      o.type = 'sawtooth';
+      const t = a.currentTime + i * 0.2;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.15, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      o.start(t); o.stop(t + 0.4);
+    });
+    vibrate([100, 50, 100]);
+  } catch (e) {}
+}
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin'          },
-  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0a00', stroke:'#cc6600', tc:'#ffaa33', icon:'💰', win:true,  prize:'Özel Yatırım Bonusu'   },
-  { lines:['100₺','BAKİYE'],         bg:'#051a09', stroke:'#0a8a35', tc:'#22ee66', icon:'💵', win:true,  prize:'100₺ Bakiye'            },
-  { lines:['VİP','HEDİYE'],          bg:'#120818', stroke:'#8800cc', tc:'#dd55ff', icon:'👑', win:true,  prize:'VİP Hediye'            },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['100₺','BONUS BUY'],      bg:'#1c0f00', stroke:'#d49500', tc:'#ffc200', icon:'🎁', win:true,  prize:'100₺ Bonus Buy'        },
-  { lines:['200','FREESPIN'],         bg:'#060d1c', stroke:'#1155cc', tc:'#4488ff', icon:'🎰', win:true,  prize:'200 Freespin'          },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['200₺','BONUS BUY'],      bg:'#1c1200', stroke:'#bb8800', tc:'#ffcc00', icon:'🎁', win:true,  prize:'200₺ Bonus Buy'        },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
+  { lines:['KAYBETTİN'],         bg:'#0a0a0a', stroke:'#222', tc:'#666', win:false, prize:null },
+  { lines:['200','BONUS BUY'],   bg:'#2a0a0a', stroke:'#4a1a1a', tc:'#ff6666', win:true, prize:'200 Bonus Buy' },
+  { lines:['+1','SPIN'],         bg:'#1a1a1a', stroke:'#ff8c00', tc:'#ffffff', win:true, prize:'+1 Spin', extra:true },
+  { lines:['100','FREESPIN'],    bg:'#0a1a3a', stroke:'#1a2a4a', tc:'#77b5ff', win:true, prize:'100 Freespin' },
+  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#2a1a00', stroke:'#4a2a1a', tc:'#ffcc66', win:true, prize:'Yatırım Bonusu' },
+  { lines:['100₺','BAKİYE'],     bg:'#0a2a10', stroke:'#1a4a1a', tc:'#66ff99', win:true, prize:'100₺ Bakiye' },
+  { lines:['VIP','GIFT'],        bg:'#220a30', stroke:'#4a1a5a', tc:'#ee99ff', win:true, prize:'VIP Gift' },
+  { lines:['KAYBETTİN'],         bg:'#0a0a0a', stroke:'#222', tc:'#666', win:false, prize:null },
+  { lines:['200','BONUS BUY'],   bg:'#0a1a3a', stroke:'#1a2a4a', tc:'#77b5ff', win:true, prize:'200 Bonus Buy' },
+  { lines:['100','FREESPIN'],    bg:'#2a1a00', stroke:'#4a2a1a', tc:'#ffcc66', win:true, prize:'100 Freespin' },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
 const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
-const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
 const CX=143, CY=143, R=138;
-let angle=0, spinning=false, spinAllowed=false;
-let countdownInterval=null;
-
-function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
-
-function updateCountdown() {
-  const el = document.getElementById('nsCountdown');
-  if (!el) return;
-  const lastSpin = localStorage.getItem(getSpinKey());
-  let target;
-  if (lastSpin) {
-    target = new Date(parseInt(lastSpin) + 24 * 60 * 60 * 1000);
-  } else {
-    target = new Date();
-    target.setUTCHours(24, 0, 0, 0);
-  }
-  const diff = target - new Date();
-  if (diff <= 0) { clearInterval(countdownInterval); countdownInterval = null; checkSpinRight(); return; }
-  const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-  const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-  const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-  el.textContent = `${h}:${m}:${s}`;
-}
-function startCountdown() {
-  updateCountdown();
-  if (countdownInterval) clearInterval(countdownInterval);
-  countdownInterval = setInterval(updateCountdown, 1000);
-}
-function stopCountdown() {
-  if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
-}
+let angle=0, spinning=false, spinAllowed=true;
 
 function draw(a) {
   ctx.clearRect(0,0,286,286);
@@ -398,265 +369,140 @@ function draw(a) {
     ctx.fillStyle=seg.bg; ctx.fill();
     ctx.strokeStyle=seg.stroke; ctx.lineWidth=1.5; ctx.stroke();
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
-    const ls=seg.lines.filter(l=>l), fs=ls.length>1?9:11;
-    ctx.font=`900 ${fs}px -apple-system,Arial,sans-serif`;
+    const ls=seg.lines, fs=ls.length>1?10:12;
+    ctx.font=`700 ${fs}px Rajdhani`;
+    ctx.shadowColor = 'rgba(0,0,0,0.9)'; ctx.shadowBlur = 5;
     ctx.fillStyle=seg.tc;
     const lh=fs+4, oy=-(ls.length-1)*lh/2;
-    ls.forEach((l,li)=>ctx.fillText(l,R-9,oy+li*lh+fs*0.35));
+    ls.forEach((l,li)=>ctx.fillText(l,R-12,oy+li*lh+fs*0.35));
     ctx.restore();
   }
-  for(let i=0;i<N;i++){
-    const a2=a+i*ARC;
-    ctx.beginPath(); ctx.moveTo(CX,CY);
-    ctx.lineTo(CX+R*Math.cos(a2),CY+R*Math.sin(a2));
-    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1; ctx.stroke();
-  }
-  ctx.beginPath(); ctx.arc(CX,CY,R,0,2*Math.PI);
-  ctx.strokeStyle='#ff4500'; ctx.lineWidth=3; ctx.stroke();
-  ctx.beginPath(); ctx.arc(CX,CY,R-5,0,2*Math.PI);
-  ctx.strokeStyle='rgba(255,69,0,0.15)'; ctx.lineWidth=8; ctx.stroke();
-  const hg=ctx.createRadialGradient(CX-8,CY-8,2,CX,CY,34);
-  hg.addColorStop(0,'#3a3a3a'); hg.addColorStop(.5,'#1a1a1a'); hg.addColorStop(1,'#0d0d0d');
+  // Merkez Logo
   ctx.beginPath(); ctx.arc(CX,CY,34,0,2*Math.PI);
-  ctx.fillStyle=hg; ctx.fill();
-  ctx.strokeStyle='#ff4500'; ctx.lineWidth=2.5; ctx.stroke();
-  ctx.beginPath(); ctx.arc(CX,CY,26,0,2*Math.PI);
-  ctx.strokeStyle='rgba(255,69,0,0.2)'; ctx.lineWidth=1; ctx.stroke();
-  ctx.textAlign='center';
-  ctx.font='800 8px -apple-system,Arial,sans-serif';
-  ctx.fillStyle='#ff4500'; ctx.fillText('betor',CX,CY-2);
-  ctx.fillStyle='#fff'; ctx.fillText('spin.',CX,CY+9);
-}
-draw(angle);
-
-function drawSpotlight(a, idx, alpha) {
-  sctx.clearRect(0,0,286,286);
-  if(alpha<=0) return;
-  sctx.save();
-  sctx.fillStyle=`rgba(0,0,0,${alpha*0.72})`;
-  sctx.beginPath(); sctx.arc(CX,CY,R,0,2*Math.PI); sctx.fill();
-  const s=a+idx*ARC, e=s+ARC;
-  sctx.globalCompositeOperation='destination-out';
-  sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R,s,e); sctx.closePath();
-  sctx.fillStyle=`rgba(255,255,255,${alpha})`; sctx.fill();
-  sctx.restore();
-  sctx.save();
-  sctx.globalAlpha=alpha*0.9;
-  const seg=SEGS[idx], mid=s+ARC/2;
-  const grd=sctx.createRadialGradient(CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),2,CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),R*0.5);
-  grd.addColorStop(0,seg.tc+'aa'); grd.addColorStop(1,'transparent');
-  sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R,s,e); sctx.closePath();
-  sctx.fillStyle=grd; sctx.globalCompositeOperation='source-over'; sctx.fill();
-  sctx.restore();
-}
-function animateSpotlight(a,idx){
-  sc.style.opacity='1'; let alpha=0,t0=null;
-  function frame(ts){ if(!t0)t0=ts; alpha=Math.min((ts-t0)/600,1); drawSpotlight(a,idx,alpha); if(alpha<1)requestAnimationFrame(frame); }
-  requestAnimationFrame(frame);
-}
-function clearSpotlight(){ sc.style.opacity='0'; sctx.clearRect(0,0,286,286); }
-
-async function checkSpinRight() {
-  if(!USER_ID){ enableSpin(); return; }
-  try {
-    const res = await fetch(`/api/check_spin?user_id=${USER_ID}`);
-    const data = await res.json();
-    if(data.allowed) enableSpin(data.spins);
-    else disableSpin();
-  } catch(e) { enableSpin(); }
+  ctx.fillStyle='#111'; ctx.fill();
+  ctx.strokeStyle='#ff4500'; ctx.lineWidth=2; ctx.stroke();
+  ctx.textAlign='center'; ctx.font='700 9px Rajdhani';
+  ctx.fillStyle='#ff4500'; ctx.fillText('BETOR',CX,CY-2);
+  ctx.fillStyle='#fff'; ctx.fillText('SPIN.',CX,CY+8);
 }
 
-function enableSpin(spins) {
+function checkSpinRight() {
+  if (USER_ID === ADMIN_ID) {
+    spinAllowed = true;
+    document.getElementById('spinBtn').disabled = false;
+    document.getElementById('spinInfo').textContent = 'Sınırsız Hak (Admin)';
+    return;
+  }
+  const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
+  if (lastSpin) {
+    const diff = Date.now() - parseInt(lastSpin);
+    if (diff < 24 * 60 * 60 * 1000) {
+      spinAllowed = false;
+      document.getElementById('spinBtn').disabled = true;
+      document.getElementById('noSpinBanner').style.display = 'block';
+      document.getElementById('spinInfo').textContent = 'Hakkın Bitti';
+      return;
+    }
+  }
   spinAllowed = true;
   document.getElementById('spinBtn').disabled = false;
-  const s = spins || 1;
-  document.getElementById('spinInfo').textContent = `${s} Çevirme Hakkın Var 🎯`;
-  document.getElementById('noSpinBanner').style.display = 'none';
-  stopCountdown();
+  document.getElementById('spinInfo').textContent = '1 Çevirme Hakkın Var';
 }
-
-function disableSpin() {
-  spinAllowed = false;
-  document.getElementById('spinBtn').disabled = true;
-  document.getElementById('spinInfo').textContent = 'Bugünkü hakkını kullandın ⏳';
-  document.getElementById('noSpinBanner').style.display = 'block';
-  startCountdown();
-}
-
-checkSpinRight();
 
 function spin() {
   if(spinning||!spinAllowed) return;
   spinning=true; spinAllowed=false;
-  clearSpotlight();
   document.getElementById('spinBtn').disabled=true;
-  document.getElementById('spinInfo').textContent='İyi şanslar! 🍀';
+  document.getElementById('spinInfo').textContent='BOL ŞANS!';
+  getACtx().resume();
 
-  if(USER_ID) {
-    fetch('/api/use_spin', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ user_id: USER_ID, name: USER_NAME, username: USER_USERNAME })
-    }).catch(()=>{});
-    localStorage.setItem(getSpinKey(), Date.now().toString());
-  }
-
-  playSpinStart();
-  const total=(6+Math.random()*4)*2*Math.PI+Math.random()*2*Math.PI;
-  const dur=4500, start=angle; let t0=null;
+  const total=(10+Math.random()*6)*2*Math.PI;
+  const dur=6000, start=angle; let t0=null, lastTick = start;
+  
   function frame(ts){
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
-    angle=start+total*easeOut(prog);
-    draw(angle); checkTick(angle);
+    // Daha pürüzsüz ve yavaş duruş için easeOut (power 5)
+    angle=start+total*(1-Math.pow(1-prog,5));
+    
+    if (Math.abs(angle - lastTick) >= (2 * Math.PI / 18)) {
+      lastTick = angle;
+      playTick();
+      vibrate(8);
+    }
+
+    draw(angle);
     if(prog<1) requestAnimationFrame(frame);
-    else { spinning=false; showResult(); }
+    else { 
+      spinning=false; 
+      const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+      const idx=Math.floor(norm/ARC)%N;
+      showResult(SEGS[idx]);
+    }
   }
   requestAnimationFrame(frame);
 }
-function easeOut(t){ return 1-Math.pow(1-t,4.5); }
 
-function showResult() {
-  const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
-  const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
-  animateSpotlight(angle,idx);
-  document.getElementById('rEmoji').textContent=seg.icon;
-  if(seg.win){
-    document.getElementById('rIcon').className='rcard-icon win';
-    document.getElementById('rTop').className='rcard-top';
-    document.getElementById('rTitle').textContent='🎉 Tebrikler!';
-    document.getElementById('rBadge').textContent=seg.prize;
-    document.getElementById('rBadge').style.display='inline-block';
-    document.getElementById('rText').textContent=`${seg.prize} kazandın! Hemen siteye gir ve ödülünü al!`;
-    document.getElementById('rBtn').className='rcard-btn';
-    document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
-    document.getElementById('rInviteBtn').style.display='block';
-    confetti(); playWin();
-    if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:seg.prize,win:true}));
+function showResult(res) {
+  const overlay = document.getElementById('overlay');
+  if (res.extra) {
+    document.getElementById('rTitle').textContent = 'HARİKA!';
+    document.getElementById('rBadge').textContent = '+1 SPIN';
+    document.getElementById('rText').textContent = 'Bir hak daha kazandın, tekrar çevir!';
+    spinAllowed = true;
+    playWin();
   } else {
-    document.getElementById('rIcon').className='rcard-icon lose';
-    document.getElementById('rTop').className='rcard-top lose-top';
-    document.getElementById('rTitle').textContent='Bu Sefer Olmadı 😔';
-    document.getElementById('rBadge').style.display='none';
-    document.getElementById('rText').textContent='Üzülme! Arkadaşını davet et, +1 Spin kazan 🎡';
-    document.getElementById('rBtn').className='rcard-btn lose-btn';
-    document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
-    document.getElementById('rInviteBtn').style.display='block';
-    playLose();
-    if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
+    if (USER_ID !== ADMIN_ID) localStorage.setItem(`last_spin_${USER_ID}`, Date.now().toString());
+    if (res.win) {
+      document.getElementById('rTitle').textContent = 'TEBRİKLER!';
+      document.getElementById('rBadge').textContent = res.prize;
+      document.getElementById('rText').textContent = 'Ödülün hesabına tanımlandı!';
+      playWin();
+    } else {
+      document.getElementById('rTitle').textContent = 'OLMADI';
+      document.getElementById('rBadge').textContent = 'KAYIP';
+      document.getElementById('rText').textContent = 'Yarın tekrar dene veya davet et!';
+      playLose();
+    }
   }
-  setTimeout(()=>document.getElementById('overlay').classList.add('show'), 800);
-  setTimeout(()=>{ if(!spinAllowed) disableSpin(); }, 1000);
+  overlay.classList.add('show');
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').classList.remove('show');
+  checkSpinRight();
 }
 
 function shareInvite() {
-  if(!USER_ID){ goSiteDirect(); return; }
-  const botUsername = 'PrimeXBos_bot';
-  const link = `https://t.me/${botUsername}?start=ref_${USER_ID}`;
-  if(tg) {
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('🎰 Betorspin Şans Çarkı\'nı dene! Günlük spin çevir, bonus kazan!')}`);
-  } else {
-    navigator.clipboard?.writeText(link).then(()=>alert('Davet linki kopyalandı!')).catch(()=>{});
-  }
-  setTimeout(()=>checkSpinRight(), 3000);
+  const link = `https://t.me/PrimeXBos_bot?start=ref_${USER_ID}`;
+  if(tg) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Betorspin Şans Çarkını dene!`);
+  else { navigator.clipboard.writeText(link); alert('Link kopyalandı!'); }
 }
 
 function goSite(){
-  document.getElementById('overlay').classList.remove('show');
-  clearSpotlight();
-  if(tg){ tg.openLink('https://cutt.ly/7tF5Ow3K'); setTimeout(()=>tg.close(),500); }
-  else window.open('https://cutt.ly/7tF5Ow3K','_blank');
-}
-function goSiteDirect(){
-  if(tg) tg.close();
+  if(tg) tg.openLink('https://cutt.ly/7tF5Ow3K');
   else window.open('https://cutt.ly/7tF5Ow3K','_blank');
 }
 
-function confetti(){
-  const cc=document.getElementById('confetti');
-  cc.width=window.innerWidth; cc.height=window.innerHeight;
-  const cx2=cc.getContext('2d');
-  const cols=['#ff4500','#ff8c00','#ffc200','#ffffff','#ff6b6b','#4a8fff','#22ee66'];
-  const ps=Array.from({length:110},()=>({
-    x:Math.random()*cc.width, y:-20-Math.random()*80,
-    w:5+Math.random()*8, h:3+Math.random()*4,
-    c:cols[Math.floor(Math.random()*cols.length)],
-    vx:(Math.random()-.5)*5, vy:3+Math.random()*4,
-    rot:Math.random()*360, rs:(Math.random()-.5)*10, a:1
-  }));
-  let raf;
-  function go(){
-    cx2.clearRect(0,0,cc.width,cc.height); let alive=false;
-    ps.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rs; p.vy+=0.06;
-      if(p.y<cc.height+20) alive=true; else p.a=Math.max(0,p.a-.02);
-      cx2.save(); cx2.globalAlpha=Math.max(0,p.a);
-      cx2.translate(p.x,p.y); cx2.rotate(p.rot*Math.PI/180);
-      cx2.fillStyle=p.c; cx2.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-      cx2.restore();
-    });
-    alive?raf=requestAnimationFrame(go):cx2.clearRect(0,0,cc.width,cc.height);
+setInterval(() => {
+  if (USER_ID === ADMIN_ID) return;
+  const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
+  if (lastSpin) {
+    const diff = (parseInt(lastSpin) + 24 * 60 * 60 * 1000) - Date.now();
+    if (diff <= 0) {
+      document.getElementById('noSpinBanner').style.display = 'none';
+      checkSpinRight();
+    } else {
+      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+      document.getElementById('nsCountdown').textContent = `${h}:${m}:${s}`;
+    }
   }
-  cancelAnimationFrame(raf); go();
-  setTimeout(()=>{cancelAnimationFrame(raf);cx2.clearRect(0,0,cc.width,cc.height);},5000);
-}
+}, 1000);
 
-const AudioCtx=window.AudioContext||window.webkitAudioContext;
-let actx=null;
-function getACtx(){ if(!actx) actx=new AudioCtx(); return actx; }
-function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
-
-function playTick(){
-  try{
-    const a=getACtx(),o=a.createOscillator(),g=a.createGain();
-    o.connect(g); g.connect(a.destination);
-    o.type='sine'; o.frequency.setValueAtTime(600,a.currentTime); o.frequency.exponentialRampToValueAtTime(200,a.currentTime+0.06);
-    g.gain.setValueAtTime(0.18,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.06);
-    o.start(); o.stop(a.currentTime+0.06);
-  }catch(e){}
-}
-function playWin(){
-  try{
-    const a=getACtx(),notes=[523,659,784,1047];
-    notes.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='triangle';
-      const t=a.currentTime+i*0.13;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
-      o.start(t); o.stop(t+0.25);
-    });
-    vibrate([50,30,80,30,150]);
-  }catch(e){}
-}
-function playLose(){
-  try{
-    const a=getACtx(),notes=[300,220];
-    notes.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='sawtooth';
-      const t=a.currentTime+i*0.18;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.15,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-      o.start(t); o.stop(t+0.3);
-    });
-    vibrate([100,50,100]);
-  }catch(e){}
-}
-function playSpinStart(){
-  try{
-    const a=getACtx(),o=a.createOscillator(),g=a.createGain();
-    o.connect(g); g.connect(a.destination); o.type='sine';
-    o.frequency.setValueAtTime(200,a.currentTime); o.frequency.exponentialRampToValueAtTime(600,a.currentTime+0.3);
-    g.gain.setValueAtTime(0.15,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.3);
-    o.start(); o.stop(a.currentTime+0.3);
-    vibrate([30,20,30]);
-  }catch(e){}
-}
-
-let lastTickAngle=0;
-const TICK_INTERVAL=(2*Math.PI)/10;
-function checkTick(a){
-  if(Math.abs(a-lastTickAngle)>=TICK_INTERVAL){ lastTickAngle=a; playTick(); vibrate(8); }
-}
+checkSpinRight();
+draw(0);
 </script>
 </body>
 </html>
