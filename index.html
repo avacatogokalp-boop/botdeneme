@@ -7,9 +7,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
-
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
 body {
   font-family: 'Rajdhani', -apple-system, sans-serif;
   background: #0a0a0a;
@@ -17,7 +15,6 @@ body {
   overflow-x: hidden;
   color: #fff;
 }
-
 .bg {
   position: fixed; inset: 0;
   background:
@@ -26,21 +23,18 @@ body {
     #0a0a0a;
   z-index: 0;
 }
-
 .container {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; align-items: center;
   min-height: 100vh;
   padding: 28px 16px 60px;
 }
-
 @keyframes wheelIntro {
   0% { transform: scale(0.85); opacity: 0; filter: blur(10px); }
   100% { transform: scale(1); opacity: 1; filter: blur(0); }
 }
 @keyframes spinRing { to { transform: rotate(360deg); } }
 @keyframes shine { to { background-position: 300% center; } }
-
 .wheel-wrap {
   position: relative;
   width: 300px; height: 300px;
@@ -50,7 +44,6 @@ body {
   transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .wheel-wrap.spinning { transform: scale(1.04); }
-
 .ring-glow {
   position: absolute; inset: -12px; border-radius: 50%;
   background: conic-gradient(#ff4500, #ff8c00, #ffc200, #ff8c00, #ff4500, #cc2200, #ff4500);
@@ -58,7 +51,6 @@ body {
   opacity: 0.7;
 }
 .ring-glow-mask { position: absolute; inset: -6px; border-radius: 50%; background: #0a0a0a; }
-
 .pointer {
   position: absolute; top: -10px; left: 50%;
   transform: translateX(-50%);
@@ -78,12 +70,10 @@ body {
   border-right: 10px solid transparent;
   border-top: 24px solid #ff4500;
 }
-
 canvas#wheel {
   border-radius: 50%; position: relative; z-index: 5;
   box-shadow: 0 0 0 4px #111, 0 0 0 7px rgba(255,69,0,0.3), 0 25px 60px rgba(0,0,0,1);
 }
-
 .btn-area { position: relative; margin-bottom: 16px; width: 100%; max-width: 300px; }
 .btn-shine {
   position: absolute; inset: -5px; border-radius: 50px;
@@ -92,7 +82,6 @@ canvas#wheel {
   animation: shine 3s linear infinite;
   filter: blur(12px); opacity: 0.7;
 }
-
 #spinBtn { position: relative; width: 100%; background: none; border: none; cursor: pointer; outline: none; }
 .btn-body {
   position: relative;
@@ -107,7 +96,6 @@ canvas#wheel {
 }
 #spinBtn:active:not(:disabled) .btn-body { transform: translateY(6px); box-shadow: 0 2px 0 #5a0800; }
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; }
-
 .logo { font-size: 30px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; text-transform: uppercase; cursor: pointer; }
 .logo .w { color: #fff; }
 .logo .o { color: #ff4500; }
@@ -116,13 +104,10 @@ canvas#wheel {
 .logo-sub { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); letter-spacing: 5px; text-transform: uppercase; margin-bottom: 22px; }
 .main-title { font-size: 34px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 22px; line-height: 1; text-transform: uppercase; }
 .main-title em { font-style: normal; color: #ff4500; }
-
 .spin-info { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 8px; text-align: center; margin-top: 12px; text-transform: uppercase; letter-spacing: 1px; }
 .spin-info::before, .spin-info::after { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #ff4500; }
-
 .no-spin-banner { display: none; margin-top: 20px; background: rgba(255,69,0,0.1); border: 1px solid rgba(255,69,0,0.2); border-radius: 20px; padding: 22px; text-align: center; max-width: 320px; width: 100%; }
 .ns-countdown { font-size: 26px; font-weight: 700; color: #ff4500; letter-spacing: 4px; font-variant-numeric: tabular-nums; text-shadow: 0 0 15px rgba(255,69,0,0.5); }
-
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
 .overlay.show { display: flex; }
 .rcard { width: 90%; max-width: 340px; background: #111; border-radius: 32px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 50px 100px rgba(0,0,0,0.8); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -131,7 +116,6 @@ canvas#wheel {
 .rcard-badge { display: inline-block; background: linear-gradient(135deg, #ff4500, #ff8c00); color: #fff; font-size: 18px; font-weight: 700; padding: 10px 28px; border-radius: 50px; box-shadow: 0 10px 25px rgba(255,69,0,0.4); text-transform: uppercase; }
 .rcard-bot { padding: 30px 28px 35px; text-align: center; }
 .rcard-btn { width: 100%; background: linear-gradient(135deg, #ff4500, #ff6a00); color: #fff; font-family: inherit; font-size: 18px; font-weight: 700; border: none; border-radius: 18px; padding: 20px; cursor: pointer; box-shadow: 0 15px 35px rgba(255,69,0,0.5); text-transform: uppercase; letter-spacing: 1px; }
-
 #adminBadge {
   position: fixed; top: 12px; right: 12px;
   background: rgba(255,69,0,0.2);
@@ -141,46 +125,66 @@ canvas#wheel {
   z-index: 100; display: none; letter-spacing: 1px;
   box-shadow: 0 0 15px rgba(255,69,0,0.3);
 }
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.loading-spinner {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+}
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255,69,0,0.2);
+  border-top-color: #ff4500;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
 <div class="bg"></div>
 <div id="adminBadge">SYSTEM ADMIN</div>
-
+<div class="loading-spinner" id="loadingSpinner">
+  <div class="spinner"></div>
+</div>
 <div class="container">
   <div class="logo" onclick="handleLogoClick()"><span class="w">betor</span><span class="o">spin</span><span class="d">.</span></div>
   <div class="logo-line"></div>
   <div class="logo-sub">Şans Çarkı</div>
   <div class="main-title">Çevir &amp; <em>Kazan!</em></div>
-
   <div class="wheel-wrap" id="wheelWrap">
     <div class="ring-glow"></div>
     <div class="ring-glow-mask"></div>
     <div class="pointer"><div class="ptr-ball"></div><div class="ptr-tri"></div></div>
     <canvas id="wheel" width="286" height="286"></canvas>
   </div>
-
   <div class="btn-area">
     <div class="btn-shine"></div>
     <button id="spinBtn" onclick="spin()">
       <div class="btn-body">ÇEVİR</div>
     </button>
   </div>
-
   <div class="spin-info" id="spinInfo">Yükleniyor...</div>
-
   <button class="invite-btn" onclick="shareInvite()" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:14px 28px; color:#fff; font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; width:100%; max-width:300px; margin-top:16px; display:flex; align-items:center; justify-content:center; gap:10px;">
     Arkadaşını Davet Et
     <span class="invite-badge">+1 Spin</span>
   </button>
-
   <div class="no-spin-banner" id="noSpinBanner">
     <div class="ns-title" style="font-weight:700; margin-bottom:10px; color:rgba(255,255,255,0.6);">BUGÜNKÜ HAKKIN BİTTİ</div>
     <div class="ns-countdown" id="nsCountdown">00:00:00</div>
     <button class="rcard-btn" style="margin-top:20px;" onclick="goSite()">SİTEYE GİT VE OYNA</button>
   </div>
 </div>
-
 <div class="overlay" id="overlay">
   <div class="rcard">
     <div class="rcard-top" id="rTop">
@@ -194,38 +198,41 @@ canvas#wheel {
     </div>
   </div>
 </div>
-
 <script>
 const tg = window.Telegram?.WebApp;
-
-// ── KESİN ADMIN AYARI ────────────────────────────────────────────────
-const ADMIN_ID = "243111766253"; 
+// ── CONSTANTS ────────────────────────────────────────────────────────
+const ADMIN_ID = "243111766253";  // BACKEND'DEKİ ADMIN_ID İLE AYNI OLMALI
 const urlParams = new URLSearchParams(window.location.search);
 let USER_ID = String(tg?.initDataUnsafe?.user?.id || urlParams.get('user_id') || 'guest');
+let INIT_DATA = tg?.initData || '';
 
+// ── ÇARK SEGMENTLERİ ─────────────────────────────────────────────────
+const SEGS = [
+  { lines:['KAYBETTİN'],         bg:'#0a0a0a', stroke:'#222', tc:'#666' },
+  { lines:['200','BONUS BUY'],   bg:'#2a0a0a', stroke:'#4a1a1a', tc:'#ff6666' },
+  { lines:['+1','SPIN'],         bg:'#1a1a1a', stroke:'#ff8c00', tc:'#ffffff' },
+  { lines:['100','FREESPIN'],    bg:'#0a1a3a', stroke:'#1a2a4a', tc:'#77b5ff' },
+  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#2a1a00', stroke:'#4a2a1a', tc:'#ffcc66' },
+  { lines:['100₺','BAKİYE'],     bg:'#0a2a10', stroke:'#1a4a1a', tc:'#66ff99' },
+  { lines:['VIP','GIFT'],        bg:'#220a30', stroke:'#4a1a5a', tc:'#ee99ff' },
+  { lines:['KAYBETTİN'],         bg:'#0a0a0a', stroke:'#222', tc:'#666' },
+  { lines:['200','BONUS BUY'],   bg:'#0a1a3a', stroke:'#1a2a4a', tc:'#77b5ff' },
+  { lines:['100','FREESPIN'],    bg:'#2a1a00', stroke:'#4a2a1a', tc:'#ffcc66' },
+];
+
+const N=SEGS.length, ARC=(2*Math.PI)/N;
+const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
+const CX=143, CY=143, R=138;
+
+let angle=0, spinning=false, spinAllowed=true;
 let logoClicks = 0;
 let forceAdmin = false;
 
-function handleLogoClick() {
-    logoClicks++;
-    if (logoClicks >= 5) {
-        forceAdmin = true;
-        checkSpinRight();
-        vibrate([100, 50, 100]);
-        console.log("Gizli Admin Modu Aktif Edildi.");
-    }
-}
-
-const checkIsAdmin = () => {
-    return forceAdmin || String(USER_ID) === ADMIN_ID || String(USER_ID) === "243111766253";
-};
-
-// ── SES VE TİTREŞİM ──────────────────────────────────────────────────
+// ── AUDIO ────────────────────────────────────────────────────────────
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let actx = null;
 function getACtx() { if (!actx) actx = new AudioCtx(); return actx; }
 function vibrate(p) { if (navigator.vibrate) navigator.vibrate(p); if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
-
 function playTick() {
   try {
     const a = getACtx();
@@ -240,7 +247,6 @@ function playTick() {
     o.start(); o.stop(a.currentTime + 0.07);
   } catch (e) {}
 }
-
 function playWin() {
   try {
     const a = getACtx();
@@ -258,7 +264,6 @@ function playWin() {
     vibrate([50, 30, 80, 30, 150]);
   } catch (e) {}
 }
-
 function playLose() {
   try {
     const a = getACtx();
@@ -277,25 +282,22 @@ function playLose() {
   } catch (e) {}
 }
 
-// ── Çark dilimleri ────────────────────────────────────────────────────
-const SEGS = [
-  { lines:['KAYBETTİN'],         bg:'#0a0a0a', stroke:'#222', tc:'#666', win:false, prize:null },
-  { lines:['200','BONUS BUY'],   bg:'#2a0a0a', stroke:'#4a1a1a', tc:'#ff6666', win:true, prize:'200 Bonus Buy' },
-  { lines:['+1','SPIN'],         bg:'#1a1a1a', stroke:'#ff8c00', tc:'#ffffff', win:true, prize:'+1 Spin', extra:true },
-  { lines:['100','FREESPIN'],    bg:'#0a1a3a', stroke:'#1a2a4a', tc:'#77b5ff', win:true, prize:'100 Freespin' },
-  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#2a1a00', stroke:'#4a2a1a', tc:'#ffcc66', win:true, prize:'Yatırım Bonusu' },
-  { lines:['100₺','BAKİYE'],     bg:'#0a2a10', stroke:'#1a4a1a', tc:'#66ff99', win:true, prize:'100₺ Bakiye' },
-  { lines:['VIP','GIFT'],        bg:'#220a30', stroke:'#4a1a5a', tc:'#ee99ff', win:true, prize:'VIP Gift' },
-  { lines:['KAYBETTİN'],         bg:'#0a0a0a', stroke:'#222', tc:'#666', win:false, prize:null },
-  { lines:['200','BONUS BUY'],   bg:'#0a1a3a', stroke:'#1a2a4a', tc:'#77b5ff', win:true, prize:'200 Bonus Buy' },
-  { lines:['100','FREESPIN'],    bg:'#2a1a00', stroke:'#4a2a1a', tc:'#ffcc66', win:true, prize:'100 Freespin' },
-];
+// ── ADMIN MODE ───────────────────────────────────────────────────────
+function handleLogoClick() {
+    logoClicks++;
+    if (logoClicks >= 5) {
+        forceAdmin = true;
+        checkSpinRight();
+        vibrate([100, 50, 100]);
+        console.log("Gizli Admin Modu Aktif Edildi.");
+    }
+}
 
-const N=SEGS.length, ARC=(2*Math.PI)/N;
-const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
-const CX=143, CY=143, R=138;
-let angle=0, spinning=false, spinAllowed=true;
+const checkIsAdmin = () => {
+    return forceAdmin || String(USER_ID) === ADMIN_ID;
+};
 
+// ── ÇARK ÇIZME ───────────────────────────────────────────────────────
 function draw(a) {
   ctx.clearRect(0,0,286,286);
   for(let i=0;i<N;i++){
@@ -320,83 +322,161 @@ function draw(a) {
   ctx.fillStyle='#fff'; ctx.fillText('SPIN.',CX,CY+8);
 }
 
+// ── SPIN KONTROL ─────────────────────────────────────────────────────
 function checkSpinRight() {
-  if (checkIsAdmin()) {
-    spinAllowed = true;
-    document.getElementById('spinBtn').disabled = false;
-    document.getElementById('spinInfo').textContent = 'Sınırsız Hak (Admin)';
-    document.getElementById('noSpinBanner').style.display = 'none';
-    document.getElementById('adminBadge').style.display = 'block';
-    return;
-  }
-  const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
-  if (lastSpin) {
-    const diff = Date.now() - parseInt(lastSpin);
-    if (diff < 24 * 60 * 60 * 1000) {
+  const spinner = document.getElementById('loadingSpinner');
+  spinner.style.display = 'flex';
+
+  fetch(`/api/check_spin?user_id=${USER_ID}`)
+    .then(r => r.json())
+    .then(data => {
+      spinner.style.display = 'none';
+
+      if (checkIsAdmin()) {
+        spinAllowed = true;
+        document.getElementById('spinBtn').disabled = false;
+        document.getElementById('spinInfo').textContent = 'Sınırsız Hak (Admin)';
+        document.getElementById('noSpinBanner').style.display = 'none';
+        document.getElementById('adminBadge').style.display = 'block';
+        return;
+      }
+
+      if (data.allowed) {
+        spinAllowed = true;
+        document.getElementById('spinBtn').disabled = false;
+        document.getElementById('spinInfo').textContent = `${data.spins} Çevirme Hakkın Var`;
+        document.getElementById('noSpinBanner').style.display = 'none';
+      } else {
+        spinAllowed = false;
+        document.getElementById('spinBtn').disabled = true;
+        document.getElementById('spinInfo').textContent = 'Hakkın Bitti';
+        document.getElementById('noSpinBanner').style.display = 'block';
+      }
+    })
+    .catch(() => {
+      spinner.style.display = 'none';
       spinAllowed = false;
-      document.getElementById('spinBtn').disabled = true;
-      document.getElementById('noSpinBanner').style.display = 'block';
-      document.getElementById('spinInfo').textContent = 'Hakkın Bitti';
+    });
+}
+
+// ── SPIN ─────────────────────────────────────────────────────────────
+function spin() {
+  if(spinning || !spinAllowed) return;
+
+  // Spin hakkını kullan (API'ye istek gönder)
+  const formData = new FormData();
+  formData.append('user_id', USER_ID);
+  formData.append('name', tg?.initDataUnsafe?.user?.first_name || 'Kullanıcı');
+  formData.append('username', tg?.initDataUnsafe?.user?.username || '');
+
+  document.getElementById('loadingSpinner').style.display = 'flex';
+
+  fetch('/api/use_spin', {
+    method: 'POST',
+    body: formData
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (!data.ok) {
+      document.getElementById('loadingSpinner').style.display = 'none';
+      alert('Hata: Spin hakkınız yeterli değil veya sunucu hatası var.');
       return;
     }
-  }
-  spinAllowed = true;
-  document.getElementById('spinBtn').disabled = false;
-  document.getElementById('spinInfo').textContent = '1 Çevirme Hakkın Var';
-}
 
-function spin() {
-  if(spinning||!spinAllowed) return;
-  spinning=true; spinAllowed=false;
-  
-  const wrap = document.getElementById('wheelWrap');
-  wrap.classList.add('spinning');
-  
-  document.getElementById('spinBtn').disabled=true;
-  document.getElementById('spinInfo').textContent='BOL ŞANS!';
-  getACtx().resume();
+    // Spin animasyonunu başlat
+    spinning = true;
+    spinAllowed = false;
 
-  // Toplam dönüş miktarını artırdık (Daha fazla tur)
-  const total=(15 + Math.random()*8)*2*Math.PI;
-  // Süreyi 9 saniyeye çıkardık (Daha yavaş ve premium)
-  const dur=9000, start=angle; let t0=null, lastTick = start;
-  
-  function frame(ts){
-    if(!t0) t0=ts;
-    const prog=Math.min((ts-t0)/dur,1);
-    // İpeksi yavaşlama için Power 6 easeOut
-    angle=start+total*(1-Math.pow(1-prog,6));
-    
-    // Tık sesi eşiğini hıza göre ayarladık
-    if (Math.abs(angle - lastTick) >= (2 * Math.PI / 20)) {
-      lastTick = angle;
-      playTick();
-      vibrate(6);
+    const wrap = document.getElementById('wheelWrap');
+    wrap.classList.add('spinning');
+
+    document.getElementById('spinBtn').disabled = true;
+    document.getElementById('spinInfo').textContent = 'BOL ŞANS!';
+    getACtx().resume();
+
+    const total = (15 + Math.random()*8)*2*Math.PI;
+    const dur = 9000;
+    const start = angle;
+    let t0 = null, lastTick = start;
+
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      const prog = Math.min((ts - t0) / dur, 1);
+      angle = start + total * (1 - Math.pow(1 - prog, 6));
+
+      if (Math.abs(angle - lastTick) >= (2 * Math.PI / 20)) {
+        lastTick = angle;
+        playTick();
+        vibrate(6);
+      }
+      draw(angle);
+
+      if (prog < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        spinning = false;
+        wrap.classList.remove('spinning');
+
+        // Backend'den sonucu al
+        fetchSpinResult();
+      }
     }
 
-    draw(angle);
-    if(prog<1) requestAnimationFrame(frame);
-    else { 
-      spinning=false; 
-      wrap.classList.remove('spinning');
-      const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
-      const idx=Math.floor(norm/ARC)%N;
-      showResult(SEGS[idx]);
-    }
-  }
-  requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
+  })
+  .catch(err => {
+    document.getElementById('loadingSpinner').style.display = 'none';
+    console.error('Spin error:', err);
+    spinning = false;
+    spinAllowed = true;
+  });
 }
 
+// ── BACKEND'DEN SONUÇ AL ─────────────────────────────────────────────
+function fetchSpinResult() {
+  const payload = {
+    user_id: USER_ID,
+    init_data: INIT_DATA
+  };
+
+  fetch('/api/spin_result', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('loadingSpinner').style.display = 'none';
+
+    if (!data.ok) {
+      alert('Spin sonucu alınamadı. Lütfen tekrar dene.');
+      checkSpinRight();
+      return;
+    }
+
+    showResult({
+      win: data.win,
+      prize: data.prize,
+      extra: data.extra
+    });
+  })
+  .catch(err => {
+    document.getElementById('loadingSpinner').style.display = 'none';
+    console.error('Result error:', err);
+    checkSpinRight();
+  });
+}
+
+// ── SONUÇ GÖSTER ─────────────────────────────────────────────────────
 function showResult(res) {
   const overlay = document.getElementById('overlay');
+
   if (res.extra) {
     document.getElementById('rTitle').textContent = 'HARİKA!';
     document.getElementById('rBadge').textContent = '+1 SPIN';
     document.getElementById('rText').textContent = 'Bir hak daha kazandın, tekrar çevir!';
-    spinAllowed = true;
     playWin();
   } else {
-    if (!checkIsAdmin()) localStorage.setItem(`last_spin_${USER_ID}`, Date.now().toString());
     if (res.win) {
       document.getElementById('rTitle').textContent = 'TEBRİKLER!';
       document.getElementById('rBadge').textContent = res.prize;
@@ -409,6 +489,7 @@ function showResult(res) {
       playLose();
     }
   }
+
   overlay.classList.add('show');
 }
 
@@ -417,6 +498,7 @@ function closeOverlay() {
   checkSpinRight();
 }
 
+// ── DAVETLİ PAYLAŞ ───────────────────────────────────────────────────
 function shareInvite() {
   const link = `https://t.me/PrimeXBos_bot?start=ref_${USER_ID}`;
   if(tg) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Betorspin Şans Çarkını dene!`);
@@ -428,23 +510,7 @@ function goSite(){
   else window.open('https://cutt.ly/7tF5Ow3K','_blank');
 }
 
-setInterval(() => {
-  if (checkIsAdmin()) return;
-  const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
-  if (lastSpin) {
-    const diff = (parseInt(lastSpin) + 24 * 60 * 60 * 1000) - Date.now();
-    if (diff <= 0) {
-      document.getElementById('noSpinBanner').style.display = 'none';
-      checkSpinRight();
-    } else {
-      const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
-      const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-      const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-      document.getElementById('nsCountdown').textContent = `${h}:${m}:${s}`;
-    }
-  }
-}, 1000);
-
+// ── İNİT ────────────────────────────────────────────────────────────
 if (tg) {
     tg.ready();
     tg.expand();
@@ -452,6 +518,7 @@ if (tg) {
 } else {
     checkSpinRight();
 }
+
 draw(0);
 </script>
 </body>
