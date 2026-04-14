@@ -14,15 +14,15 @@ body {
   font-family: 'Rajdhani', -apple-system, sans-serif;
   background: #0a0a0a;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden; /* Sadece yatay kaymayı kapat, dikey serbest */
   color: #fff;
 }
 
 .bg {
   position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,69,0,0.2) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(255,120,0,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,69,0,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(255,120,0,0.08) 0%, transparent 50%),
     #0a0a0a;
   z-index: 0;
 }
@@ -31,13 +31,13 @@ body {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; align-items: center;
   min-height: 100vh;
-  padding: 28px 16px 40px;
+  padding: 28px 16px 60px; /* Alt boşluğu artırdım */
 }
 
-/* Giriş Animasyonu */
+/* Yumuşak Giriş Animasyonu */
 @keyframes wheelIntro {
-  0% { transform: scale(0.8) rotate(-10deg); opacity: 0; filter: blur(10px); }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0); }
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .wheel-wrap {
@@ -45,11 +45,10 @@ body {
   width: 300px; height: 300px;
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 32px;
-  animation: wheelIntro 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: wheelIntro 0.8s ease-out forwards;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Spin sırasında çarkın öne çıkması */
 .wheel-wrap.spinning {
   transform: scale(1.05);
 }
@@ -58,7 +57,7 @@ body {
   position: absolute; inset: -12px; border-radius: 50%;
   background: conic-gradient(#ff4500, #ff8c00, #ffc200, #ff8c00, #ff4500, #cc2200, #ff4500);
   animation: spinRing 8s linear infinite;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 .ring-glow-mask { position: absolute; inset: -6px; border-radius: 50%; background: #0a0a0a; }
 @keyframes spinRing { to { transform: rotate(360deg); } }
@@ -68,7 +67,7 @@ body {
   transform: translateX(-50%);
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
-  filter: drop-shadow(0 4px 10px rgba(255,69,0,1));
+  filter: drop-shadow(0 4px 10px rgba(255,69,0,0.8));
 }
 .ptr-ball {
   width: 18px; height: 18px; border-radius: 50%;
@@ -85,7 +84,7 @@ body {
 
 canvas#wheel {
   border-radius: 50%; position: relative; z-index: 5;
-  box-shadow: 0 0 0 4px #111, 0 0 0 7px rgba(255,69,0,0.3), 0 25px 60px rgba(0,0,0,1);
+  box-shadow: 0 0 0 4px #111, 0 0 0 7px rgba(255,69,0,0.2), 0 25px 50px rgba(0,0,0,0.9);
 }
 
 .btn-area { position: relative; margin-bottom: 16px; width: 100%; max-width: 300px; }
@@ -94,7 +93,7 @@ canvas#wheel {
   background: linear-gradient(90deg, #ff4500, #ff8c00, #ffc200, #ff8c00, #ff4500);
   background-size: 300% auto;
   animation: shine 3s linear infinite;
-  filter: blur(12px); opacity: 0.7;
+  filter: blur(10px); opacity: 0.6;
 }
 @keyframes shine { to { background-position: 300% center; } }
 
@@ -112,6 +111,53 @@ canvas#wheel {
 }
 #spinBtn:active:not(:disabled) .btn-body { transform: translateY(6px); box-shadow: 0 2px 0 #5a0800; }
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; }
+
+.invite-btn {
+  margin-top: 16px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 14px 28px;
+  color: #fff; font-family: inherit; font-size: 15px; font-weight: 600;
+  cursor: pointer; width: 100%; max-width: 300px;
+}
+.invite-badge {
+  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  color: #fff; font-size: 12px; font-weight: 700;
+  padding: 4px 10px; border-radius: 8px;
+}
+
+.spin-info {
+  font-size: 14px; font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  display: flex; align-items: center; gap: 8px;
+  text-align: center; margin-top: 12px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.spin-info::before, .spin-info::after {
+  content: ''; display: block;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #ff4500;
+}
+
+.no-spin-banner {
+  display: none;
+  margin-top: 20px;
+  background: rgba(255,69,0,0.1);
+  border: 1px solid rgba(255,69,0,0.2);
+  border-radius: 20px;
+  padding: 22px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+}
+.ns-countdown {
+  font-size: 26px; font-weight: 700;
+  color: #ff4500;
+  letter-spacing: 4px;
+  font-variant-numeric: tabular-nums;
+}
 
 .overlay {
   display: none; position: fixed; inset: 0;
@@ -133,6 +179,28 @@ canvas#wheel {
   from { transform: scale(0.7) translateY(40px); opacity: 0; }
   to   { transform: scale(1) translateY(0); opacity: 1; }
 }
+.rcard-top {
+  padding: 40px 24px 30px; text-align: center;
+  background: linear-gradient(180deg, rgba(255,69,0,0.15) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.rcard-title { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 15px; text-transform: uppercase; }
+.rcard-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  color: #fff; font-size: 18px; font-weight: 700;
+  padding: 10px 28px; border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(255,69,0,0.4);
+}
+.rcard-bot { padding: 30px 28px 35px; text-align: center; }
+.rcard-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff4500, #ff6a00);
+  color: #fff; font-family: inherit; font-size: 18px; font-weight: 700;
+  border: none; border-radius: 18px; padding: 20px;
+  cursor: pointer; box-shadow: 0 15px 35px rgba(255,69,0,0.5);
+  text-transform: uppercase; letter-spacing: 1px;
+}
 
 #adminBadge {
   position: fixed; top: 12px; right: 12px;
@@ -140,7 +208,7 @@ canvas#wheel {
   border: 1px solid #ff4500;
   padding: 5px 12px; border-radius: 8px;
   font-size: 11px; font-weight: 700; color: #ff4500;
-  z-index: 100; display: none; letter-spacing: 1px;
+  z-index: 100; display: none;
 }
 
 .logo { font-size: 30px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; text-transform: uppercase; }
@@ -151,17 +219,6 @@ canvas#wheel {
 .logo-sub { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4); letter-spacing: 5px; text-transform: uppercase; margin-bottom: 22px; }
 .main-title { font-size: 34px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 22px; line-height: 1; text-transform: uppercase; }
 .main-title em { font-style: normal; color: #ff4500; }
-.spin-info { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 8px; text-align: center; margin-top: 12px; text-transform: uppercase; letter-spacing: 1px; }
-.spin-info::before, .spin-info::after { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #ff4500; }
-.invite-btn { margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 14px 28px; color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; max-width: 300px; }
-.invite-badge { background: linear-gradient(135deg, #ff4500, #ff8c00); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
-.no-spin-banner { display: none; margin-top: 20px; background: rgba(255,69,0,0.1); border: 1px solid rgba(255,69,0,0.2); border-radius: 20px; padding: 22px; text-align: center; max-width: 320px; width: 100%; }
-.ns-countdown { font-size: 26px; font-weight: 700; color: #ff4500; letter-spacing: 4px; font-variant-numeric: tabular-nums; text-shadow: 0 0 15px rgba(255,69,0,0.5); }
-.rcard-top { padding: 40px 24px 30px; text-align: center; background: linear-gradient(180deg, rgba(255,69,0,0.15) 0%, transparent 100%); border-bottom: 1px solid rgba(255,255,255,0.05); }
-.rcard-title { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 15px; text-transform: uppercase; }
-.rcard-badge { display: inline-block; background: linear-gradient(135deg, #ff4500, #ff8c00); color: #fff; font-size: 18px; font-weight: 700; padding: 10px 28px; border-radius: 50px; box-shadow: 0 10px 25px rgba(255,69,0,0.4); text-transform: uppercase; }
-.rcard-bot { padding: 30px 28px 35px; text-align: center; }
-.rcard-btn { width: 100%; background: linear-gradient(135deg, #ff4500, #ff6a00); color: #fff; font-family: inherit; font-size: 18px; font-weight: 700; border: none; border-radius: 18px; padding: 20px; cursor: pointer; box-shadow: 0 15px 35px rgba(255,69,0,0.5); text-transform: uppercase; letter-spacing: 1px; }
 </style>
 </head>
 <body>
@@ -183,7 +240,7 @@ canvas#wheel {
 
   <div class="btn-area">
     <div class="btn-shine"></div>
-    <button id="spinBtn" onclick="spin()" disabled>
+    <button id="spinBtn" onclick="spin()">
       <div class="btn-body">ÇEVİR</div>
     </button>
   </div>
@@ -241,7 +298,7 @@ function playTick() {
     o.type = 'sine';
     o.frequency.setValueAtTime(500, a.currentTime);
     o.frequency.exponentialRampToValueAtTime(150, a.currentTime + 0.07);
-    g.gain.setValueAtTime(0.18, a.currentTime);
+    g.gain.setValueAtTime(0.15, a.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.07);
     o.start(); o.stop(a.currentTime + 0.07);
   } catch (e) {}
@@ -257,7 +314,7 @@ function playWin() {
       o.type = 'triangle';
       const t = a.currentTime + i * 0.12;
       o.frequency.setValueAtTime(freq, t);
-      g.gain.setValueAtTime(0.25, t);
+      g.gain.setValueAtTime(0.2, t);
       g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       o.start(t); o.stop(t + 0.4);
     });
@@ -275,7 +332,7 @@ function playLose() {
       o.type = 'sawtooth';
       const t = a.currentTime + i * 0.2;
       o.frequency.setValueAtTime(freq, t);
-      g.gain.setValueAtTime(0.15, t);
+      g.gain.setValueAtTime(0.12, t);
       g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
       o.start(t); o.stop(t + 0.4);
     });
@@ -355,22 +412,21 @@ function spin() {
   spinning=true; spinAllowed=false;
   
   const wrap = document.getElementById('wheelWrap');
-  wrap.classList.add('spinning'); // Büyüme efekti
+  wrap.classList.add('spinning');
   
   document.getElementById('spinBtn').disabled=true;
   document.getElementById('spinInfo').textContent='BOL ŞANS!';
   getACtx().resume();
 
-  const total=(12+Math.random()*6)*2*Math.PI; // Daha fazla tur
+  const total=(12+Math.random()*6)*2*Math.PI;
   const dur=6000, start=angle; let t0=null, lastTick = start;
   
   function frame(ts){
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
-    // İpeksi yavaşlama için Power 5 easeOut
     angle=start+total*(1-Math.pow(1-prog,5));
     
-    if (Math.abs(angle - lastTick) >= (2 * Math.PI / 20)) {
+    if (Math.abs(angle - lastTick) >= (2 * Math.PI / 18)) {
       lastTick = angle;
       playTick();
       vibrate(6);
@@ -380,11 +436,7 @@ function spin() {
     if(prog<1) requestAnimationFrame(frame);
     else { 
       spinning=false; 
-      wrap.classList.remove('spinning'); // Efekti kaldır
-      // Durduğunda hafif bir "bounce" hissi için
-      wrap.style.transform = 'scale(1.02)';
-      setTimeout(() => wrap.style.transform = 'scale(1)', 300);
-      
+      wrap.classList.remove('spinning');
       const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
       const idx=Math.floor(norm/ARC)%N;
       showResult(SEGS[idx]);
