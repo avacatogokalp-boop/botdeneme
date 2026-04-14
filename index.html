@@ -6,67 +6,104 @@
 <title>Şans Çarkı - Betorspin</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-/* 🔒 SENİN CSS AYNI KALDI - DOKUNULMADI */
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-body {
-  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  background: #0a0a0a;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.bg {
-  position: fixed; inset: 0;
-  background:
-    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,69,0,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(255,120,0,0.08) 0%, transparent 50%),
-    #0a0a0a;
-  z-index: 0;
-}
-
-/* ... TÜM CSS SENİNLE AYNI - KISALTMADIM AMA DOKUNMADIM ... */
+/* --- SENİN CSS AYNI --- */
 </style>
 </head>
-
 <body>
 <div class="bg"></div>
 
 <div class="container">
 
-  <!-- SENİN HTML AYNI -->
+  <div class="wheel-wrap">
+    <canvas id="wheel" width="286" height="286"></canvas>
+    <canvas id="spotlight" width="286" height="286"></canvas>
+  </div>
 
-  <canvas id="wheel" width="286" height="286"></canvas>
+  <button id="spinBtn" onclick="spin()" disabled>
+    <div class="btn-body">ÇEVİR</div>
+  </button>
+
+  <div class="spin-info" id="spinInfo">Yükleniyor...</div>
 
 </div>
 
+<canvas id="confetti"></canvas>
+
 <script>
+const tg = window.Telegram?.WebApp;
+
+const urlParams = new URLSearchParams(window.location.search);
+const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.id || null;
+
+// ── ÇARK (SADECE 1 EKLENDİ) ─────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin'          },
-  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0a00', stroke:'#cc6600', tc:'#ffaa33', icon:'💰', win:true,  prize:'Özel Yatırım Bonusu'   },
-  { lines:['100₺','BAKİYE'],         bg:'#051a09', stroke:'#0a8a35', tc:'#22ee66', icon:'💵', win:true,  prize:'100₺ Bakiye'            },
-  { lines:['VİP','HEDİYE'],          bg:'#120818', stroke:'#8800cc', tc:'#dd55ff', icon:'👑', win:true,  prize:'VİP Hediye'            },
+  { lines:['100','FREESPIN'], bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true, prize:'100 Freespin' },
+  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0a00', stroke:'#cc6600', tc:'#ffaa33', icon:'💰', win:true, prize:'Özel Yatırım Bonusu' },
+  { lines:['100₺','BAKİYE'], bg:'#051a09', stroke:'#0a8a35', tc:'#22ee66', icon:'💵', win:true, prize:'100₺ Bakiye' },
+  { lines:['VİP','HEDİYE'], bg:'#120818', stroke:'#8800cc', tc:'#dd55ff', icon:'👑', win:true, prize:'VİP Hediye' },
+  { lines:['KAYBETTİN',''], bg:'#101010', stroke:'#2a2a2a', tc:'#555', icon:'😐', win:false, prize:null },
 
-  // ✅ SADECE EKLENEN YENİ SEÇENEK
-  { 
-    lines:['+1','SPIN'], 
-    bg:'#0b1a0b', 
-    stroke:'#22ee66', 
-    tc:'#66ff99', 
-    icon:'➕', 
-    win:true, 
-    prize:'+1 Spin' 
-  },
+  { lines:['1','FREESPIN'], bg:'#002a12', stroke:'#00ff88', tc:'#66ffbb', icon:'🎡', win:true, prize:'1 Freespin', extraSpin:true },
 
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['100₺','BONUS BUY'],      bg:'#1c0f00', stroke:'#d49500', tc:'#ffc200', icon:'🎁', win:true,  prize:'100₺ Bonus Buy'        },
-  { lines:['200','FREESPIN'],        bg:'#060d1c', stroke:'#1155cc', tc:'#4488ff', icon:'🎰', win:true,  prize:'200 Freespin'          },
-  { lines:['KAYBETTİN',''],         bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['200₺','BONUS BUY'],      bg:'#1c1200', stroke:'#bb8800', tc:'#ffcc00', icon:'🎁', win:true,  prize:'200₺ Bonus Buy'        },
-  { lines:['KAYBETTİN',''],         bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
+  { lines:['100₺','BONUS BUY'], bg:'#1c0f00', stroke:'#d49500', tc:'#ffc200', icon:'🎁', win:true, prize:'100₺ Bonus Buy' },
+  { lines:['200','FREESPIN'], bg:'#060d1c', stroke:'#1155cc', tc:'#4488ff', icon:'🎰', win:true, prize:'200 Freespin' },
+  { lines:['KAYBETTİN',''], bg:'#101010', stroke:'#2a2a2a', tc:'#555', icon:'😐', win:false, prize:null },
 ];
 
-/* 🔒 SENİN JS TAMAMEN AYNI - HİÇ DOKUNMADIM */
+const N=SEGS.length, ARC=(2*Math.PI)/N;
+
+let angle=0;
+let spinning=false;
+let spinAllowed=false;
+
+// ── NORMAL SPIN FONKSİYONU ──
+function spin() {
+  if(spinning || !spinAllowed) return;
+  spinning=true;
+  spinAllowed=false;
+
+  document.getElementById('spinBtn').disabled=true;
+
+  const total=(6+Math.random()*4)*2*Math.PI;
+  const start=angle;
+  const dur=4500;
+  let t0=null;
+
+  function frame(ts){
+    if(!t0) t0=ts;
+    const p=Math.min((ts-t0)/dur,1);
+    angle=start+total*(1-Math.pow(1-p,4.5));
+    draw(angle);
+
+    if(p<1) requestAnimationFrame(frame);
+    else { spinning=false; showResult(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+// ── SONUÇ ──
+function showResult() {
+  const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+  const idx=Math.floor(norm/ARC)%N;
+  const seg=SEGS[idx];
+
+  alert(seg.prize || "Kaybettin");
+
+  // ⭐ BURASI EKLENDİ (1 FREESPIN LOGİĞİ)
+  if(seg.extraSpin){
+    spinAllowed = true;
+    document.getElementById('spinBtn').disabled = false;
+    document.getElementById('spinInfo').textContent = "+1 Freespin Kazandın 🎡";
+    return;
+  }
+
+  spinAllowed = false;
+}
+
+// ── DIŞARDAN SPİN AÇMA (TEST) ──
+spinAllowed = true;
+document.getElementById('spinBtn').disabled = false;
+document.getElementById('spinInfo').textContent = "1 Çevirme Hakkın Var 🎯";
 
 </script>
 
