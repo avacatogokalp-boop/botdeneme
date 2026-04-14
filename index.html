@@ -34,17 +34,12 @@ body {
   padding: 28px 16px 60px;
 }
 
-/* Animasyonlar */
 @keyframes wheelIntro {
   0% { transform: scale(0.85); opacity: 0; filter: blur(10px); }
   100% { transform: scale(1); opacity: 1; filter: blur(0); }
 }
 @keyframes spinRing { to { transform: rotate(360deg); } }
 @keyframes shine { to { background-position: 300% center; } }
-@keyframes popIn {
-  from { transform: scale(0.8) translateY(30px); opacity: 0; }
-  to   { transform: scale(1) translateY(0); opacity: 1; }
-}
 
 .wheel-wrap {
   position: relative;
@@ -52,14 +47,14 @@ body {
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 32px;
   animation: wheelIntro 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.wheel-wrap.spinning { transform: scale(1.06); }
+.wheel-wrap.spinning { transform: scale(1.04); }
 
 .ring-glow {
   position: absolute; inset: -12px; border-radius: 50%;
   background: conic-gradient(#ff4500, #ff8c00, #ffc200, #ff8c00, #ff4500, #cc2200, #ff4500);
-  animation: spinRing 8s linear infinite;
+  animation: spinRing 10s linear infinite;
   opacity: 0.7;
 }
 .ring-glow-mask { position: absolute; inset: -6px; border-radius: 50%; background: #0a0a0a; }
@@ -113,7 +108,7 @@ canvas#wheel {
 #spinBtn:active:not(:disabled) .btn-body { transform: translateY(6px); box-shadow: 0 2px 0 #5a0800; }
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; }
 
-.logo { font-size: 30px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; text-transform: uppercase; }
+.logo { font-size: 30px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; text-transform: uppercase; cursor: pointer; }
 .logo .w { color: #fff; }
 .logo .o { color: #ff4500; }
 .logo .d { color: #ff8c00; }
@@ -153,7 +148,7 @@ canvas#wheel {
 <div id="adminBadge">SYSTEM ADMIN</div>
 
 <div class="container">
-  <div class="logo"><span class="w">betor</span><span class="o">spin</span><span class="d">.</span></div>
+  <div class="logo" onclick="handleLogoClick()"><span class="w">betor</span><span class="o">spin</span><span class="d">.</span></div>
   <div class="logo-line"></div>
   <div class="logo-sub">Şans Çarkı</div>
   <div class="main-title">Çevir &amp; <em>Kazan!</em></div>
@@ -206,19 +201,24 @@ const tg = window.Telegram?.WebApp;
 // ── KESİN ADMIN AYARI ────────────────────────────────────────────────
 const ADMIN_ID = "243111766253"; 
 const urlParams = new URLSearchParams(window.location.search);
-const USER_ID = String(tg?.initDataUnsafe?.user?.id || urlParams.get('user_id') || 'guest');
+let USER_ID = String(tg?.initDataUnsafe?.user?.id || urlParams.get('user_id') || 'guest');
 
-if (tg) { tg.ready(); tg.expand(); }
+let logoClicks = 0;
+let forceAdmin = false;
 
-// Adminlik Kontrolü
-const checkIsAdmin = () => {
-    return USER_ID === ADMIN_ID || USER_ID === "243111766253";
-};
-
-if (checkIsAdmin()) {
-    document.getElementById('adminBadge').style.display = 'block';
-    console.log("Süper Admin Yetkisi Tanımlandı.");
+function handleLogoClick() {
+    logoClicks++;
+    if (logoClicks >= 5) {
+        forceAdmin = true;
+        checkSpinRight();
+        vibrate([100, 50, 100]);
+        console.log("Gizli Admin Modu Aktif Edildi.");
+    }
 }
+
+const checkIsAdmin = () => {
+    return forceAdmin || String(USER_ID) === ADMIN_ID || String(USER_ID) === "243111766253";
+};
 
 // ── SES VE TİTREŞİM ──────────────────────────────────────────────────
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -326,6 +326,7 @@ function checkSpinRight() {
     document.getElementById('spinBtn').disabled = false;
     document.getElementById('spinInfo').textContent = 'Sınırsız Hak (Admin)';
     document.getElementById('noSpinBanner').style.display = 'none';
+    document.getElementById('adminBadge').style.display = 'block';
     return;
   }
   const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
@@ -355,15 +356,19 @@ function spin() {
   document.getElementById('spinInfo').textContent='BOL ŞANS!';
   getACtx().resume();
 
-  const total=(12+Math.random()*6)*2*Math.PI;
-  const dur=6000, start=angle; let t0=null, lastTick = start;
+  // Toplam dönüş miktarını artırdık (Daha fazla tur)
+  const total=(15 + Math.random()*8)*2*Math.PI;
+  // Süreyi 9 saniyeye çıkardık (Daha yavaş ve premium)
+  const dur=9000, start=angle; let t0=null, lastTick = start;
   
   function frame(ts){
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
-    angle=start+total*(1-Math.pow(1-prog,5));
+    // İpeksi yavaşlama için Power 6 easeOut
+    angle=start+total*(1-Math.pow(1-prog,6));
     
-    if (Math.abs(angle - lastTick) >= (2 * Math.PI / 18)) {
+    // Tık sesi eşiğini hıza göre ayarladık
+    if (Math.abs(angle - lastTick) >= (2 * Math.PI / 20)) {
       lastTick = angle;
       playTick();
       vibrate(6);
@@ -440,7 +445,13 @@ setInterval(() => {
   }
 }, 1000);
 
-checkSpinRight();
+if (tg) {
+    tg.ready();
+    tg.expand();
+    setTimeout(checkSpinRight, 100);
+} else {
+    checkSpinRight();
+}
 draw(0);
 </script>
 </body>
