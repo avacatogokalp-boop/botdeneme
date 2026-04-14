@@ -3,103 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Betorspin Şans Çarkı</title>
+    <title>Betorspin Premium Çark</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         
         body {
             font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
+            background: #050505;
             margin: 0;
             overflow-x: hidden;
+            user-select: none;
         }
 
         @keyframes shine { to { background-position: 300% center; } }
         @keyframes popIn {
-            from { transform: scale(0.7) translateY(40px); opacity: 0; }
+            from { transform: scale(0.8) translateY(30px); opacity: 0; }
             to   { transform: scale(1) translateY(0); opacity: 1; }
         }
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
-        .animate-shine { animation: shine 2.5s linear infinite; }
-        .animate-popIn { animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .animate-shine { animation: shine 3s linear infinite; }
+        .animate-popIn { animation: popIn 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.49); }
+        .rotate-glow { animation: rotateGlow 8s linear infinite; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
         
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
         canvas { touch-action: none; }
     </style>
 </head>
 <body class="text-white">
-    <!-- Arka Plan -->
-    <div class="fixed inset-0 z-0 bg-[radial-gradient(ellipse_90%_50%_at_50%_0%,rgba(255,69,0,0.18)_0%,transparent_60%),radial-gradient(ellipse_50%_40%_at_90%_90%,rgba(255,120,0,0.08)_0%,transparent_50%),#0a0a0a]"></div>
+    <!-- Dinamik Arka Plan -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-[#050505]"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#ff4500] opacity-[0.08] blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#ff8c00] opacity-[0.05] blur-[150px] rounded-full"></div>
+    </div>
+
+    <!-- Admin Rozeti -->
+    <div id="adminBadge" class="hidden fixed top-4 right-4 z-[100] glass px-3 py-1 rounded-full border-[#ff4500]/30">
+        <span class="text-[10px] font-black text-[#ff4500] tracking-widest uppercase">Admin Mode</span>
+    </div>
 
     <!-- Ana İçerik -->
-    <div class="relative z-10 flex flex-col items-center min-h-screen px-4 py-7 pb-10">
-        <div class="text-[26px] font-black tracking-tight mb-1">
-            <span>betor</span><span class="text-[#ff4500]">spin</span><span class="text-[#ff8c00]">.</span>
+    <div class="relative z-10 flex flex-col items-center min-h-screen px-6 py-8 pb-12">
+        <!-- Logo -->
+        <div class="flex flex-col items-center mb-6">
+            <div class="text-[28px] font-black tracking-tighter mb-1">
+                <span class="text-white">betor</span><span class="text-[#ff4500]">spin</span><span class="text-[#ff8c00]">.</span>
+            </div>
+            <div class="w-16 h-[2px] bg-gradient-to-r from-transparent via-[#ff4500] to-transparent opacity-50"></div>
         </div>
-        <div class="w-12 h-0.5 bg-[linear-gradient(90deg,transparent,#ff4500,transparent)] my-2 mx-auto"></div>
-        <div class="text-[11px] font-bold text-white/30 tracking-[4px] uppercase mb-5">Şans Çarkı</div>
-        <h1 class="text-[30px] font-black text-center mb-5 leading-tight">Çevir & <em class="not-italic text-[#ff4500]">Kazan!</em></h1>
 
-        <!-- Çark Alanı -->
-        <div class="relative w-[300px] h-[300px] flex items-center justify-center mb-7">
-            <div class="absolute -inset-2.5 rounded-full bg-[conic-gradient(#ff4500,#ff8c00,#ffc200,#ff8c00,#ff4500,#cc2200,#ff4500)] animate-spin opacity-60 [animation-duration:5s]"></div>
-            <div class="absolute -inset-1.5 rounded-full bg-[#0a0a0a]"></div>
+        <!-- Çark ve Model Konteynırı -->
+        <div class="relative flex flex-col lg:flex-row items-center justify-center gap-10 mb-10">
             
-            <!-- İbre -->
-            <div class="absolute -top-2 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center drop-shadow-[0_3px_8px_rgba(255,69,0,0.9)]">
-                <div class="w-4 h-4 rounded-full bg-[radial-gradient(circle_at_35%_35%,#fff_0%,#ff8c00_100%)] border-2 border-white/60 -mb-0.5 z-1"></div>
-                <div class="w-0 h-0 border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-t-[20px] border-t-[#ff4500]"></div>
+            <!-- Çark Alanı -->
+            <div class="relative w-[310px] h-[310px] flex items-center justify-center">
+                <!-- Dönen Işık Halkası -->
+                <div class="absolute -inset-4 rounded-full border-[1px] border-white/5 rotate-glow">
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#ff4500] rounded-full shadow-[0_0_15px_#ff4500]"></div>
+                </div>
+                
+                <!-- Çark Çerçevesi -->
+                <div class="absolute -inset-2.5 rounded-full bg-[conic-gradient(from_0deg,#ff4500,#ff8c00,#ffc200,#ff8c00,#ff4500)] opacity-40 blur-[2px]"></div>
+                <div class="absolute -inset-1.5 rounded-full bg-[#050505]"></div>
+                
+                <!-- İbre -->
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center drop-shadow-[0_4px_10px_rgba(255,69,0,0.8)]">
+                    <div class="w-5 h-5 rounded-full bg-gradient-to-br from-white via-[#ff8c00] to-[#ff4500] border-2 border-white/40 shadow-inner -mb-1 z-1"></div>
+                    <div class="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[24px] border-t-[#ff4500]"></div>
+                </div>
+
+                <canvas id="wheelCanvas" width="286" height="286" class="rounded-full relative z-10 shadow-[0_25px_60px_rgba(0,0,0,0.8)]"></canvas>
             </div>
 
-            <canvas id="wheelCanvas" width="286" height="286" class="rounded-full relative z-5 shadow-[0_0_0_3px_#111,0_0_0_5px_rgba(255,69,0,0.25),0_20px_50px_rgba(0,0,0,0.9)]"></canvas>
+            <!-- Kadın Modeli Alanı -->
+            <div class="hidden lg:block relative w-[200px] animate-float">
+                <!-- Buraya fotoğrafını atınca src kısmını değiştir kankam -->
+                <img src="https://picsum.photos/seed/casino-model/400/800" alt="Model" class="w-full h-auto drop-shadow-[0_0_30px_rgba(255,69,0,0.3)] filter brightness-110" referrerPolicy="no-referrer">
+            </div>
         </div>
 
-        <!-- Çevir Butonu -->
-        <div class="relative mb-3.5">
-            <div id="btnGlow" class="absolute -inset-1 rounded-[50px] bg-[linear-gradient(90deg,#ff4500,#ff8c00,#ffc200,#ff8c00,#ff4500)] bg-[length:300%_auto] animate-shine blur-[10px] opacity-60"></div>
-            <button id="spinBtn" class="relative bg-none border-none cursor-pointer outline-none disabled:opacity-40 disabled:cursor-not-allowed group">
-                <div class="relative bg-[linear-gradient(180deg,#ff5500_0%,#cc2200_45%,#991500_100%)] text-white text-[22px] font-black tracking-[5px] uppercase rounded-[50px] px-20 py-4 border border-white/10 shadow-[0_6px_0_#5a0800,inset_0_1px_0_rgba(255,255,255,0.12)] transition-all active:translate-y-1 active:shadow-[0_1px_0_#5a0800]">
-                    ÇEVİR
-                </div>
+        <!-- Kontrol Alanı -->
+        <div class="w-full max-w-[320px] flex flex-col items-center">
+            <div class="relative w-full mb-5">
+                <div id="btnGlow" class="absolute -inset-1 rounded-[50px] bg-gradient-to-r from-[#ff4500] via-[#ffc200] to-[#ff4500] bg-[length:200%_auto] animate-shine blur-[12px] opacity-50"></div>
+                <button id="spinBtn" class="relative w-full bg-none border-none cursor-pointer outline-none disabled:opacity-30 disabled:grayscale group">
+                    <div class="relative bg-gradient-to-b from-[#ff5500] via-[#cc2200] to-[#991500] text-white text-[20px] font-black tracking-[6px] uppercase rounded-[50px] py-4.5 border border-white/10 shadow-[0_6px_0_#5a0800,inset_0_1px_0_rgba(255,255,255,0.15)] transition-all active:translate-y-1 active:shadow-[0_1px_0_#5a0800]">
+                        ÇEVİR
+                    </div>
+                </button>
+            </div>
+
+            <div id="spinInfo" class="text-[12px] font-bold text-white/30 tracking-[2px] uppercase flex items-center gap-3 mb-8">
+                <div class="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse"></div>
+                <span>Yükleniyor...</span>
+                <div class="w-1.5 h-1.5 rounded-full bg-[#ff4500] animate-pulse"></div>
+            </div>
+
+            <button onclick="shareInvite()" class="w-full glass rounded-2xl py-4 flex items-center justify-center gap-3 text-sm font-bold active:bg-white/5 transition-all border-white/5">
+                Arkadaşını Davet Et
+                <span class="bg-gradient-to-r from-[#ff4500] to-[#ff8c00] text-[10px] font-black px-2.5 py-0.5 rounded-lg tracking-tighter">+1 SPIN</span>
             </button>
         </div>
 
-        <div id="spinInfo" class="text-[13px] font-semibold text-white/40 flex items-center gap-2 mt-2.5 before:content-[''] before:block before:w-1 before:h-1 before:rounded-full before:bg-[#ff4500] after:content-[''] after:block after:w-1 after:h-1 after:rounded-full after:bg-[#ff4500]">Yükleniyor...</div>
-
-        <button onclick="shareInvite()" class="mt-3.5 flex items-center justify-center gap-2 bg-white/5 border border-white/10 rounded-xl px-7 py-3 text-sm font-bold w-full max-w-[300px] active:bg-white/10 transition-colors">
-            Arkadaşını Davet Et
-            <span class="bg-[linear-gradient(135deg,#ff4500,#ff8c00)] text-white text-[11px] font-extrabold px-2 py-0.5 rounded-lg tracking-tight whitespace-nowrap">+1 Spin</span>
-        </button>
-
         <!-- Geri Sayım Banner -->
-        <div id="noSpinBanner" class="hidden mt-6 bg-[#ff4500]/10 border border-[#ff4500]/20 rounded-2xl p-6 text-center w-full max-w-[300px] animate-popIn">
-            <div class="text-white font-extrabold mb-1">Bugünkü Hakkını Kullandın!</div>
-            <div class="text-xs text-white/40 mb-3">Yeni spin hakkın için kalan süre:</div>
-            <div class="mb-4">
-                <div class="text-[10px] font-bold text-white/25 tracking-[2px] uppercase mb-1">Yenileniyor</div>
-                <div id="countdown" class="text-[22px] font-black text-[#ff4500] tracking-[3px] shadow-[0_0_14px_rgba(255,69,0,0.4)] tabular-nums">00:00:00</div>
+        <div id="noSpinBanner" class="hidden mt-8 glass rounded-[28px] p-7 text-center w-full max-w-[320px] animate-popIn border-[#ff4500]/10">
+            <div class="text-white font-black text-lg mb-1 tracking-tight">Bugünkü Hakkını Kullandın!</div>
+            <div class="text-[11px] text-white/40 font-bold uppercase tracking-widest mb-5">Yeni hak için bekle</div>
+            
+            <div class="mb-6 relative">
+                <div id="countdown" class="text-[32px] font-black text-[#ff4500] tracking-[4px] tabular-nums drop-shadow-[0_0_15px_rgba(255,69,0,0.5)]">00:00:00</div>
             </div>
-            <button onclick="goSite()" class="bg-[linear-gradient(135deg,#ff4500,#ff6a00)] text-white text-sm font-black rounded-xl py-3 px-7 w-full mb-2.5">SİTEYE GİT VE OYNA</button>
-            <button onclick="shareInvite()" class="bg-white/5 text-white/70 text-[13px] font-bold border border-white/10 rounded-xl py-2.5 px-7 w-full">Davet Et → Hemen +1 Spin Kazan</button>
+            
+            <button onclick="goSite()" class="w-full bg-gradient-to-r from-[#ff4500] to-[#ff6a00] text-white text-sm font-black rounded-xl py-4 mb-3 shadow-[0_10px_20px_rgba(255,69,0,0.3)]">SİTEYE GİT VE OYNA</button>
+            <button onclick="shareInvite()" class="w-full text-white/50 text-[12px] font-bold py-2">Davet Et → Hemen +1 Spin Kazan</button>
         </div>
     </div>
 
     <!-- Sonuç Overlay -->
-    <div id="overlay" class="hidden fixed inset-0 bg-black/90 z-[200] flex items-center justify-center backdrop-blur-md">
-        <div class="w-[88%] max-w-[310px] bg-[#141414] rounded-[26px] overflow-hidden border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.7)] animate-popIn">
-            <div id="overlayHeader" class="pt-7 px-6 pb-5 text-center border-b border-white/5">
-                <div id="resultTitle" class="text-[26px] font-black text-white mb-2.5">Tebrikler!</div>
-                <div id="prizeBadge" class="inline-block bg-[linear-gradient(135deg,#ff4500,#ff8c00)] text-white text-[13px] font-extrabold px-4.5 py-1.5 rounded-[20px] tracking-tight">Ödül</div>
+    <div id="overlay" class="hidden fixed inset-0 bg-black/95 z-[200] flex items-center justify-center backdrop-blur-xl">
+        <div class="w-[85%] max-w-[320px] glass rounded-[32px] overflow-hidden animate-popIn">
+            <div id="overlayHeader" class="pt-10 px-8 pb-6 text-center border-b border-white/5">
+                <div id="resultTitle" class="text-[28px] font-black text-white mb-3 tracking-tighter">Tebrikler!</div>
+                <div id="prizeBadge" class="inline-block bg-gradient-to-r from-[#ff4500] to-[#ff8c00] text-white text-[14px] font-black px-6 py-2 rounded-full shadow-lg">Ödül</div>
             </div>
-            <div class="p-5 px-6 pb-6 text-center">
-                <div id="resultDesc" class="text-sm text-white/45 leading-relaxed mb-3.5">Ödül kazandın!</div>
-                <button id="overlayBtn" onclick="closeOverlay()" class="w-full bg-[linear-gradient(135deg,#ff4500,#ff6a00)] text-white text-base font-black tracking-tight uppercase rounded-2xl py-4 shadow-[0_4_24px_rgba(255,69,0,0.45)] mb-2.5">SİTEYE GİT VE OYNA</button>
+            <div class="p-8 text-center">
+                <div id="resultDesc" class="text-sm text-white/50 leading-relaxed mb-8 font-medium">Ödül kazandın!</div>
+                <button id="overlayBtn" onclick="closeOverlay()" class="w-full bg-gradient-to-r from-[#ff4500] to-[#ff6a00] text-white text-base font-black rounded-2xl py-4.5 shadow-[0_15px_30px_rgba(255,69,0,0.45)]">
+                    SİTEYE GİT VE OYNA
+                </button>
             </div>
         </div>
     </div>
 
     <script>
+        const ADMIN_IDS = ['243111766253', 'guest', 'erdemcevik331407']; 
+        
         const SEGS = [
             { lines:['100','FREESPIN'],         bg:'#0a1a3a', stroke:'#1a4aaa', tc:'#77b5ff', win:true,  prize:'100 Freespin'          },
             { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#2a1a00', stroke:'#cc6600', tc:'#ffcc66', win:true,  prize:'Özel Yatırım Bonusu'   },
@@ -124,13 +178,19 @@
         let spinning = false;
         let spinAllowed = true;
         let audioCtx = null;
+        let isAdmin = false;
 
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
         const spinBtn = document.getElementById('spinBtn');
-        const spinInfo = document.getElementById('spinInfo');
+        const spinInfo = document.getElementById('spinInfo').querySelector('span');
         const tg = window.Telegram?.WebApp;
-        const USER_ID = tg?.initDataUnsafe?.user?.id || 'guest';
+        const USER_ID = String(tg?.initDataUnsafe?.user?.id || 'guest');
+
+        if (ADMIN_IDS.includes(USER_ID)) {
+            isAdmin = true;
+            document.getElementById('adminBadge').classList.remove('hidden');
+        }
 
         function getACtx() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -151,7 +211,7 @@
                 o.type = 'sine';
                 o.frequency.setValueAtTime(600, a.currentTime);
                 o.frequency.exponentialRampToValueAtTime(200, a.currentTime + 0.06);
-                g.gain.setValueAtTime(0.18, a.currentTime);
+                g.gain.setValueAtTime(0.15, a.currentTime);
                 g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.06);
                 o.start(); o.stop(a.currentTime + 0.06);
             } catch (e) {}
@@ -165,31 +225,13 @@
                     const g = a.createGain();
                     o.connect(g); g.connect(a.destination);
                     o.type = 'triangle';
-                    const t = a.currentTime + i * 0.13;
+                    const t = a.currentTime + i * 0.1;
                     o.frequency.setValueAtTime(freq, t);
-                    g.gain.setValueAtTime(0.22, t);
-                    g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-                    o.start(t); o.stop(t + 0.25);
-                });
-                vibrate([50, 30, 80, 30, 150]);
-            } catch (e) {}
-        }
-
-        function playLose() {
-            try {
-                const a = getACtx();
-                [300, 220].forEach((freq, i) => {
-                    const o = a.createOscillator();
-                    const g = a.createGain();
-                    o.connect(g); g.connect(a.destination);
-                    o.type = 'sawtooth';
-                    const t = a.currentTime + i * 0.18;
-                    o.frequency.setValueAtTime(freq, t);
-                    g.gain.setValueAtTime(0.15, t);
+                    g.gain.setValueAtTime(0.2, t);
                     g.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
                     o.start(t); o.stop(t + 0.3);
                 });
-                vibrate([100, 50, 100]);
+                vibrate([50, 30, 80, 30, 150]);
             } catch (e) {}
         }
 
@@ -199,41 +241,69 @@
                 const s = a + i * ARC;
                 const e = s + ARC;
                 const seg = SEGS[i];
+                
                 ctx.beginPath();
                 ctx.moveTo(CX, CY);
                 ctx.arc(CX, CY, R, s, e);
                 ctx.closePath();
                 ctx.fillStyle = seg.bg;
                 ctx.fill();
+                
+                const grad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
+                grad.addColorStop(0, 'rgba(0,0,0,0)');
+                grad.addColorStop(1, 'rgba(0,0,0,0.3)');
+                ctx.fillStyle = grad;
+                ctx.fill();
+
                 ctx.strokeStyle = seg.stroke;
-                ctx.lineWidth = 1.5;
+                ctx.lineWidth = 1;
                 ctx.stroke();
+
                 ctx.save();
                 ctx.translate(CX, CY);
                 ctx.rotate(s + ARC / 2);
                 ctx.textAlign = 'right';
                 const ls = seg.lines.filter(l => l);
                 const fs = ls.length > 1 ? 10 : 12;
-                ctx.font = `900 ${fs}px -apple-system,Arial,sans-serif`;
-                ctx.shadowColor = 'rgba(0,0,0,0.8)';
-                ctx.shadowBlur = 4;
-                ctx.shadowOffsetX = 1;
-                ctx.shadowOffsetY = 1;
+                ctx.font = `900 ${fs}px 'Inter', sans-serif`;
+                ctx.shadowColor = 'rgba(0,0,0,0.9)';
+                ctx.shadowBlur = 5;
                 ctx.fillStyle = seg.tc;
                 const lh = fs + 4;
                 const oy = (-(ls.length - 1) * lh) / 2;
-                ls.forEach((l, li) => ctx.fillText(l, R - 12, oy + li * lh + fs * 0.35));
+                ls.forEach((l, li) => ctx.fillText(l, R - 15, oy + li * lh + fs * 0.35));
                 ctx.restore();
             }
-            // Merkez ve Çerçeve
-            ctx.beginPath(); ctx.arc(CX,CY,R,0,2*Math.PI);
-            ctx.strokeStyle='#ff4500'; ctx.lineWidth=3; ctx.stroke();
-            ctx.beginPath(); ctx.arc(CX,CY,34,0,2*Math.PI);
-            ctx.fillStyle='#1a1a1a'; ctx.fill();
-            ctx.strokeStyle='#ff4500'; ctx.lineWidth=2.5; ctx.stroke();
+
+            // BETORSPIN MERKEZ LOGOSU
+            ctx.beginPath(); ctx.arc(CX,CY,36,0,2*Math.PI);
+            const hg = ctx.createRadialGradient(CX-5, CY-5, 2, CX, CY, 36);
+            hg.addColorStop(0, '#333'); hg.addColorStop(1, '#000');
+            ctx.fillStyle = hg; ctx.fill();
+            ctx.strokeStyle = '#ff4500'; ctx.lineWidth = 2.5; ctx.stroke();
+            
+            // Logo Metni
+            ctx.save();
+            ctx.translate(CX, CY);
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#fff';
+            ctx.font = '900 8px Inter';
+            ctx.fillText('BETOR', 0, -2);
+            ctx.fillStyle = '#ff4500';
+            ctx.font = '900 8px Inter';
+            ctx.fillText('SPIN', 0, 8);
+            ctx.restore();
         }
 
         function checkSpinRight() {
+            if (isAdmin) {
+                spinAllowed = true;
+                spinBtn.disabled = false;
+                document.getElementById('btnGlow').classList.remove('hidden');
+                spinInfo.innerText = 'Sınırsız Hak (Admin)';
+                return;
+            }
+
             const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
             if (lastSpin) {
                 const diff = Date.now() - parseInt(lastSpin);
@@ -242,7 +312,7 @@
                     document.getElementById('noSpinBanner').classList.remove('hidden');
                     spinBtn.disabled = true;
                     document.getElementById('btnGlow').classList.add('hidden');
-                    spinInfo.innerText = 'Bugünkü hakkını kullandın';
+                    spinInfo.innerText = 'Hakkın Bitti';
                     return;
                 }
             }
@@ -258,10 +328,10 @@
             spinning = true;
             spinAllowed = false;
             spinBtn.disabled = true;
-            spinInfo.innerText = 'İyi şanslar!';
+            spinInfo.innerText = 'Bol Şans!';
             
-            const total = (6 + Math.random() * 4) * 2 * Math.PI + Math.random() * 2 * Math.PI;
-            const dur = 4500;
+            const total = (7 + Math.random() * 5) * 2 * Math.PI + Math.random() * 2 * Math.PI;
+            const dur = 5000;
             const start = angle;
             let t0 = null;
             let lastTick = start;
@@ -269,12 +339,12 @@
             function frame(ts) {
                 if (!t0) t0 = ts;
                 const prog = Math.min((ts - t0) / dur, 1);
-                const cur = start + total * (1 - Math.pow(1 - prog, 4.5));
+                const cur = start + total * (1 - Math.pow(1 - prog, 5));
                 
-                if (Math.abs(cur - lastTick) >= (2 * Math.PI / 10)) {
+                if (Math.abs(cur - lastTick) >= (2 * Math.PI / 12)) {
                     lastTick = cur;
                     playTick();
-                    vibrate(8);
+                    vibrate(6);
                 }
 
                 angle = cur;
@@ -284,16 +354,13 @@
                     spinning = false;
                     const norm = ((-Math.PI / 2 - cur) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
                     const idx = Math.floor(norm / ARC) % N;
-                    const res = SEGS[idx];
-                    showResult(res);
+                    showResult(SEGS[idx]);
                 }
             }
             requestAnimationFrame(frame);
         };
 
-        let currentResult = null;
         function showResult(res) {
-            currentResult = res;
             const overlay = document.getElementById('overlay');
             const title = document.getElementById('resultTitle');
             const badge = document.getElementById('prizeBadge');
@@ -303,14 +370,14 @@
             if (res.extra) {
                 spinAllowed = true;
                 spinBtn.disabled = false;
-                spinInfo.innerText = '1 Ekstra Spin Kazandın!';
+                spinInfo.innerText = 'Ekstra Spin!';
                 title.innerText = 'Harika!';
-                badge.innerText = '+1 Spin';
+                badge.innerText = '+1 SPIN';
                 desc.innerText = 'Şansın devam ediyor! Bir kez daha çevirme hakkı kazandın.';
                 btn.innerText = 'TEKRAR ÇEVİR';
                 playWin();
             } else {
-                localStorage.setItem(`last_spin_${USER_ID}`, Date.now().toString());
+                if (!isAdmin) localStorage.setItem(`last_spin_${USER_ID}`, Date.now().toString());
                 if (res.win) {
                     title.innerText = 'Tebrikler!';
                     badge.innerText = res.prize;
@@ -318,11 +385,10 @@
                     btn.innerText = 'SİTEYE GİT VE OYNA';
                     playWin();
                 } else {
-                    title.innerText = 'Bu Sefer Olmadı';
+                    title.innerText = 'Olmadı';
                     badge.innerText = 'Kayıp';
                     desc.innerText = 'Üzülme! Arkadaşını davet et, +1 Spin kazan';
-                    btn.innerText = 'DAVET ET VE TEKRAR DENE';
-                    playLose();
+                    btn.innerText = 'DAVET ET VE DENE';
                 }
             }
             overlay.classList.remove('hidden');
@@ -330,15 +396,13 @@
 
         function closeOverlay() {
             document.getElementById('overlay').classList.add('hidden');
-            if (currentResult && !currentResult.extra) {
-                checkSpinRight();
-            }
+            checkSpinRight();
         }
 
         function shareInvite() {
             const link = `https://t.me/PrimeXBos_bot?start=ref_${USER_ID}`;
             if (tg) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=Betorspin Şans Çarkını dene!`);
-            else { navigator.clipboard.writeText(link); alert('Davet linki kopyalandı!'); }
+            else { navigator.clipboard.writeText(link); alert('Link kopyalandı!'); }
         }
 
         function goSite() {
@@ -346,8 +410,8 @@
             else window.open('https://cutt.ly/7tF5Ow3K', '_blank');
         }
 
-        // Sayaç Güncelleme
         setInterval(() => {
+            if (isAdmin) return;
             const lastSpin = localStorage.getItem(`last_spin_${USER_ID}`);
             if (lastSpin) {
                 const diff = (parseInt(lastSpin) + 24 * 60 * 60 * 1000) - Date.now();
@@ -361,7 +425,6 @@
             }
         }, 1000);
 
-        // Başlat
         if (tg) { tg.ready(); tg.expand(); }
         checkSpinRight();
         draw(0);
