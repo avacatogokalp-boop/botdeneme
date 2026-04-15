@@ -71,8 +71,9 @@ body {
 @keyframes spinRing { to { transform: rotate(360deg); } }
 
 #spotlight {
-  position: absolute; inset: 0; border-radius: 50%;
-  pointer-events: none; z-index: 10;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 286px; height: 286px;
+  border-radius: 50%; pointer-events: none; z-index: 10;
   opacity: 0; transition: opacity 0.3s;
 }
 
@@ -249,6 +250,7 @@ canvas#wheel {
   border: 1px solid #2f221c;
   box-shadow: 0 40px 80px rgba(0,0,0,0.8);
   animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
 }
 @keyframes popIn {
   from { transform: scale(0.7) translateY(40px); opacity: 0; }
@@ -364,6 +366,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.id || null;
 const USER_NAME = tg?.initDataUnsafe?.user?.first_name || '';
 const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
+const ADMIN_ID = 6943377103;
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
@@ -391,6 +394,7 @@ function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
 function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
+  if(USER_ID === ADMIN_ID) return; // Adminler için sayaca ihtiyaç yok
   
   let lastSpin = localStorage.getItem(getSpinKey());
   
@@ -604,7 +608,9 @@ function spin() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ user_id: USER_ID, name: USER_NAME, username: USER_USERNAME })
     }).catch(()=>{});
-    localStorage.setItem(getSpinKey(), Date.now().toString());
+    if (USER_ID !== ADMIN_ID) {
+      localStorage.setItem(getSpinKey(), Date.now().toString());
+    }
   }
 
   playSpinStart();
@@ -648,7 +654,10 @@ function showResult() {
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
   }
   setTimeout(()=>document.getElementById('overlay').classList.add('show'), 800);
-  setTimeout(()=>{ if(!spinAllowed) disableSpin(); }, 1000);
+  setTimeout(()=>{ 
+    // Çark durduktan sonra Backend'e bonus ya da admin hakkımız var mı diye tekrar soruyoruz
+    checkSpinRight(); 
+  }, 1000);
 }
 
 function shareInvite() {
