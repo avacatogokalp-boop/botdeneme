@@ -635,12 +635,26 @@ function showResult() {
   animateSpotlight(angle,idx);
   
   if(seg.win){
+    const rTitle = document.getElementById('rTitle');
+    const rText = document.getElementById('rText');
+    const rBtn = document.getElementById('rBtn');
+
     document.getElementById('rTop').className='rcard-top';
-    document.getElementById('rTitle').textContent='TEBRİKLER';
     document.getElementById('rBadge').style.display='inline-block';
     document.getElementById('rBadge').textContent=seg.prize;
-    document.getElementById('rText').textContent=`Ödülün hesabına yatırıldı!`;
-    document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
+    
+    if (seg.prize === '+1 Spin') {
+      rTitle.textContent = 'EKSTRA ŞANS!';
+      rText.innerHTML = 'Harika! Çarkı çevirmek için anında<br><b>+1 HAK</b> daha kazandın.';
+      rBtn.textContent = 'HEMEN TEKRAR ÇEVİR';
+      rBtn.onclick = closeModal;
+    } else {
+      rTitle.textContent = 'TEBRİKLER';
+      rText.textContent = 'Ödülün hesabına yatırıldı!';
+      rBtn.textContent = 'SİTEYE GİT VE OYNA';
+      rBtn.onclick = goSite;
+    }
+
     confetti(); playWin();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:seg.prize,win:true}));
   } else {
@@ -650,6 +664,7 @@ function showResult() {
     document.getElementById('rBadge').textContent='KAYIP';
     document.getElementById('rText').textContent='Yarın tekrar dene veya davet et!';
     document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
+    document.getElementById('rBtn').onclick = goSite;
     playLose();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
   }
