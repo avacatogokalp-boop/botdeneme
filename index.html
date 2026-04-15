@@ -5,14 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Şans Çarkı - Betorspin</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif;
   background: #0a0a0a;
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .bg {
@@ -80,6 +85,15 @@ body {
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
   filter: drop-shadow(0 3px 8px rgba(255,69,0,0.9));
+  transform-origin: 50% 0%;
+}
+.pointer.tick {
+  animation: ptrTick 0.16s cubic-bezier(0.3, 1.6, 0.4, 1);
+}
+@keyframes ptrTick {
+  0%   { transform: translateX(-50%) rotate(0deg); }
+  30%  { transform: translateX(-50%) rotate(-11deg); }
+  100% { transform: translateX(-50%) rotate(0deg); }
 }
 .ptr-ball {
   width: 16px; height: 16px; border-radius: 50%;
@@ -297,34 +311,32 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
   <div class="spin-info" id="spinInfo">Yükleniyor...</div>
 
   <button class="invite-btn" onclick="shareInvite()">
-    👥 Arkadaşını Davet Et
+    Arkadaşını Davet Et
     <span class="invite-badge">+1 Spin</span>
   </button>
 
   <div class="no-spin-banner" id="noSpinBanner">
-    <div class="ns-icon">⏳</div>
-    <div class="ns-title">Bugünkü Hakkını Kullandın!</div>
+    <div class="ns-title">Bugünkü Hakkını Kullandın</div>
     <div class="ns-text">Yeni spin hakkın için kalan süre:</div>
     <div class="ns-countdown-wrap">
       <div class="ns-countdown-label">Yenileniyor</div>
       <div class="ns-countdown" id="nsCountdown">00:00:00</div>
     </div>
     <button class="ns-btn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
-    <button class="ns-invite" onclick="shareInvite()">👥 Davet Et → Hemen +1 Spin Kazan</button>
+    <button class="ns-invite" onclick="shareInvite()">Davet Et ve Hemen +1 Spin Kazan</button>
   </div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="rcard">
     <div class="rcard-top" id="rTop">
-      <div class="rcard-icon win" id="rIcon"><span id="rEmoji">🎉</span></div>
-      <div class="rcard-title" id="rTitle">Tebrikler!</div>
+      <div class="rcard-title" id="rTitle">Tebrikler</div>
       <div class="rcard-badge" id="rBadge">100 Freespin</div>
     </div>
     <div class="rcard-bot">
-      <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
-      <button class="rcard-btn" id="rBtn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
-      <button class="rcard-invite-btn" id="rInviteBtn" onclick="shareInvite()">👥 Arkadaşını Davet Et → +1 Spin</button>
+      <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı.</div>
+      <button class="rcard-btn" id="rBtn">SİTEYE GİT VE OYNA</button>
+      <button class="rcard-invite-btn" id="rInviteBtn" onclick="shareInvite()">Arkadaşını Davet Et (+1 Spin)</button>
     </div>
   </div>
 </div>
@@ -342,16 +354,16 @@ const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#08101e', stroke:'#1a4aaa', tc:'#5599ff', icon:'🎰', win:true,  prize:'100 Freespin'          },
-  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0a00', stroke:'#cc6600', tc:'#ffaa33', icon:'💰', win:true,  prize:'Özel Yatırım Bonusu'   },
-  { lines:['100₺','BAKİYE'],         bg:'#051a09', stroke:'#0a8a35', tc:'#22ee66', icon:'💵', win:true,  prize:'100₺ Bakiye'            },
-  { lines:['VİP','HEDİYE'],          bg:'#120818', stroke:'#8800cc', tc:'#dd55ff', icon:'👑', win:true,  prize:'VİP Hediye'            },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['100₺','BONUS BUY'],      bg:'#1c0f00', stroke:'#d49500', tc:'#ffc200', icon:'🎁', win:true,  prize:'100₺ Bonus Buy'        },
-  { lines:['200','FREESPIN'],         bg:'#060d1c', stroke:'#1155cc', tc:'#4488ff', icon:'🎰', win:true,  prize:'200 Freespin'          },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
-  { lines:['200₺','BONUS BUY'],      bg:'#1c1200', stroke:'#bb8800', tc:'#ffcc00', icon:'🎁', win:true,  prize:'200₺ Bonus Buy'        },
-  { lines:['KAYBETTİN',''],          bg:'#101010', stroke:'#2a2a2a', tc:'#555',    icon:'😐', win:false, prize:null                    },
+  { lines:['100','FREESPIN'],         bg:'#3a1200', stroke:'#ff8c00', tc:'#ffffff', tickFreq:560, win:true,  prize:'100 Freespin'          },
+  { lines:['KAYBETTİN',''],          bg:'#0a0a0a', stroke:'#1f1f1f', tc:'#777777', tickFreq:220, win:false, prize:null                    },
+  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#1a0600', stroke:'#ff4500', tc:'#ffffff', tickFreq:780, win:true,  prize:'Özel Yatırım Bonusu'   },
+  { lines:['100₺','BAKİYE'],         bg:'#3a1200', stroke:'#ff8c00', tc:'#ffffff', tickFreq:560, win:true,  prize:'100₺ Bakiye'            },
+  { lines:['KAYBETTİN',''],          bg:'#0a0a0a', stroke:'#1f1f1f', tc:'#777777', tickFreq:220, win:false, prize:null                    },
+  { lines:['VİP','HEDİYE'],          bg:'#1a0600', stroke:'#ff4500', tc:'#ffffff', tickFreq:1100,win:true,  prize:'VİP Hediye'            },
+  { lines:['100₺','BONUS BUY'],      bg:'#3a1200', stroke:'#ff8c00', tc:'#ffffff', tickFreq:620, win:true,  prize:'100₺ Bonus Buy'        },
+  { lines:['200','FREESPIN'],         bg:'#1a0600', stroke:'#ff4500', tc:'#ffffff', tickFreq:830, win:true,  prize:'200 Freespin'          },
+  { lines:['+1','SPIN'],             bg:'#4a1a00', stroke:'#ffc200', tc:'#ffc200', tickFreq:980, win:true,  prize:'+1 Spin Hakkı', bonusSpin:true },
+  { lines:['200₺','BONUS BUY'],      bg:'#1a0600', stroke:'#ff4500', tc:'#ffffff', tickFreq:880, win:true,  prize:'200₺ Bonus Buy'        },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
@@ -398,11 +410,13 @@ function draw(a) {
     ctx.fillStyle=seg.bg; ctx.fill();
     ctx.strokeStyle=seg.stroke; ctx.lineWidth=1.5; ctx.stroke();
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
-    const ls=seg.lines.filter(l=>l), fs=ls.length>1?9:11;
-    ctx.font=`900 ${fs}px -apple-system,Arial,sans-serif`;
+    const ls=seg.lines.filter(l=>l), fs=ls.length>1?10:12;
+    ctx.font=`900 ${fs}px 'Inter',-apple-system,Arial,sans-serif`;
+    ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=3; ctx.shadowOffsetY=1;
     ctx.fillStyle=seg.tc;
     const lh=fs+4, oy=-(ls.length-1)*lh/2;
     ls.forEach((l,li)=>ctx.fillText(l,R-9,oy+li*lh+fs*0.35));
+    ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetY=0;
     ctx.restore();
   }
   for(let i=0;i<N;i++){
@@ -423,7 +437,7 @@ function draw(a) {
   ctx.beginPath(); ctx.arc(CX,CY,26,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,69,0,0.2)'; ctx.lineWidth=1; ctx.stroke();
   ctx.textAlign='center';
-  ctx.font='800 8px -apple-system,Arial,sans-serif';
+  ctx.font="800 8px 'Inter',-apple-system,Arial,sans-serif";
   ctx.fillStyle='#ff4500'; ctx.fillText('betor',CX,CY-2);
   ctx.fillStyle='#fff'; ctx.fillText('spin.',CX,CY+9);
 }
@@ -470,7 +484,7 @@ function enableSpin(spins) {
   spinAllowed = true;
   document.getElementById('spinBtn').disabled = false;
   const s = spins || 1;
-  document.getElementById('spinInfo').textContent = `${s} Çevirme Hakkın Var 🎯`;
+  document.getElementById('spinInfo').textContent = `${s} Çevirme Hakkın Var`;
   document.getElementById('noSpinBanner').style.display = 'none';
   stopCountdown();
 }
@@ -478,7 +492,7 @@ function enableSpin(spins) {
 function disableSpin() {
   spinAllowed = false;
   document.getElementById('spinBtn').disabled = true;
-  document.getElementById('spinInfo').textContent = 'Bugünkü hakkını kullandın ⏳';
+  document.getElementById('spinInfo').textContent = 'Bugünkü hakkını kullandın';
   document.getElementById('noSpinBanner').style.display = 'block';
   startCountdown();
 }
@@ -490,7 +504,7 @@ function spin() {
   spinning=true; spinAllowed=false;
   clearSpotlight();
   document.getElementById('spinBtn').disabled=true;
-  document.getElementById('spinInfo').textContent='İyi şanslar! 🍀';
+  document.getElementById('spinInfo').textContent='İyi şanslar!';
 
   if(USER_ID) {
     fetch('/api/use_spin', {
@@ -502,45 +516,102 @@ function spin() {
   }
 
   playSpinStart();
-  const total=(6+Math.random()*4)*2*Math.PI+Math.random()*2*Math.PI;
-  const dur=4500, start=angle; let t0=null;
-  function frame(ts){
-    if(!t0) t0=ts;
-    const prog=Math.min((ts-t0)/dur,1);
-    angle=start+total*easeOut(prog);
-    draw(angle); checkTick(angle);
-    if(prog<1) requestAnimationFrame(frame);
-    else { spinning=false; showResult(); }
+
+  // ── Faz 1: Anticipation (geri çekilme) ──
+  const pullBack = -0.20;
+  const pullDur  = 240;
+  const pullStart = angle;
+  let pt0 = null;
+  function pullback(ts){
+    if(!pt0) pt0 = ts;
+    const p = Math.min((ts-pt0)/pullDur, 1);
+    const e = 1 - Math.pow(1-p, 2);
+    angle = pullStart + pullBack * e;
+    draw(angle);
+    if(p < 1) requestAnimationFrame(pullback);
+    else mainSpin();
   }
-  requestAnimationFrame(frame);
+
+  // ── Faz 2: Ana dönüş (overshoot ile) ──
+  function mainSpin(){
+    const total     = (6+Math.random()*4)*2*Math.PI + Math.random()*2*Math.PI;
+    const overshoot = 0.06;
+    const dur       = 4200;
+    const mStart    = angle;
+    const mTotal    = total + overshoot + (pullStart - mStart);
+    let t0 = null;
+    function frame(ts){
+      if(!t0) t0 = ts;
+      const prog = Math.min((ts-t0)/dur, 1);
+      angle = mStart + mTotal * easeOut(prog);
+      draw(angle); checkTick(angle);
+      if(prog < 1) requestAnimationFrame(frame);
+      else settle(pullStart + total);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ── Faz 3: Settle (overshoot geri yaylanma) ──
+  function settle(target){
+    const sDur   = 480;
+    const sStart = angle;
+    const diff   = target - sStart;
+    let st0 = null;
+    function frame(ts){
+      if(!st0) st0 = ts;
+      const p = Math.min((ts-st0)/sDur, 1);
+      const e = 1 - Math.pow(1-p, 3);
+      angle = sStart + diff * e;
+      draw(angle);
+      if(p < 1) requestAnimationFrame(frame);
+      else { spinning=false; landingImpact(); showResult(); }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(pullback);
 }
 function easeOut(t){ return 1-Math.pow(1-t,4.5); }
+
+function landingImpact(){
+  try {
+    if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+  } catch(e){}
+  if(navigator.vibrate) navigator.vibrate([40, 20, 30]);
+}
 
 function showResult() {
   const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
   const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
   animateSpotlight(angle,idx);
-  document.getElementById('rEmoji').textContent=seg.icon;
   if(seg.win){
-    document.getElementById('rIcon').className='rcard-icon win';
     document.getElementById('rTop').className='rcard-top';
-    document.getElementById('rTitle').textContent='🎉 Tebrikler!';
     document.getElementById('rBadge').textContent=seg.prize;
     document.getElementById('rBadge').style.display='inline-block';
-    document.getElementById('rText').textContent=`${seg.prize} kazandın! Hemen siteye gir ve ödülünü al!`;
-    document.getElementById('rBtn').className='rcard-btn';
-    document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
+    if(seg.bonusSpin){
+      document.getElementById('rTitle').textContent='Ekstra Spin!';
+      document.getElementById('rText').textContent='+1 Spin hakkı kazandın. Hemen tekrar çevirebilirsin.';
+      document.getElementById('rBtn').className='rcard-btn';
+      document.getElementById('rBtn').textContent='HEMEN TEKRAR ÇEVİR';
+      document.getElementById('rBtn').onclick=claimBonusSpin;
+    } else {
+      document.getElementById('rTitle').textContent='Tebrikler!';
+      document.getElementById('rText').textContent=`${seg.prize} kazandın. Hemen siteye gir ve ödülünü al.`;
+      document.getElementById('rBtn').className='rcard-btn';
+      document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
+      document.getElementById('rBtn').onclick=goSite;
+    }
     document.getElementById('rInviteBtn').style.display='block';
     confetti(); playWin();
-    if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:seg.prize,win:true}));
+    if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:seg.prize,win:true,bonusSpin:!!seg.bonusSpin}));
   } else {
-    document.getElementById('rIcon').className='rcard-icon lose';
     document.getElementById('rTop').className='rcard-top lose-top';
-    document.getElementById('rTitle').textContent='Bu Sefer Olmadı 😔';
+    document.getElementById('rTitle').textContent='Bu Sefer Olmadı';
     document.getElementById('rBadge').style.display='none';
-    document.getElementById('rText').textContent='Üzülme! Arkadaşını davet et, +1 Spin kazan 🎡';
+    document.getElementById('rText').textContent='Üzülme. Arkadaşını davet et, +1 Spin kazan.';
     document.getElementById('rBtn').className='rcard-btn lose-btn';
     document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
+    document.getElementById('rBtn').onclick=goSite;
     document.getElementById('rInviteBtn').style.display='block';
     playLose();
     if(tg) tg.sendData(JSON.stringify({event:'spin_result',prize:null,win:false}));
@@ -554,11 +625,17 @@ function shareInvite() {
   const botUsername = 'PrimeXBos_bot';
   const link = `https://t.me/${botUsername}?start=ref_${USER_ID}`;
   if(tg) {
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('🎰 Betorspin Şans Çarkı\'nı dene! Günlük spin çevir, bonus kazan!')}`);
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Betorspin Şans Çarkı\'nı dene. Günlük spin çevir, bonus kazan.')}`);
   } else {
     navigator.clipboard?.writeText(link).then(()=>alert('Davet linki kopyalandı!')).catch(()=>{});
   }
   setTimeout(()=>checkSpinRight(), 3000);
+}
+
+function claimBonusSpin(){
+  document.getElementById('overlay').classList.remove('show');
+  clearSpotlight();
+  setTimeout(()=>checkSpinRight(), 400);
 }
 
 function goSite(){
@@ -606,39 +683,74 @@ let actx=null;
 function getACtx(){ if(!actx) actx=new AudioCtx(); return actx; }
 function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
 
-function playTick(){
+function playTick(freq){
   try{
     const a=getACtx(),o=a.createOscillator(),g=a.createGain();
     o.connect(g); g.connect(a.destination);
-    o.type='sine'; o.frequency.setValueAtTime(600,a.currentTime); o.frequency.exponentialRampToValueAtTime(200,a.currentTime+0.06);
-    g.gain.setValueAtTime(0.18,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.06);
-    o.start(); o.stop(a.currentTime+0.06);
+    o.type='sine';
+    const f = freq || 500;
+    o.frequency.setValueAtTime(f,a.currentTime);
+    o.frequency.exponentialRampToValueAtTime(Math.max(f*0.35,80),a.currentTime+0.07);
+    const vol = f > 800 ? 0.22 : (f < 300 ? 0.12 : 0.18);
+    g.gain.setValueAtTime(vol,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.07);
+    o.start(); o.stop(a.currentTime+0.07);
   }catch(e){}
 }
+
+function currentSegIdx(a){
+  const norm=((-Math.PI/2-a)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+  return Math.floor(norm/ARC)%N;
+}
+
+const pointerEl = document.querySelector('.pointer');
+function pointerWobble(){
+  if(!pointerEl) return;
+  pointerEl.classList.remove('tick');
+  void pointerEl.offsetWidth;
+  pointerEl.classList.add('tick');
+}
+
 function playWin(){
   try{
     const a=getACtx(),notes=[523,659,784,1047];
     notes.forEach((freq,i)=>{
       const o=a.createOscillator(),g=a.createGain();
       o.connect(g); g.connect(a.destination); o.type='triangle';
-      const t=a.currentTime+i*0.13;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
-      o.start(t); o.stop(t+0.25);
+      const t=a.currentTime+i*0.12;
+      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.28);
+      o.start(t); o.stop(t+0.28);
     });
+    const a2=getACtx();
+    for(let i=0;i<8;i++){
+      const t=a2.currentTime + 0.45 + i*0.045 + Math.random()*0.03;
+      const f=1400 + Math.random()*900;
+      const o=a2.createOscillator(),g=a2.createGain();
+      o.connect(g); g.connect(a2.destination);
+      o.type='square';
+      o.frequency.setValueAtTime(f,t);
+      o.frequency.exponentialRampToValueAtTime(f*0.5,t+0.08);
+      g.gain.setValueAtTime(0.09,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+0.09);
+      o.start(t); o.stop(t+0.09);
+    }
     vibrate([50,30,80,30,150]);
+    if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   }catch(e){}
 }
 function playLose(){
   try{
-    const a=getACtx(),notes=[300,220];
+    const a=getACtx(),notes=[330,247];
     notes.forEach((freq,i)=>{
       const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='sawtooth';
-      const t=a.currentTime+i*0.18;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.15,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-      o.start(t); o.stop(t+0.3);
+      o.connect(g); g.connect(a.destination); o.type='sine';
+      const t=a.currentTime+i*0.22;
+      o.frequency.setValueAtTime(freq,t);
+      o.frequency.exponentialRampToValueAtTime(freq*0.75,t+0.35);
+      g.gain.setValueAtTime(0.16,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+      o.start(t); o.stop(t+0.4);
     });
     vibrate([100,50,100]);
+    if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
   }catch(e){}
 }
 function playSpinStart(){
@@ -655,7 +767,14 @@ function playSpinStart(){
 let lastTickAngle=0;
 const TICK_INTERVAL=(2*Math.PI)/10;
 function checkTick(a){
-  if(Math.abs(a-lastTickAngle)>=TICK_INTERVAL){ lastTickAngle=a; playTick(); vibrate(8); }
+  if(Math.abs(a-lastTickAngle)>=TICK_INTERVAL){
+    lastTickAngle=a;
+    const idx=currentSegIdx(a);
+    const freq=SEGS[idx]?.tickFreq || 500;
+    playTick(freq);
+    pointerWobble();
+    vibrate(8);
+  }
 }
 </script>
 </body>
