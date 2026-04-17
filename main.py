@@ -4,8 +4,9 @@ import threading
 import os
 import time
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import sqlite3
+import random
 from flask import Flask, send_from_directory, request, jsonify
 
 TOKEN = os.environ.get("BOT_TOKEN")
@@ -52,7 +53,7 @@ def is_admin(user_id: int) -> bool:
     return int(user_id) in ADMIN_IDS
 
 def get_today():
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d")
 
 def register_user(user_id: int, name: str, username: str):
     with db_lock:
@@ -183,14 +184,99 @@ def api_use_spin():
     data = request.get_json(silent=True) or {}
     user_id = data.get('user_id')
     if not user_id:
-        return jsonify({"ok": False})
+        return jsonify({"ok": False, "reason": "no_user_id"})
     user_id = int(user_id)
     
     name = data.get('name') or 'Bilinmiyor'
     username = data.get('username') or ''
     register_user(user_id, name, username)
+
+    if available_spins(user_id) <= 0:
+        return jsonify({"ok": False, "reason": "no_spins"})
+
     use_spin(user_id)
-    return jsonify({"ok": True})
+
+    PRIZES = [
+        {"win": True, "prize": "100 Freespin"},
+        {"win": True, "prize": "Özel Yatırım Bonusu"},
+        {"win": True, "prize": "100₺ Bakiye"},
+        {"win": False, "prize": None},
+        {"win": True, "prize": "100₺ Bonus Buy"},
+        {"win": True, "prize": "200 Freespin"},
+        {"win": True, "prize": "VİP Hediye"},
+        {"win": True, "prize": "200₺ Bonus Buy"},
+        {"win": False, "prize": None},
+        {"win": True, "prize": "+1 Spin"},
+    ]
+    
+    index = random.randint(0, 9)
+    result = PRIZES[index]
+    prize = result["prize"]
+    win = result["win"]
+
+    if win and prize:
+        with db_lock:
+            conn = get_db()
+            c = conn.cursor()
+            c.execute("SELECT count FROM wins WHERE prize = ?", (prize,))
+            if c.fetchone():
+                c.execute("UPDATE wins SET count = count + 1 WHERE prize = ?", (prize,))
+            else:
+                c.execute("INSERT INTO wins (prize, count) VALUES (?, 1)", (prize,))
+            conn.commit()
+            conn.close()
+        
+        if prize == "+1 Spin":
+            add_bonus_spin(user_id, 1)
+
+    def delayed_message():
+        time.sleep(8.5)
+        try:
+            if win and prize:
+                if prize == "+1 Spin":
+                    bot.send_message(
+                        user_id,
+                        f"*Tebrikler {name}!*\n\n"
+                        f"*+1 Spin* kazandın! Çarkı tekrar çevirebilirsin.",
+                        parse_mode="Markdown",
+                        reply_markup=InlineKeyboardMarkup().add(
+                            InlineKeyboardButton("Şans Çarkını Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}"))
+                        )
+                    )
+                else:
+                    bot.send_message(
+                        user_id,
+                        f"*Tebrikler {name}!*\n\n"
+                        f"Kazandığın ödül: *{prize}*\n\n"
+                        f"Ödülünü almak için siteye gir!",
+                        parse_mode="Markdown",
+                        reply_markup=InlineKeyboardMarkup().add(
+                            InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
+                        )
+                    )
+            else:
+                bot.send_message(
+                    user_id,
+                    f"*Bu sefer olmadı {name}!*\n\n"
+                    f"Arkadaşını davet et, *+1 Spin* kazan!",
+                    parse_mode="Markdown",
+                    reply_markup=InlineKeyboardMarkup().add(
+                        InlineKeyboardButton("Arkadaşını Davet Et +1 Spin", callback_data="get_invite_link")
+                    ).add(
+                        InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
+                    )
+                )
+        except Exception as e:
+            print(f"Hata: {e}")
+
+    threading.Thread(target=delayed_message, daemon=True).start()
+
+    return jsonify({
+        "ok": True,
+        "segment_index": index,
+        "win": win,
+        "prize": prize
+    })
 
 # ── /start ────────────────────────────────────────────────────────────
 @bot.message_handler(commands=['start'])
@@ -350,65 +436,6 @@ def admin_stats(message):
         bot.reply_to(message, "Yetkisiz erişim.")
         return
     send_stats(message.chat.id)
-
-# ── Web app data ──────────────────────────────────────────────────────
-@bot.message_handler(content_types=['web_app_data'])
-def handle_web_app_data(message):
-    try:
-        data  = json.loads(message.web_app_data.data)
-        user  = message.from_user
-        name  = user.first_name or "Kullanıcı"
-
-        if data.get("win") and data.get("prize"):
-            prize = data["prize"]
-            with db_lock:
-                conn = get_db()
-                c = conn.cursor()
-                c.execute("SELECT count FROM wins WHERE prize = ?", (prize,))
-                if c.fetchone():
-                    c.execute("UPDATE wins SET count = count + 1 WHERE prize = ?", (prize,))
-                else:
-                    c.execute("INSERT INTO wins (prize, count) VALUES (?, 1)", (prize,))
-                conn.commit()
-                conn.close()
-            
-            if prize == "+1 Spin":
-                add_bonus_spin(user.id, 1)
-                bot.send_message(
-                    message.chat.id,
-                    f"*Tebrikler {name}!*\n\n"
-                    f"*+1 Spin* kazandın! Çarkı tekrar çevirebilirsin.",
-                    parse_mode="Markdown",
-                    reply_markup=InlineKeyboardMarkup().add(
-                        InlineKeyboardButton("Şans Çarkını Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user.id}"))
-                    )
-                )
-            else:
-                bot.send_message(
-                    message.chat.id,
-                    f"*Tebrikler {name}!*\n\n"
-                    f"Kazandığın ödül: *{prize}*\n\n"
-                    f"Ödülünü almak için siteye gir!",
-                    parse_mode="Markdown",
-                    reply_markup=InlineKeyboardMarkup().add(
-                        InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
-                    )
-                )
-        else:
-            bot.send_message(
-                message.chat.id,
-                f"*Bu sefer olmadı {name}!*\n\n"
-                f"Arkadaşını davet et, *+1 Spin* kazan!",
-                parse_mode="Markdown",
-                reply_markup=InlineKeyboardMarkup().add(
-                    InlineKeyboardButton("Arkadaşını Davet Et +1 Spin", callback_data="get_invite_link")
-                ).add(
-                    InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
-                )
-            )
-        print(f"Spin sonucu: {user.id} -> {data}")
-    except Exception as e:
-        print(f"WebApp data hatası: {e}")
 
 # ── Diğer mesajlar ────────────────────────────────────────────────────
 @bot.message_handler(func=lambda m: m.text and not m.text.startswith('/'))
