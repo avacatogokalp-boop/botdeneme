@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -84,24 +85,32 @@ body {
   transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.8)) drop-shadow(0 0 5px rgba(255,69,0,0.5));
+  filter: drop-shadow(0 15px 15px rgba(0,0,0,0.95)) drop-shadow(0 4px 6px rgba(255,69,0,0.6));
 }
 .pointer.ticking {
-  transform: translateX(-50%) rotate(-30deg);
+  transform: translateX(-50%) rotate(-35deg);
   transition: transform 0.02s ease-out;
 }
 .ptr-ball {
-  width: 20px; height: 20px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ff5500 40%, #5a1100 100%);
-  border: 2px solid rgba(255,255,200,0.8);
-  margin-bottom: -3px; z-index: 1;
-  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.5);
+  width: 24px; height: 24px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ff8c00 30%, #5a1100 100%);
+  border: 3px solid rgba(255, 230, 150, 0.9);
+  margin-bottom: -5px; z-index: 1;
+  box-shadow: inset -3px -3px 6px rgba(0,0,0,0.7), 0 0 10px rgba(255,120,0,0.5);
 }
 .ptr-tri {
   width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 28px solid #ff4500;
+  position: relative;
+}
+.ptr-tri::after {
+  content:''; position: absolute; top:-28px; left:-10px;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 24px solid #ff4500;
+  border-top: 26px solid rgba(255,255,255,0.4);
+  pointer-events:none;
 }
 
 canvas#wheel {
@@ -245,12 +254,13 @@ canvas#wheel {
 .rcard {
   position: relative; z-index: 1;
   width: 88%; max-width: 320px;
-  background: #18110c;
+  background: rgba(20, 10, 5, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 20px; overflow: hidden;
-  border: 1px solid #2f221c;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+  border: 1px solid rgba(255, 100, 0, 0.4);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 2px 20px rgba(255,100,0,0.1);
   animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
-  position: relative;
 }
 @keyframes popIn {
   from { transform: scale(0.7) translateY(40px); opacity: 0; }
@@ -258,22 +268,23 @@ canvas#wheel {
 }
 .rcard-top {
   padding: 40px 24px 30px; text-align: center;
-  background: radial-gradient(circle at top, rgba(255,69,0,0.15) 0%, transparent 100%);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: radial-gradient(circle at top, rgba(255,69,0,0.2) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.rcard-top.lose-top { background: #130c08; border-bottom: 1px solid #1f140e; }
+.rcard-top.lose-top { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.03); }
 
-.rcard-title { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; }
+.rcard-title { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(255,69,0,0.6); }
 .rcard-badge {
   display: inline-block;
-  background: linear-gradient(180deg, #ff5500 0%, #d83b00 100%);
+  background: linear-gradient(180deg, #ff7b00 0%, #c42900 100%);
   color: #fff; font-size: 16px; font-weight: 900;
   padding: 10px 30px; border-radius: 40px; letter-spacing: 1px;
   text-transform: uppercase;
-  box-shadow: 0 0 20px rgba(255,69,0,0.3);
+  box-shadow: 0 5px 20px rgba(255,69,0,0.5), inset 0 2px 5px rgba(255,255,255,0.4);
+  border: 1px solid #ff9245;
 }
 
-.rcard-bot { padding: 30px 24px 20px; text-align: center; background: #130c08; }
+.rcard-bot { padding: 30px 24px 20px; text-align: center; background: rgba(0,0,0,0.4); }
 .rcard-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 24px; }
 .rcard-btn {
   width: 100%;
@@ -431,93 +442,146 @@ function stopCountdown() {
 
 function draw(a, t=0) {
   ctx.clearRect(0,0,286,286);
-  // 1. Dilim Zeminleri ve Çizgileri
+  // 1. Dilim Zeminleri ve Derinlikli Gradient (Inner Shadow İlüzyonu)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, e=s+ARC, seg=SEGS[i];
+    
+    // Her dilime 3D eğimli çukur hissi veren custom gradient
+    const segGrd = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
+    segGrd.addColorStop(0, seg.bg);
+    segGrd.addColorStop(0.8, '#050201'); // Dışa doğru kararma (Çukur hissi)
+    segGrd.addColorStop(1, '#000000');
+    
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
-    ctx.fillStyle=seg.bg; ctx.fill();
-    ctx.strokeStyle=seg.stroke; ctx.lineWidth=1.5; ctx.stroke();
-  }
-  for(let i=0;i<N;i++){
-    const a2=a+i*ARC;
-    ctx.beginPath(); ctx.moveTo(CX,CY);
-    ctx.lineTo(CX+R*Math.cos(a2),CY+R*Math.sin(a2));
-    ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.fillStyle = segGrd; ctx.fill();
+    
+    // Hafif parlayan iç ışık (Vurgu)
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R-3,s,e); ctx.closePath();
+    ctx.fillStyle = 'rgba(255,100,0,0.05)'; ctx.fill();
   }
 
-  // 2. 3D BOMBE OLUŞTURUCU KÜRESEL GÖLGE EFEKTİ (DOME EFFECT)
+  // 2. Altın Mekanik Çıtalar (Dividers)
+  for(let i=0;i<N;i++){
+    const a2=a+i*ARC;
+    const endX = CX+R*Math.cos(a2), endY = CY+R*Math.sin(a2);
+    
+    // Çıta gölgesi (Derinlik)
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2, endY-2);
+    ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=4; ctx.stroke();
+    
+    // Altın ışıltılı ana çıta
+    const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
+    lineGrd.addColorStop(0, '#5a3d00'); // Merkeze yakın koyu
+    lineGrd.addColorStop(0.5, '#ffd900'); // Ortada güçlü parlama
+    lineGrd.addColorStop(1, '#ff9900'); // Kenara yakın turuncu-altın
+    
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
+    ctx.strokeStyle = lineGrd; ctx.lineWidth = 2.5; ctx.stroke();
+    
+    // Çıta üzeri keskin beyaz/sarı yansıma
+    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2)); 
+    ctx.lineTo(endX*0.8, endY*0.8);
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
+  }
+
+  // 3. 3D BOMBE OLUŞTURUCU KÜRESEL GÖLGE EFEKTİ (DOME EFFECT)
   const domeGrd = ctx.createRadialGradient(CX - R*0.35, CY - R*0.35, 0, CX, CY, R);
-  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.12)'); 
+  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)'); 
   domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');        
-  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.85)');       
+  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');       
   
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = domeGrd; ctx.fill();
 
-  // 3. YAZILAR (Gölgelerin üstünde parlak durmaları için buraya alındı)
+  // 4. YAZILAR (Gölgelerin üstünde parlak durmaları için)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
     const ls=seg.lines.filter(l=>l);
     
-    // Orjinal font boyutlarına geri dönüldü taşıp göbeğe girmemesi için
     const fs=ls.length>1?11.5:13.5; 
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
     
-    // Metinlere güçlü drop-shadow ile ayrıştırma
+    // Keskin Metalik Yazı Stili Drop-Shadow
     ctx.shadowColor = 'rgba(0,0,0,0.95)';
-    ctx.shadowBlur = 4;
-    ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
     
-    ctx.fillStyle=seg.tc;
+    ctx.fillStyle = seg.tc;
     const lh=fs+4, oy=-(ls.length-1)*lh/2;
-    ls.forEach((l,li)=>ctx.fillText(l,R-11,oy+li*lh+fs*0.35));
+    ls.forEach((l,li)=>ctx.fillText(l,R-15,oy+li*lh+fs*0.35));
     ctx.restore();
   }
 
-  // 4. METALİK DIŞ ÇERÇEVE (Hareketli Aydınlatma)
+  // 5. METALİK DIŞ ÇERÇEVE (Kalın Lüks Kasa)
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
   const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
-  rimGrd.addColorStop(0, '#5a1d00');
-  rimGrd.addColorStop(0.25, '#ffaa00'); // Işık yansıması (Glow)
-  rimGrd.addColorStop(0.5, '#2e0f00');
-  rimGrd.addColorStop(0.75, '#ff5500');
-  rimGrd.addColorStop(1, '#5a1d00');
+  rimGrd.addColorStop(0, '#2e0f00');
+  rimGrd.addColorStop(0.3, '#ffaa00'); // Işık yansıması (Glow)
+  rimGrd.addColorStop(0.5, '#1a0800');
+  rimGrd.addColorStop(0.8, '#ff5500');
+  rimGrd.addColorStop(1, '#2e0f00');
   
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
-  ctx.strokeStyle = rimGrd; ctx.lineWidth = 10; ctx.stroke();
+  ctx.strokeStyle = rimGrd; ctx.lineWidth = 14; ctx.stroke();
 
-  ctx.beginPath(); ctx.arc(CX, CY, R-5, 0, 2*Math.PI);
-  ctx.strokeStyle = 'rgba(255, 120, 0, 0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+  // Kasa iç yansıma detayı
+  ctx.beginPath(); ctx.arc(CX, CY, R-7, 0, 2*Math.PI);
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)'; ctx.lineWidth = 3; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX, CY, R-8, 0, 2*Math.PI);
+  ctx.strokeStyle = 'rgba(255, 120, 0, 0.6)'; ctx.lineWidth = 1; ctx.stroke();
 
-  // 5. MERKEZ GÖBEK (3D Vida)
+  // 6. CASINO LED AMPULLERİ ÇERÇEVESİ (Buls/Rim Lights)
+  const numBulbs = 36;
+  for(let j=0; j<numBulbs; j++) {
+      const bAngle = j * (2 * Math.PI / numBulbs);
+      const bx = CX + (R - 3) * Math.cos(bAngle);
+      const by = CY + (R - 3) * Math.sin(bAngle);
+      
+      // Işıkların dönüyormuş gibi yanıp sönmesini sağlayan sinüs dalgası
+      const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
+      
+      ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
+      ctx.fillStyle = `rgba(255, 255, 150, ${0.4 + glowLevel * 0.6})`;
+      ctx.shadowColor = '#ffffaa';
+      ctx.shadowBlur = glowLevel * 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+  }
+
+  // 7. MERKEZ GÖBEK (Neon Işıklı 3D Vida)
   ctx.shadowColor = 'rgba(0,0,0,0.95)';
   ctx.shadowBlur = 15;
-  ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 6;
+  ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
   
   const centerBase = ctx.createRadialGradient(CX-15, CY-15, 2, CX, CY, 38);
-  centerBase.addColorStop(0, '#662200');
-  centerBase.addColorStop(0.6, '#170b07');
-  centerBase.addColorStop(1, '#080402');
-  ctx.beginPath(); ctx.arc(CX, CY, 35, 0, 2*Math.PI);
+  centerBase.addColorStop(0, '#552200');
+  centerBase.addColorStop(0.5, '#170b07');
+  centerBase.addColorStop(1, '#000000');
+  ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
   ctx.fillStyle = centerBase; ctx.fill();
   
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 
-  const dx2 = 35 * Math.cos(-t), dy2 = 35 * Math.sin(-t);
+  // Dönen ışıklı led halka göbekte
+  const dx2 = 35 * Math.cos(-t*2), dy2 = 35 * Math.sin(-t*2);
   const cRim = ctx.createLinearGradient(CX-dx2, CY-dy2, CX+dx2, CY+dy2);
-  cRim.addColorStop(0, '#ff9900'); cRim.addColorStop(1, '#330c00');
-  ctx.beginPath(); ctx.arc(CX, CY, 35, 0, 2*Math.PI);
-  ctx.strokeStyle = cRim; ctx.lineWidth = 4; ctx.stroke();
+  cRim.addColorStop(0, '#ffcc00'); cRim.addColorStop(0.5, '#441100'); cRim.addColorStop(1, '#ff5500');
+  ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
+  ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
 
-  ctx.beginPath(); ctx.arc(CX,CY,25,0,2*Math.PI);
-  ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1; ctx.stroke();
+  // İç koruyucu halka
+  ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI);
+  ctx.strokeStyle='rgba(0,0,0, 0.8)'; ctx.lineWidth=3; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
+  ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
+  // "BETOR SPIN" Yüzen 3D Yazı
   ctx.textAlign='center';
-  ctx.font='900 11.5px Montserrat, sans-serif';
-  ctx.shadowColor = 'rgba(255,100,0,0.6)'; ctx.shadowBlur = 5;
-  ctx.fillStyle='#ff5500'; ctx.fillText('BETOR',CX,CY-2);
-  ctx.fillStyle='#fff'; ctx.fillText('SPİN.',CX,CY+11);
+  ctx.font='900 12.5px Montserrat, sans-serif'; // Bir tık büyüdü
+  ctx.shadowColor = 'rgba(255,100,0,1)'; ctx.shadowBlur = 8;
+  ctx.fillStyle='#ff5500'; ctx.fillText('BETOR',CX,CY-3);
+  ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 }
 
