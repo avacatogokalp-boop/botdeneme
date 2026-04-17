@@ -20,11 +20,19 @@ body {
 .bg {
   position: fixed; inset: 0;
   background:
-    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,69,0,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(255,120,0,0.08) 0%, transparent 50%),
-    #0d0806;
+    radial-gradient(ellipse 100% 60% at 50% -10%, rgba(255,69,0,0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 95% 95%, rgba(255,100,0,0.15) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(255, 30, 0, 0.05) 0%, transparent 60%),
+    #080402;
   z-index: 0;
 }
+.bg::after {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: repeating-conic-gradient(from 0deg, transparent 0deg 10deg, rgba(255, 60, 0, 0.03) 10deg 20deg);
+  animation: bgRays 60s linear infinite;
+  z-index: 0; pointer-events: none;
+}
+@keyframes bgRays { to { transform: rotate(360deg); } }
 
 .container {
   position: relative; z-index: 1;
@@ -134,14 +142,15 @@ canvas#wheel {
 
 .btn-body {
   position: relative; overflow: hidden;
-  background: linear-gradient(180deg, #ff5500 0%, #8b1c00 100%);
-  color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg, #ff4400 0%, #aa1100 80%, #660000 100%);
+  color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
   font-family: inherit; font-size: 28px; font-weight: 900;
   letter-spacing: 4px; text-transform: uppercase;
   border-radius: 40px; padding: 18px 0;
-  border: 2px solid #ffa677;
+  border: 1px solid rgba(255,200,100,0.5);
+  box-shadow: 0 8px 0 #7a0b00, 0 15px 25px rgba(0,0,0,0.8), 0 0 30px rgba(255,60,0,0.5);
   animation: pulseGlow 2.5s infinite;
-  transition: transform .1s, filter .1s;
+  transition: transform .1s, box-shadow .1s, filter .1s;
   width: 100%;
 }
 .btn-body::before {
@@ -155,7 +164,11 @@ canvas#wheel {
   transform: rotate(45deg) translateX(-150%);
   animation: shineBtn 5s infinite; pointer-events: none;
 }
-#spinBtn:active:not(:disabled) .btn-body { transform: translateY(6px); filter: brightness(0.8); }
+#spinBtn:active:not(:disabled) .btn-body { 
+  transform: translateY(8px); 
+  box-shadow: 0 0px 0 #7a0b00, 0 5px 10px rgba(0,0,0,0.8), 0 0 40px rgba(255,60,0,0.8);
+  filter: brightness(1.2); 
+}
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; animation: none; box-shadow: none; border-color: transparent; }
 
 .spin-info {
@@ -173,15 +186,17 @@ canvas#wheel {
 
 .invite-btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  background: #1c1817;
-  border: 1px solid #322b2a;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,100,0,0.3);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.05);
   border-radius: 20px;
   padding: 16px 20px;
   color: #fff; font-family: inherit; font-size: 15px; font-weight: 700;
   cursor: pointer; width: 100%; max-width: 300px;
-  transition: background .15s, border-color .15s;
+  transition: all .2s;
 }
-.invite-btn:active { background: #26211f; }
+.invite-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.97); }
 .invite-badge {
   color: #ffffff;
   font-weight: 800;
@@ -190,8 +205,10 @@ canvas#wheel {
 .no-spin-banner {
   display: none;
   margin-top: 18px;
-  background: rgba(255,69,0,0.08);
-  border: 1px solid rgba(255,69,0,0.2);
+  background: rgba(20,10,5, 0.6);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,69,0,0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
   border-radius: 16px;
   padding: 18px 22px;
   text-align: center;
