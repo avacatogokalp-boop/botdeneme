@@ -18,8 +18,10 @@ ADMIN_IDS = [6943377103]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID
 
 db_lock = threading.Lock()
 
+DB_PATH = "/var/data/database.sqlite" if os.path.isdir("/var/data") else "database.sqlite"
+
 def get_db():
-    conn = sqlite3.connect("database.sqlite", check_same_thread=False)
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
