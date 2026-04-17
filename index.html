@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -598,6 +597,13 @@ function disableSpin() {
 
 checkSpinRight();
 
+// Arkadaş davetinden gelebilecek ekstra hakları algılaması için arka plan kontrolü
+setInterval(() => {
+  if (!spinAllowed && USER_ID) {
+    checkSpinRight();
+  }
+}, 5000);
+
 async function spin() {
   if(spinning||!spinAllowed) return;
   spinning=true; spinAllowed=false;
@@ -677,7 +683,7 @@ function showResult() {
       rTitle.textContent = 'EKSTRA ŞANS!';
       rText.innerHTML = 'Harika! Çarkı çevirmek için anında<br><b>+1 HAK</b> daha kazandın.';
       rBtn.textContent = 'HEMEN TEKRAR ÇEVİR';
-      rBtn.onclick = closeModal;
+      rBtn.onclick = () => { closeModal(); spin(); };
     } else {
       rTitle.textContent = 'TEBRİKLER';
       rText.textContent = 'Ödülün hesabına yatırıldı!';
