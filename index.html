@@ -510,6 +510,18 @@ function draw(a, t=0) {
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = domeGrd; ctx.fill();
 
+  // 3.5. ALTIN İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
+  const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
+  innerRimGrd.addColorStop(0, '#ffe55c');
+  innerRimGrd.addColorStop(0.3, '#b37d00');
+  innerRimGrd.addColorStop(0.6, '#4d3000');
+  innerRimGrd.addColorStop(1, '#ffc000');
+  
+  ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
+  ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX, CY, 44, 0, 2*Math.PI);
+  ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 2; ctx.stroke();
+
   // 4. YAZILAR (Gölgelerin üstünde parlak durmaları için)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
@@ -529,6 +541,15 @@ function draw(a, t=0) {
     ls.forEach((l,li)=>ctx.fillText(l,R-15,oy+li*lh+fs*0.35));
     ctx.restore();
   }
+
+  // 4.5. CAM PARLAMASI (Glossy Tabaka)
+  const glassGrd = ctx.createLinearGradient(CX - R*0.6, CY - R*0.8, CX + R*0.8, CY + R*0.8);
+  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)'); // Üst köşe parlaması
+  glassGrd.addColorStop(0.4, 'rgba(255, 255, 255, 0.04)');
+  glassGrd.addColorStop(0.45, 'transparent');
+  glassGrd.addColorStop(1, 'transparent');
+  ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
+  ctx.fillStyle = glassGrd; ctx.fill();
 
   // 5. METALİK DIŞ ÇERÇEVE (Kalın Lüks Kasa)
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
@@ -580,22 +601,33 @@ function draw(a, t=0) {
   
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 
-  // Dönen ışıklı led halka göbekte
-  const dx2 = 35 * Math.cos(-t*2), dy2 = 35 * Math.sin(-t*2);
-  const cRim = ctx.createLinearGradient(CX-dx2, CY-dy2, CX+dx2, CY+dy2);
+  // ZIT DÖNEN IŞIKLI MEKANİK HALKA
+  ctx.save();
+  ctx.translate(CX, CY);
+  const rotA = -a * 1.5; // Çarkın yönüne tam ters ve daha hızlı
+  ctx.rotate(rotA);
+  
+  const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
   cRim.addColorStop(0, '#ffcc00'); cRim.addColorStop(0.5, '#441100'); cRim.addColorStop(1, '#ff5500');
-  ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
+  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI); // Çizim 0,0 merkezli yapılıyor translate yüzünden
   ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
 
-  // İç koruyucu halka
+  // Mekanik dişli çiviler
+  for(let j=0; j<8; j++) {
+      ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
+      ctx.fillStyle = '#ffaa00'; ctx.fill();
+  }
+  ctx.restore(); // Matrix geri yükleniyor ki yazılar ters dönmesin
+
+  // İç koruyucu halka statik
   ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI);
   ctx.strokeStyle='rgba(0,0,0, 0.8)'; ctx.lineWidth=3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
-  // "BETOR SPIN" Yüzen 3D Yazı
+  // "BETOR SPIN" Yüzen 3D Yazı (Düz kalacak)
   ctx.textAlign='center';
-  ctx.font='900 12.5px Montserrat, sans-serif'; // Bir tık büyüdü
+  ctx.font='900 12.5px Montserrat, sans-serif'; 
   ctx.shadowColor = 'rgba(255,100,0,1)'; ctx.shadowBlur = 8;
   ctx.fillStyle='#ff5500'; ctx.fillText('BETOR',CX,CY-3);
   ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
