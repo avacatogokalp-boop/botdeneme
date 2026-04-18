@@ -7,7 +7,9 @@ import json
 from datetime import datetime, timezone, timedelta
 import sqlite3
 import random
-from flask import Flask, send_from_directory, request, jsonify
+import csv
+import io
+from flask import Flask, send_from_directory, request, jsonify, Response
 
 TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
@@ -41,6 +43,13 @@ def init_db():
         c.execute('''CREATE TABLE IF NOT EXISTS wins (
             prize TEXT PRIMARY KEY,
             count INTEGER DEFAULT 0
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS spin_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            name TEXT,
+            prize TEXT,
+            date_time TEXT
         )''')
         conn.commit()
         conn.close()
@@ -159,6 +168,32 @@ def send_stats(chat_id):
 def home():
     return "Bot Aktif!", 200
 
+@app.route('/admin/rapor_indir')
+def excel_indir():
+    secret = request.args.get('sifre')
+    if secret != "VIP_MUDUR_2026":
+        return "Yetkisiz Erisim", 403
+
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT user_id, name, prize, date_time FROM spin_logs ORDER BY id DESC")
+        rows = c.fetchall()
+        conn.close()
+
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['Kullanici ID', 'Isim Soyisim', 'Kazanilan Odul', 'Tarih'])
+    for r in rows:
+        cw.writerow([r['user_id'], r['name'], r['prize'], r['date_time']])
+    
+    # utf-8-sig kullanıyoruz ki Excel Türkçe karakterleri ve verileri düzgün okusun
+    return Response(
+        si.getvalue().encode('utf-8-sig'),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=BetorSpin_Rapor_2026.csv"}
+    )
+
 @app.route('/wheel')
 def wheel():
     return send_from_directory('.', 'index.html')
@@ -216,17 +251,26 @@ def api_use_spin():
     prize = result["prize"]
     win = result["win"]
 
-    if win and prize:
-        with db_lock:
-            conn = get_db()
-            c = conn.cursor()
+    current_time = datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")
+
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        
+        # Log Kaydı
+        log_prize = prize if prize else "KAYBETTİN"
+        c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time) VALUES (?, ?, ?, ?)", 
+                 (user_id, name, log_prize, current_time))
+
+        if win and prize:
             c.execute("SELECT count FROM wins WHERE prize = ?", (prize,))
             if c.fetchone():
                 c.execute("UPDATE wins SET count = count + 1 WHERE prize = ?", (prize,))
             else:
                 c.execute("INSERT INTO wins (prize, count) VALUES (?, 1)", (prize,))
-            conn.commit()
-            conn.close()
+        
+        conn.commit()
+        conn.close()
         
         if prize == "+1 Spin":
             add_bonus_spin(user_id, 1)
@@ -438,6 +482,45 @@ def admin_stats(message):
         bot.reply_to(message, "Yetkisiz erişim.")
         return
     send_stats(message.chat.id)
+
+@bot.message_handler(commands=['logs'])
+def admin_logs(message):
+    user_id = message.from_user.id
+    if not is_admin(user_id): return
+    
+    args = message.text.split()
+    page = 1
+    if len(args) > 1 and args[1].isdigit():
+        page = int(args[1])
+        if page < 1: page = 1
+        
+    limit = 50
+    offset = (page - 1) * limit
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT name, prize, date_time FROM spin_logs ORDER BY id DESC LIMIT ? OFFSET ?", (limit, offset))
+        rows = c.fetchall()
+        
+        c.execute("SELECT COUNT(*) as total FROM spin_logs")
+        total_logs = c.fetchone()["total"]
+        conn.close()
+    
+    if not rows:
+        bot.reply_to(message, f"Sayfa {page}'de henüz hiç kayıt yok.")
+        return
+        
+    total_pages = (total_logs + limit - 1) // limit
+    lines = [f"📋 *Çevirme Kayıtları (Sayfa {page}/{total_pages})*"]
+    for r in rows:
+        dt = r['date_time'][5:16]
+        lines.append(f"• *{r['name']}* ➜ {r['prize']} ({dt})")
+        
+    if page < total_pages:
+        lines.append(f"\n_Sonraki sayfa için komut: /logs {page+1}_")
+        
+    bot.reply_to(message, "\n".join(lines), parse_mode="Markdown")
 
 # ── Diğer mesajlar ────────────────────────────────────────────────────
 @bot.message_handler(func=lambda m: m.text and not m.text.startswith('/'))
