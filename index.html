@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -449,7 +448,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
       <h2>MAĞAZA</h2>
       <button class="store-close" onclick="closeStore()">X</button>
     </div>
-    <div class="store-body">
+    <div class="store-body" id="storeItems">
       <div class="store-item">
         <div class="si-info"><h3>100 Freespin</h3><p>Seçili oyunlarda geçerli</p></div>
         <button class="si-buy" onclick="buyItem('freespin', 300)">300 BOS</button>
@@ -461,6 +460,15 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
       <div class="store-item" style="border: 1px solid rgba(255, 215, 0, 0.5); background: linear-gradient(45deg, rgba(26,23,22,0.8), rgba(45,36,0,0.8)); box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.1);">
         <div class="si-info"><h3 style="color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.9);">VİP Hediye Kodu</h3><p style="color: #FFD700; opacity: 0.8;">VİP Müşterilere özel ödül</p></div>
         <button class="si-buy" style="background: linear-gradient(180deg, #FFD700, #b39700); color: #000; text-shadow: none;" onclick="buyItem('vip', 1000)">1000 BOS</button>
+      </div>
+    </div>
+    
+    <div class="store-body" id="storePrompt" style="display:none; text-align:center; padding: 20px 0;">
+      <p style="color:#FFF; font-size:14px; opacity:0.9; margin-bottom:15px; font-weight:600;">Hediyenin yükleneceği <br><span style="color:#FF5800;">BetorSpin Site Kullanıcı Adınızı</span> girin:</p>
+      <input type="text" id="casinoUsername" placeholder="Site Kullanıcı Adınız" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,88,0,0.5); color:#FFF; padding:15px; border-radius:12px; font-size:16px; outline:none; text-align:center; font-family:'Montserrat', sans-serif; font-weight:700; box-shadow:inset 0 0 15px rgba(0,0,0,0.5);">
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button class="kapat-btn" onclick="closePrompt()" style="flex:1;">İPTAL</button>
+        <button class="si-buy" onclick="submitPurchase()" style="flex:1; padding:12px; font-size:14px;">ONAYLA</button>
       </div>
     </div>
   </div>
@@ -885,25 +893,41 @@ function openStore() {
 function closeStore() {
   document.getElementById('storeOverlay').classList.remove('show');
 }
-async function buyItem(itemId, price) {
+let pendingItemId = null;
+function buyItem(itemId, price) {
   if(!USER_ID) return;
   if(WALLET_BALANCE < price) {
     alert("Yetersiz BOSCOIN! Önce çarkı çevirip bakiye biriktirmelisin.");
     return;
   }
   
-  if(!confirm("Bu ödülü satın almak istediğine emin misin?")) return;
+  pendingItemId = itemId;
+  document.getElementById('storeItems').style.display = 'none';
+  document.getElementById('casinoUsername').value = '';
+  document.getElementById('storePrompt').style.display = 'block';
+}
+
+function closePrompt() {
+  pendingItemId = null;
+  document.getElementById('storePrompt').style.display = 'none';
+  document.getElementById('storeItems').style.display = 'flex';
+}
+
+async function submitPurchase() {
+  const cUser = document.getElementById('casinoUsername').value.trim();
+  if(!cUser) { alert("Lütfen site kullanıcı adınızı girin!"); return; }
   
   try {
     const res = await fetch('/api/buy_item', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ user_id: USER_ID, item_id: itemId })
+      body: JSON.stringify({ user_id: USER_ID, item_id: pendingItemId, casino_user: cUser })
     });
     const data = await res.json();
     if(data.ok) {
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
+      closePrompt();
       closeStore();
       
       const rTitle = document.getElementById('rTitle');
@@ -912,24 +936,16 @@ async function buyItem(itemId, price) {
       const rTop = document.getElementById('rTop');
       const rBadge = document.getElementById('rBadge');
       const pBox = document.getElementById('promoBox');
-      const pText = document.getElementById('promoCodeText');
-      const promoCopyBtn = document.getElementById('promoCopyBtn');
       
       rTop.className = 'rcard-top';
       rBadge.style.display = 'inline-block';
-      rBadge.textContent = 'Satın Alım Başarılı!';
-      rTitle.textContent = 'MAĞAZA';
+      rBadge.textContent = 'Siparişiniz Alındı!';
+      rTitle.textContent = 'TEBRİKLER';
       rText.style.display = 'block';
-      rText.innerHTML = 'Promokodun oluşturuldu. <br>Aşağıdaki kodu kopyalayıp sitemizde bozdurabilirsin.';
+      rText.innerHTML = `Ödülünüz ayrılmıştır!<br><br>Kalite standartlarımız gereği <b style="color:#FF5800;">${cUser}</b> kullanıcı adlı hesabınıza <b>bu gece saat 00:00'da</b> otomatik olarak yüklenecektir.`;
       
-      if (pBox) pBox.style.display = 'flex';
-      if (pText) pText.textContent = data.code;
-      if (promoCopyBtn) {
-        promoCopyBtn.textContent = 'KOPYALA';
-        promoCopyBtn.className = 'promo-btn';
-      }
-      
-      rBtn.textContent = 'SİTEYE GİT VE BOZDUR';
+      if (pBox) pBox.style.display = 'none';
+      rBtn.textContent = 'SİTEYE GİT VE OYNA';
       rBtn.onclick = goSite;
       
       document.getElementById('overlay').classList.add('show');
