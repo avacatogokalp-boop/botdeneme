@@ -316,15 +316,18 @@ canvas#wheel {
 
 .promo-box {
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(0,0,0,0.6); border: 1px dashed #FF9153;
-  border-radius: 12px; padding: 12px 16px; margin-bottom: 20px;
+  background: #252322; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
 }
-.promo-box span { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,145,83,0.6); }
+.promo-box-left { display: flex; flex-direction: column; text-align: left; }
+.promo-box-title { font-size: 11px; color: rgba(255,255,255,0.6); font-weight: 600; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
+.promo-box span { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 2px; }
 .promo-btn {
-  background: #FF2E00; border: none; color: #fff; font-weight: 800;
-  padding: 8px 16px; border-radius: 8px; cursor: pointer; text-transform: uppercase;
-  font-size: 12px; transition: transform 0.1s;
+  background: transparent; border: 1px solid #FF9153; color: #FF9153; font-weight: 800;
+  padding: 6px 12px; border-radius: 6px; cursor: pointer; text-transform: uppercase;
+  font-size: 11px; transition: 0.2s;
 }
+.promo-btn.copied { background: #FF9153; color: #fff; }
 .promo-btn:active { transform: scale(0.95); }
 
 .kapat-btn {
@@ -392,7 +395,10 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     <div class="rcard-bot">
       <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
       <div class="promo-box" id="promoBox" style="display:none;">
-        <span id="promoCodeText">CODE</span>
+        <div class="promo-box-left">
+          <div class="promo-box-title">PROMOKOD</div>
+          <span id="promoCodeText">CODE</span>
+        </div>
         <button class="promo-btn" id="promoCopyBtn" onclick="copyCode()">KOPYALA</button>
       </div>
       <button class="rcard-btn" id="rBtn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
@@ -415,14 +421,14 @@ const ADMIN_ID = 6943377103;
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
+  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
   { lines:['+1','SPIN'],             bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
-  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
+  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
   { lines:['+1','SPIN'],             bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
-  { lines:['100₺','BONUS BUY'],      bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
+  { lines:['100₺','BONUS BUY'],      bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
   { lines:['100₺','BONUS BUY'],      bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
   { lines:['KAYBETTİN',''],          bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null                    },
-  { lines:['VİP','HEDİYE'],          bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
+  { lines:['VİP','HEDİYE'],          bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
   { lines:['KAYBETTİN',''],          bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null                    },
 ];
 
@@ -506,7 +512,7 @@ function draw(a, t=0) {
     // Altın/Turuncu ışıltılı ana çıta
     const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
     lineGrd.addColorStop(0, '#2b0a00'); // Merkeze yakın koyu
-    lineGrd.addColorStop(0.5, '#FF9153'); // Ortada güçlü parlama
+    lineGrd.addColorStop(0.5, '#FF5800'); // Ortada güçlü parlama
     lineGrd.addColorStop(1, '#FF2E00'); // Kenara yakın turuncu-kırmızı
     
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
@@ -529,10 +535,10 @@ function draw(a, t=0) {
 
   // 3.5. ALTIN/TURUNCU İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
   const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
-  innerRimGrd.addColorStop(0, '#FF9153');
+  innerRimGrd.addColorStop(0, '#FF5800');
   innerRimGrd.addColorStop(0.3, '#FF2E00');
   innerRimGrd.addColorStop(0.6, '#202020');
-  innerRimGrd.addColorStop(1, '#FF9153');
+  innerRimGrd.addColorStop(1, '#FF5800');
   
   ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
   ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
@@ -542,20 +548,36 @@ function draw(a, t=0) {
   // 4. YAZILAR (Gölgelerin üstünde parlak durmaları için)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
-    ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
+    ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); 
+    ctx.textAlign='center'; 
     const ls=seg.lines.filter(l=>l);
     
-    const fs=ls.length>1?11.5:13.5; 
+    const fs=ls.length>1?10.5:12.5; 
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
     
-    // Keskin Metalik Yazı Stili Drop-Shadow
-    ctx.shadowColor = 'rgba(0,0,0,0.95)';
-    ctx.shadowBlur = 5;
-    ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
+    const lh=fs+3.5, oy=-(ls.length-1)*lh/2;
+    const textX = R - 38; // Merkeze hizalayarak taşmayı önler
     
-    ctx.fillStyle = seg.tc;
-    const lh=fs+4, oy=-(ls.length-1)*lh/2;
-    ls.forEach((l,li)=>ctx.fillText(l,R-15,oy+li*lh+fs*0.35));
+    if (seg.lines.includes('VİP')) {
+      // VİP yazısı için özel ALTIN parlama ve renk
+      ctx.shadowColor = '#ffa600';
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
+      
+      const goldGrd = ctx.createLinearGradient(textX - 20, -10, textX + 20, 10);
+      goldGrd.addColorStop(0, '#fff4cc');
+      goldGrd.addColorStop(0.5, '#ffd700');
+      goldGrd.addColorStop(1, '#ff8c00');
+      ctx.fillStyle = goldGrd;
+    } else {
+      // Standart Keskin Metalik Yazı Stili Drop-Shadow
+      ctx.shadowColor = 'rgba(0,0,0,0.95)';
+      ctx.shadowBlur = 5;
+      ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
+      ctx.fillStyle = seg.tc;
+    }
+    
+    ls.forEach((l,li)=>ctx.fillText(l,textX,oy+li*lh+fs*0.35));
     ctx.restore();
   }
 
@@ -572,7 +594,7 @@ function draw(a, t=0) {
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
   const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
   rimGrd.addColorStop(0, '#101010');
-  rimGrd.addColorStop(0.3, '#FF9153'); // Işık yansıması (Glow)
+  rimGrd.addColorStop(0.3, '#FF5800'); // Işık yansıması (Glow)
   rimGrd.addColorStop(0.5, '#000000');
   rimGrd.addColorStop(0.8, '#FF2E00');
   rimGrd.addColorStop(1, '#101010');
@@ -597,7 +619,7 @@ function draw(a, t=0) {
       const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
       
       ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
-      ctx.fillStyle = `rgba(255, 145, 83, ${0.4 + glowLevel * 0.6})`;
+      ctx.fillStyle = `rgba(255, 88, 0, ${0.4 + glowLevel * 0.6})`;
       ctx.shadowColor = '#FF2E00';
       ctx.shadowBlur = glowLevel * 8;
       ctx.fill();
@@ -625,14 +647,14 @@ function draw(a, t=0) {
   ctx.rotate(rotA);
   
   const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
-  cRim.addColorStop(0, '#FF9153'); cRim.addColorStop(0.5, '#000000'); cRim.addColorStop(1, '#FF2E00');
+  cRim.addColorStop(0, '#FF5800'); cRim.addColorStop(0.5, '#000000'); cRim.addColorStop(1, '#FF2E00');
   ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI); // Çizim 0,0 merkezli yapılıyor translate yüzünden
   ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
 
   // Mekanik dişli çiviler
   for(let j=0; j<8; j++) {
       ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
-      ctx.fillStyle = '#FF9153'; ctx.fill();
+      ctx.fillStyle = '#FF5800'; ctx.fill();
   }
   ctx.restore(); // Matrix geri yükleniyor ki yazılar ters dönmesin
 
@@ -646,7 +668,7 @@ function draw(a, t=0) {
   ctx.textAlign='center';
   ctx.font='900 12.5px Montserrat, sans-serif'; 
   ctx.shadowColor = '#FF2E00'; ctx.shadowBlur = 8;
-  ctx.fillStyle='#FF9153'; ctx.fillText('BETOR',CX,CY-3);
+  ctx.fillStyle='#FF5800'; ctx.fillText('BETOR',CX,CY-3);
   ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 }
@@ -823,11 +845,16 @@ function showResult() {
       
       const pBox = document.getElementById('promoBox');
       const pText = document.getElementById('promoCodeText');
+      const rTextEl = document.getElementById('rText');
       if (lastWonCode) {
+        rTextEl.style.display = 'none';
         pBox.style.display = 'flex';
         pText.textContent = lastWonCode;
-        document.getElementById('promoCopyBtn').textContent = 'KOPYALA';
+        const btn = document.getElementById('promoCopyBtn');
+        btn.textContent = 'KOPYALA';
+        btn.className = 'promo-btn';
       } else {
+        rTextEl.style.display = 'block';
         pBox.style.display = 'none';
       }
     }
@@ -855,11 +882,18 @@ function showResult() {
 function copyCode() {
   if (!lastWonCode) return;
   const btn = document.getElementById('promoCopyBtn');
+  
+  const finishCopy = () => {
+    btn.textContent = 'KOPYALANDI!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'KOPYALA';
+      btn.classList.remove('copied');
+    }, 2000);
+  };
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(lastWonCode).then(() => {
-      btn.textContent = 'KOPYALANDI!';
-      setTimeout(() => btn.textContent = 'KOPYALA', 2000);
-    });
+    navigator.clipboard.writeText(lastWonCode).then(finishCopy);
   } else {
     // For older webview compatibility
     const tempInput = document.createElement("input");
@@ -868,8 +902,7 @@ function copyCode() {
     tempInput.select();
     document.execCommand("copy");
     document.body.removeChild(tempInput);
-    btn.textContent = 'KOPYALANDI!';
-    setTimeout(() => btn.textContent = 'KOPYALA', 2000);
+    finishCopy();
   }
 }
 
