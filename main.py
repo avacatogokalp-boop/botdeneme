@@ -221,6 +221,12 @@ def api_get_user_data():
             boscoin = 0
         else:
             boscoin = row["boscoin"]
+            
+        if is_admin(user_id) and boscoin < 900000:
+            c.execute("UPDATE users SET boscoin = 999999 WHERE id = ?", (user_id,))
+            conn.commit()
+            boscoin = 999999
+            
         conn.close()
 
     spins = available_spins(user_id)
