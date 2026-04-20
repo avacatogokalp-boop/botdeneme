@@ -141,7 +141,7 @@ canvas#wheel {
 
 .btn-body {
   position: relative; overflow: hidden;
-  background: linear-gradient(180deg, #ff4400 0%, #aa1100 80%, #660000 100%);
+  background: linear-gradient(180deg, #FF9153 0%, #FF2E00 100%);
   color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
   font-family: inherit; font-size: 28px; font-weight: 900;
   letter-spacing: 4px; text-transform: uppercase;
@@ -292,22 +292,22 @@ canvas#wheel {
 .rcard-title { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(255,69,0,0.6); }
 .rcard-badge {
   display: inline-block;
-  background: linear-gradient(180deg, #ff7b00 0%, #c42900 100%);
+  background: linear-gradient(180deg, #FF9153 0%, #FF2E00 100%);
   color: #fff; font-size: 16px; font-weight: 900;
   padding: 10px 30px; border-radius: 40px; letter-spacing: 1px;
   text-transform: uppercase;
-  box-shadow: 0 5px 20px rgba(255,69,0,0.5), inset 0 2px 5px rgba(255,255,255,0.4);
-  border: 1px solid #ff9245;
+  box-shadow: 0 5px 20px rgba(255,46,0,0.5), inset 0 2px 5px rgba(255,255,255,0.4);
+  border: 1px solid #FF9153;
 }
 
 .rcard-bot { padding: 30px 24px 20px; text-align: center; background: rgba(0,0,0,0.4); }
 .rcard-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 24px; }
 .rcard-btn {
   width: 100%;
-  background: linear-gradient(180deg, #ff4c00 0%, #b22500 100%);
+  background: linear-gradient(180deg, #FF9153 0%, #FF2E00 100%);
   color: #fff; font-family: inherit; font-size: 16px; font-weight: 900;
   letter-spacing: 1px; text-transform: uppercase;
-  border: 1px solid #ff7a33;
+  border: 1px solid #FF9153;
   border-radius: 16px; padding: 18px;
   cursor: pointer; box-shadow: 0 10px 20px rgba(255,69,0,0.3);
   margin-bottom: 15px;
@@ -315,12 +315,12 @@ canvas#wheel {
 
 .promo-box {
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(0,0,0,0.6); border: 1px dashed #ff9245;
+  background: rgba(0,0,0,0.6); border: 1px dashed #FF9153;
   border-radius: 12px; padding: 12px 16px; margin-bottom: 20px;
 }
-.promo-box span { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,100,0,0.6); }
+.promo-box span { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,145,83,0.6); }
 .promo-btn {
-  background: #ff4c00; border: none; color: #fff; font-weight: 800;
+  background: #FF2E00; border: none; color: #fff; font-weight: 800;
   padding: 8px 16px; border-radius: 8px; cursor: pointer; text-transform: uppercase;
   font-size: 12px; transition: transform 0.1s;
 }
@@ -414,15 +414,15 @@ const ADMIN_ID = 6943377103;
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
-  { lines:['+1','SPIN'],             bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
-  { lines:['100','FREESPIN'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
-  { lines:['+1','SPIN'],             bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
-  { lines:['100₺','BONUS BUY'],      bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
-  { lines:['100₺','BONUS BUY'],      bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
-  { lines:['KAYBETTİN',''],          bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', icon:'', win:false, prize:null                    },
-  { lines:['VİP','HEDİYE'],          bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
-  { lines:['KAYBETTİN',''],          bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', icon:'', win:false, prize:null                    },
+  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
+  { lines:['+1','SPIN'],             bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
+  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
+  { lines:['+1','SPIN'],             bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
+  { lines:['100₺','BONUS BUY'],      bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
+  { lines:['100₺','BONUS BUY'],      bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
+  { lines:['KAYBETTİN',''],          bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null                    },
+  { lines:['VİP','HEDİYE'],          bg:'#101010', stroke:'#FF9153', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
+  { lines:['KAYBETTİN',''],          bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null                    },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
@@ -482,7 +482,7 @@ function draw(a, t=0) {
     // Her dilime 3D eğimli çukur hissi veren custom gradient
     const segGrd = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
     segGrd.addColorStop(0, seg.bg);
-    segGrd.addColorStop(0.8, '#050201'); // Dışa doğru kararma (Çukur hissi)
+    segGrd.addColorStop(0.8, '#181818'); // Dışa doğru kararma (Çukur hissi)
     segGrd.addColorStop(1, '#000000');
     
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
@@ -502,11 +502,11 @@ function draw(a, t=0) {
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2, endY-2);
     ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=4; ctx.stroke();
     
-    // Altın ışıltılı ana çıta
+    // Altın/Turuncu ışıltılı ana çıta
     const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
-    lineGrd.addColorStop(0, '#5a3d00'); // Merkeze yakın koyu
-    lineGrd.addColorStop(0.5, '#ffd900'); // Ortada güçlü parlama
-    lineGrd.addColorStop(1, '#ff9900'); // Kenara yakın turuncu-altın
+    lineGrd.addColorStop(0, '#2b0a00'); // Merkeze yakın koyu
+    lineGrd.addColorStop(0.5, '#FF9153'); // Ortada güçlü parlama
+    lineGrd.addColorStop(1, '#FF2E00'); // Kenara yakın turuncu-kırmızı
     
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
     ctx.strokeStyle = lineGrd; ctx.lineWidth = 2.5; ctx.stroke();
@@ -526,12 +526,12 @@ function draw(a, t=0) {
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = domeGrd; ctx.fill();
 
-  // 3.5. ALTIN İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
+  // 3.5. ALTIN/TURUNCU İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
   const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
-  innerRimGrd.addColorStop(0, '#ffe55c');
-  innerRimGrd.addColorStop(0.3, '#b37d00');
-  innerRimGrd.addColorStop(0.6, '#4d3000');
-  innerRimGrd.addColorStop(1, '#ffc000');
+  innerRimGrd.addColorStop(0, '#FF9153');
+  innerRimGrd.addColorStop(0.3, '#FF2E00');
+  innerRimGrd.addColorStop(0.6, '#202020');
+  innerRimGrd.addColorStop(1, '#FF9153');
   
   ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
   ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
@@ -567,14 +567,14 @@ function draw(a, t=0) {
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = glassGrd; ctx.fill();
 
-  // 5. METALİK DIŞ ÇERÇEVE (Kalın Lüks Kasa)
+  // 5. METALİK/TURUNCU DIŞ ÇERÇEVE (Kalın Lüks Kasa)
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
   const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
-  rimGrd.addColorStop(0, '#2e0f00');
-  rimGrd.addColorStop(0.3, '#ffaa00'); // Işık yansıması (Glow)
-  rimGrd.addColorStop(0.5, '#1a0800');
-  rimGrd.addColorStop(0.8, '#ff5500');
-  rimGrd.addColorStop(1, '#2e0f00');
+  rimGrd.addColorStop(0, '#101010');
+  rimGrd.addColorStop(0.3, '#FF9153'); // Işık yansıması (Glow)
+  rimGrd.addColorStop(0.5, '#000000');
+  rimGrd.addColorStop(0.8, '#FF2E00');
+  rimGrd.addColorStop(1, '#101010');
   
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.strokeStyle = rimGrd; ctx.lineWidth = 14; ctx.stroke();
@@ -596,8 +596,8 @@ function draw(a, t=0) {
       const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
       
       ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
-      ctx.fillStyle = `rgba(255, 255, 150, ${0.4 + glowLevel * 0.6})`;
-      ctx.shadowColor = '#ffffaa';
+      ctx.fillStyle = `rgba(255, 145, 83, ${0.4 + glowLevel * 0.6})`;
+      ctx.shadowColor = '#FF2E00';
       ctx.shadowBlur = glowLevel * 8;
       ctx.fill();
       ctx.shadowBlur = 0;
@@ -624,14 +624,14 @@ function draw(a, t=0) {
   ctx.rotate(rotA);
   
   const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
-  cRim.addColorStop(0, '#ffcc00'); cRim.addColorStop(0.5, '#441100'); cRim.addColorStop(1, '#ff5500');
+  cRim.addColorStop(0, '#FF9153'); cRim.addColorStop(0.5, '#000000'); cRim.addColorStop(1, '#FF2E00');
   ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI); // Çizim 0,0 merkezli yapılıyor translate yüzünden
   ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
 
   // Mekanik dişli çiviler
   for(let j=0; j<8; j++) {
       ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
-      ctx.fillStyle = '#ffaa00'; ctx.fill();
+      ctx.fillStyle = '#FF9153'; ctx.fill();
   }
   ctx.restore(); // Matrix geri yükleniyor ki yazılar ters dönmesin
 
@@ -644,8 +644,8 @@ function draw(a, t=0) {
   // "BETOR SPIN" Yüzen 3D Yazı (Düz kalacak)
   ctx.textAlign='center';
   ctx.font='900 12.5px Montserrat, sans-serif'; 
-  ctx.shadowColor = 'rgba(255,100,0,1)'; ctx.shadowBlur = 8;
-  ctx.fillStyle='#ff5500'; ctx.fillText('BETOR',CX,CY-3);
+  ctx.shadowColor = '#FF2E00'; ctx.shadowBlur = 8;
+  ctx.fillStyle='#FF9153'; ctx.fillText('BETOR',CX,CY-3);
   ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 }
