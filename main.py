@@ -38,8 +38,14 @@ def init_db():
             last_spin_date TEXT,
             bonus_spins INTEGER DEFAULT 0,
             inviter_id INTEGER,
-            invite_count INTEGER DEFAULT 0
+            invite_count INTEGER DEFAULT 0,
+            boscoin INTEGER DEFAULT 0
         )''')
+        try:
+            c.execute("ALTER TABLE users ADD COLUMN boscoin INTEGER DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass # Sütun zaten varsa hata vermeden devam et
+        
         c.execute('''CREATE TABLE IF NOT EXISTS wins (
             prize TEXT PRIMARY KEY,
             count INTEGER DEFAULT 0
@@ -198,8 +204,8 @@ def excel_indir():
 def wheel():
     return send_from_directory('.', 'index.html')
 
-@app.route('/api/check_spin')
-def check_spin():
+@app.route('/api/get_user_data')
+def api_get_user_data():
     user_id = request.args.get('user_id', type=int)
     if not user_id:
         return jsonify({"allowed": False, "reason": "no_id"})
@@ -207,14 +213,18 @@ def check_spin():
     with db_lock:
         conn = get_db()
         c = conn.cursor()
-        c.execute("SELECT id FROM users WHERE id = ?", (user_id,))
-        if not c.fetchone():
-            c.execute("INSERT INTO users (id, name, username) VALUES (?, ?, ?)", (user_id, 'Bilinmiyor', ''))
+        c.execute("SELECT id, boscoin FROM users WHERE id = ?", (user_id,))
+        row = c.fetchone()
+        if not row:
+            c.execute("INSERT INTO users (id, name, username, boscoin) VALUES (?, ?, ?, 0)", (user_id, 'Bilinmiyor', ''))
             conn.commit()
+            boscoin = 0
+        else:
+            boscoin = row["boscoin"]
         conn.close()
 
     spins = available_spins(user_id)
-    return jsonify({"allowed": spins > 0, "spins": spins})
+    return jsonify({"allowed": spins > 0, "spins": spins, "boscoin": boscoin})
 
 @app.route('/api/use_spin', methods=['POST'])
 def api_use_spin():
@@ -234,27 +244,34 @@ def api_use_spin():
     use_spin(user_id)
 
     PRIZES = [
-        {"win": True, "prize": "100 Freespin", "code": "BOSFS100GO"},
-        {"win": True, "prize": "+1 Spin", "code": None},
-        {"win": True, "prize": "100 Freespin", "code": "BOSFS100S"},
-        {"win": True, "prize": "+1 Spin", "code": None},
-        {"win": True, "prize": "100TL Bonus Buy", "code": "BOSBYB"},
-        {"win": True, "prize": "100TL Bonus Buy", "code": "BOSBHB"},
-        {"win": False, "prize": None, "code": None},
-        {"win": True, "prize": "VİP Hediye", "code": "BOSBBH"},
-        {"win": False, "prize": None, "code": None},
+        {"win": True, "prize": "10 BOSCOIN", "amount": 10},
+        {"win": True, "prize": "50 BOSCOIN", "amount": 50},
+        {"win": True, "prize": "5 BOSCOIN", "amount": 5},
+        {"win": False, "prize": None, "amount": 0},
+        {"win": True, "prize": "100 BOSCOIN", "amount": 100},
+        {"win": True, "prize": "+1 Spin", "amount": 0},
+        {"win": True, "prize": "10 BOSCOIN", "amount": 10},
+        {"win": True, "prize": "200 BOSCOIN (VİP)", "amount": 200},
+        {"win": False, "prize": None, "amount": 0},
     ]
     
     index = random.randint(0, 8)
     result = PRIZES[index]
     prize = result["prize"]
     win = result["win"]
+    amount = result["amount"]
 
     current_time = datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")
 
     with db_lock:
         conn = get_db()
         c = conn.cursor()
+        
+        if amount > 0:
+            c.execute("UPDATE users SET boscoin = boscoin + ? WHERE id = ?", (amount, user_id))
+            
+        c.execute("SELECT boscoin FROM users WHERE id = ?", (user_id,))
+        current_boscoin = c.fetchone()["boscoin"]
         
         # Log Kaydı
         log_prize = prize if prize else "KAYBETTİN"
@@ -281,35 +298,23 @@ def api_use_spin():
                 if prize == "+1 Spin":
                     bot.send_message(
                         user_id,
-                        f"*Tebrikler {name}!*\n\n"
-                        f"*+1 Spin* kazandın! Çarkı tekrar çevirebilirsin.",
+                        f"*Tebrikler {name}!*\n\n*+1 Spin* kazandın! Çarkı tekrar çevirebilirsin.",
                         parse_mode="Markdown",
-                        reply_markup=InlineKeyboardMarkup().add(
-                            InlineKeyboardButton("Şans Çarkını Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}"))
-                        )
+                        reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Şans Çarkını Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
                     )
                 else:
                     bot.send_message(
                         user_id,
-                        f"*Tebrikler {name}!*\n\n"
-                        f"Kazandığın ödül: *{prize}*\n\n"
-                        f"Ödülünü almak için siteye gir!",
+                        f"*Tebrikler {name}!*\n\nÇarktan *{prize}* kazandın! Puan cüzdanına başarıyla yüklendi.\nMağazaya uğrayıp hediyeni almayı unutma!",
                         parse_mode="Markdown",
-                        reply_markup=InlineKeyboardMarkup().add(
-                            InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
-                        )
+                        reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Uygulamaya Dön ve Mağazaya Gir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
                     )
             else:
                 bot.send_message(
                     user_id,
-                    f"*Bu sefer olmadı {name}!*\n\n"
-                    f"Arkadaşını davet et, *+1 Spin* kazan!",
+                    f"*Bu sefer olmadı {name}!*\n\nArkadaşını davet et, *+1 Spin* kazan!",
                     parse_mode="Markdown",
-                    reply_markup=InlineKeyboardMarkup().add(
-                        InlineKeyboardButton("Arkadaşını Davet Et +1 Spin", callback_data="get_invite_link")
-                    ).add(
-                        InlineKeyboardButton("SİTEYE GİT VE OYNA", url=SITE_LINKI)
-                    )
+                    reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Arkadaşını Davet Et +1 Spin", callback_data="get_invite_link"))
                 )
         except Exception as e:
             print(f"Hata: {e}")
@@ -321,8 +326,46 @@ def api_use_spin():
         "segment_index": index,
         "win": win,
         "prize": prize,
-        "code": result.get("code")
+        "boscoin": current_boscoin
     })
+
+@app.route('/api/buy_item', methods=['POST'])
+def api_buy_item():
+    data = request.get_json(silent=True) or {}
+    user_id = data.get('user_id')
+    item_id = data.get('item_id')
+    
+    STORE = {
+        "freespin": {"price": 300, "name": "100 Freespin", "code": "BOSFS100GO"},
+        "bonusbuy": {"price": 500, "name": "100₺ Bonus Buy", "code": "BOSBYB"},
+        "vip": {"price": 1000, "name": "VİP Hediye", "code": "BOSBBH"}
+    }
+    
+    if not user_id or item_id not in STORE:
+        return jsonify({"ok": False, "reason": "invalid_request"})
+        
+    item = STORE[item_id]
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT boscoin, name FROM users WHERE id = ?", (user_id,))
+        row = c.fetchone()
+        
+        if not row or row["boscoin"] < item["price"]:
+            conn.close()
+            return jsonify({"ok": False, "reason": "insufficient_funds"})
+            
+        new_balance = row["boscoin"] - item["price"]
+        c.execute("UPDATE users SET boscoin = ? WHERE id = ?", (new_balance, user_id))
+        
+        c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time) VALUES (?, ?, ?, ?)", 
+                 (user_id, row["name"], f"SATIN ALIM: {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")))
+                 
+        conn.commit()
+        conn.close()
+        
+    return jsonify({"ok": True, "code": item["code"], "new_balance": new_balance})
 
 # ── /start ────────────────────────────────────────────────────────────
 @bot.message_handler(commands=['start'])
