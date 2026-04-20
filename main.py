@@ -234,19 +234,18 @@ def api_use_spin():
     use_spin(user_id)
 
     PRIZES = [
-        {"win": True, "prize": "100 Freespin"},
-        {"win": True, "prize": "Özel Yatırım Bonusu"},
-        {"win": True, "prize": "100₺ Bakiye"},
-        {"win": False, "prize": None},
-        {"win": True, "prize": "100₺ Bonus Buy"},
-        {"win": True, "prize": "200 Freespin"},
-        {"win": True, "prize": "VİP Hediye"},
-        {"win": True, "prize": "200₺ Bonus Buy"},
-        {"win": False, "prize": None},
-        {"win": True, "prize": "+1 Spin"},
+        {"win": True, "prize": "100 Freespin", "code": "BOSFS100GO"},
+        {"win": True, "prize": "+1 Spin", "code": None},
+        {"win": True, "prize": "100 Freespin", "code": "BOSFS100S"},
+        {"win": True, "prize": "+1 Spin", "code": None},
+        {"win": True, "prize": "100TL Bonus Buy", "code": "BOSBYB"},
+        {"win": True, "prize": "100TL Bonus Buy", "code": "BOSBHB"},
+        {"win": False, "prize": None, "code": None},
+        {"win": True, "prize": "VİP Hediye", "code": "BOSBBH"},
+        {"win": False, "prize": None, "code": None},
     ]
     
-    index = random.randint(0, 9)
+    index = random.randint(0, 8)
     result = PRIZES[index]
     prize = result["prize"]
     win = result["win"]
@@ -321,7 +320,8 @@ def api_use_spin():
         "ok": True,
         "segment_index": index,
         "win": win,
-        "prize": prize
+        "prize": prize,
+        "code": result.get("code")
     })
 
 # ── /start ────────────────────────────────────────────────────────────
