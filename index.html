@@ -893,7 +893,36 @@ async function buyItem(itemId, price) {
     if(data.ok) {
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
-      alert(`🎉 Satın alım başarılı!\n\nPromokodun: ${data.code}\n\nBu kodu kopyalayıp sitemizde bozdurabilirsin.`);
+      closeStore();
+      
+      const rTitle = document.getElementById('rTitle');
+      const rText = document.getElementById('rText');
+      const rBtn = document.getElementById('rBtn');
+      const rTop = document.getElementById('rTop');
+      const rBadge = document.getElementById('rBadge');
+      const pBox = document.getElementById('promoBox');
+      const pText = document.getElementById('promoCodeText');
+      const promoCopyBtn = document.getElementById('promoCopyBtn');
+      
+      rTop.className = 'rcard-top';
+      rBadge.style.display = 'inline-block';
+      rBadge.textContent = 'Satın Alım Başarılı!';
+      rTitle.textContent = 'MAĞAZA';
+      rText.style.display = 'block';
+      rText.innerHTML = 'Promokodun oluşturuldu. <br>Aşağıdaki kodu kopyalayıp sitemizde bozdurabilirsin.';
+      
+      if (pBox) pBox.style.display = 'flex';
+      if (pText) pText.textContent = data.code;
+      if (promoCopyBtn) {
+        promoCopyBtn.textContent = 'KOPYALA';
+        promoCopyBtn.className = 'promo-btn';
+      }
+      
+      rBtn.textContent = 'SİTEYE GİT VE BOZDUR';
+      rBtn.onclick = goSite;
+      
+      document.getElementById('overlay').classList.add('show');
+      confetti();
     } else {
       alert("Hata: " + (data.reason === 'insufficient_funds' ? "Yetersiz bakiye." : "İşlem reddedildi."));
     }
