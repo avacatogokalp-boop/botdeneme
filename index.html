@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -371,10 +372,10 @@ canvas#wheel {
 }
 .store-btn {
   background: linear-gradient(135deg, #101010, #202020);
-  border: 1px solid #FF5800; border-radius: 8px;
-  padding: 8px 12px; color: #fff; font-weight: 800; font-size: 11px;
-  cursor: pointer; display: flex; align-items: center; gap: 6px;
-  box-shadow: 0 4px 10px rgba(255,88,0,0.3); transition: 0.2s;
+  border: 1px solid #FF5800; border-radius: 12px;
+  padding: 10px 18px; color: #fff; font-weight: 900; font-size: 15px;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 15px rgba(255,88,0,0.4); transition: 0.2s;
 }
 .store-btn:active { transform: scale(0.95); }
 .wallet-box {
@@ -580,6 +581,15 @@ const SEGS = [
 const N=SEGS.length, ARC=(2*Math.PI)/N;
 const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
+
+// -- HD CANVAS (Retina Scaling) --
+const dpr = window.devicePixelRatio || 1;
+cv.width = 286 * dpr; cv.height = 286 * dpr;
+sc.width = 286 * dpr; sc.height = 286 * dpr;
+cv.style.width = '286px'; cv.style.height = '286px';
+sc.style.width = '286px'; sc.style.height = '286px';
+ctx.scale(dpr, dpr); sctx.scale(dpr, dpr);
+
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
 let pendingBoscoinUpdate = null;
