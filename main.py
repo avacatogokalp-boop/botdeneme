@@ -287,9 +287,9 @@ def api_use_spin():
         
         conn.commit()
         conn.close()
-        
-        if prize == "+1 Spin":
-            add_bonus_spin(user_id, 1)
+
+    if prize == "+1 Spin":
+        add_bonus_spin(user_id, 1)
 
     def delayed_message():
         time.sleep(8.5)
