@@ -126,13 +126,12 @@ canvas#wheel {
 }
 
 .btn-area { position: relative; margin-bottom: 14px; width: 100%; max-width: 320px; display: flex; justify-content: center; }
-
 #spinBtn { position: relative; background: none; border: none; cursor: pointer; outline: none; width: 100%; max-width: 280px; }
 
 @keyframes pulseGlow {
-  0% { box-shadow: 0 0 20px rgba(255, 76, 0, 0.4), inset 0 2px 2px rgba(255,255,255,0.3); }
-  50% { box-shadow: 0 0 50px rgba(255, 100, 0, 0.8), inset 0 2px 2px rgba(255,255,255,0.5); }
-  100% { box-shadow: 0 0 20px rgba(255, 76, 0, 0.4), inset 0 2px 2px rgba(255,255,255,0.3); }
+  0%   { box-shadow: 0 0 20px rgba(255,76,0,0.4), inset 0 2px 2px rgba(255,255,255,0.3); }
+  50%  { box-shadow: 0 0 50px rgba(255,100,0,0.8), inset 0 2px 2px rgba(255,255,255,0.5); }
+  100% { box-shadow: 0 0 20px rgba(255,76,0,0.4), inset 0 2px 2px rgba(255,255,255,0.3); }
 }
 @keyframes shineBtn {
   0% { transform: rotate(45deg) translateX(-200%); }
@@ -163,23 +162,21 @@ canvas#wheel {
   transform: rotate(45deg) translateX(-150%);
   animation: shineBtn 5s infinite; pointer-events: none;
 }
-#spinBtn:active:not(:disabled) .btn-body { 
-  transform: translateY(8px); 
+#spinBtn:active:not(:disabled) .btn-body {
+  transform: translateY(8px);
   box-shadow: 0 0px 0 #7a0b00, 0 5px 10px rgba(0,0,0,0.8), 0 0 40px rgba(255,60,0,0.8);
-  filter: brightness(1.2); 
+  filter: brightness(1.2);
 }
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; animation: none; box-shadow: none; border-color: transparent; }
 
 .spin-info {
-  font-size: 14px; font-weight: 800;
-  color: #928b86;
+  font-size: 14px; font-weight: 800; color: #928b86;
   display: flex; align-items: center; justify-content: center; gap: 10px;
   text-transform: uppercase; letter-spacing: 1.5px;
   margin-top: 10px; margin-bottom: 20px;
 }
 .spin-info::before, .spin-info::after {
-  content: ''; display: block;
-  width: 7px; height: 7px; border-radius: 50%;
+  content: ''; display: block; width: 7px; height: 7px; border-radius: 50%;
   background: #ff4500; flex-shrink: 0;
 }
 
@@ -189,158 +186,91 @@ canvas#wheel {
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255,100,0,0.3);
   box-shadow: 0 8px 20px rgba(0,0,0,0.5), inset 0 2px 10px rgba(255,255,255,0.05);
-  border-radius: 20px;
-  padding: 16px 20px;
+  border-radius: 20px; padding: 16px 20px;
   color: #fff; font-family: inherit; font-size: 15px; font-weight: 700;
-  cursor: pointer; width: 100%; max-width: 300px;
-  transition: all .2s;
+  cursor: pointer; width: 100%; max-width: 300px; transition: all .2s;
 }
 .invite-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.97); }
-.invite-badge {
-  color: #ffffff;
-  font-weight: 800;
-}
+.invite-badge { color: #ffffff; font-weight: 800; }
 
-/* ── KAYAN BANNER ────────────────────────────────────────────────── */
+/* ── KAYAN BANNER ─────────────────────────────────────────────────── */
 .ticker-wrap {
-  width: 100%;
-  max-width: 300px;
-  margin: 12px auto 0;
-  overflow: hidden;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,100,0,0.25);
-  padding: 10px 0;
-  position: relative;
+  width: 100%; max-width: 300px; margin: 12px auto 0;
+  overflow: hidden; border-radius: 20px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,100,0,0.25);
+  padding: 10px 0; position: relative;
 }
 .ticker-wrap::before, .ticker-wrap::after {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 40px;
-  z-index: 2;
-  pointer-events: none;
+  content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none;
 }
-.ticker-wrap::before {
-  left: 0;
-  background: linear-gradient(90deg, #0d0806 60%, transparent);
-}
-.ticker-wrap::after {
-  right: 0;
-  background: linear-gradient(270deg, #0d0806 60%, transparent);
-}
-.ticker-track {
-  display: flex;
-  gap: 0;
-  width: max-content;
-  animation: ticker 28s linear infinite;
-}
+.ticker-wrap::before { left: 0; background: linear-gradient(90deg, #0d0806 60%, transparent); }
+.ticker-wrap::after  { right: 0; background: linear-gradient(270deg, #0d0806 60%, transparent); }
+.ticker-track { display: flex; gap: 0; width: max-content; animation: ticker 28s linear infinite; }
 .ticker-track:hover { animation-play-state: paused; }
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .ticker-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 20px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-  color: rgba(255,255,255,0.75);
+  display: flex; align-items: center; gap: 6px; padding: 0 20px;
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+  white-space: nowrap; color: rgba(255,255,255,0.75);
 }
-.ticker-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: #ff4500;
-  flex-shrink: 0;
-}
-.ticker-name { color: #ff8c00; }
-.ticker-won { color: #ff6a00; font-weight: 800; }
+.ticker-dot  { width: 5px; height: 5px; border-radius: 50%; background: #ff4500; flex-shrink: 0; }
+.ticker-name  { color: #ff8c00; }
+.ticker-won   { color: #ff6a00; font-weight: 800; }
 .ticker-prize { color: #fff; }
-.ticker-sep {
-  color: rgba(255,69,0,0.4);
-  margin: 0 4px;
-  font-size: 10px;
-}
-/* ── /KAYAN BANNER ───────────────────────────────────────────────── */
+.ticker-sep   { color: rgba(255,69,0,0.4); margin: 0 4px; font-size: 10px; }
+/* ── /KAYAN BANNER ────────────────────────────────────────────────── */
 
 .no-spin-banner {
-  display: none;
-  margin-top: 18px;
-  background: rgba(20,10,5, 0.6);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,69,0,0.3);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  border-radius: 16px;
-  padding: 18px 22px;
-  text-align: center;
-  max-width: 300px;
-  width: 100%;
+  display: none; margin-top: 18px;
+  background: rgba(20,10,5,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,69,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  border-radius: 16px; padding: 18px 22px; text-align: center; max-width: 300px; width: 100%;
 }
 .no-spin-banner .ns-title { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 4px; }
-.no-spin-banner .ns-text { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; margin-bottom: 10px; }
-
+.no-spin-banner .ns-text  { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.5; margin-bottom: 10px; }
 .ns-countdown-wrap { margin-bottom: 12px; }
 .ns-countdown-label {
-  font-size: 10px; font-weight: 700;
-  color: rgba(255,255,255,0.25);
-  letter-spacing: 2px; text-transform: uppercase;
-  margin-bottom: 4px;
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.25);
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px;
 }
 .ns-countdown {
-  font-size: 22px; font-weight: 900;
-  color: #ff4500;
-  letter-spacing: 3px;
-  text-shadow: 0 0 14px rgba(255,69,0,0.4);
-  font-variant-numeric: tabular-nums;
+  font-size: 22px; font-weight: 900; color: #ff4500;
+  letter-spacing: 3px; text-shadow: 0 0 14px rgba(255,69,0,0.4); font-variant-numeric: tabular-nums;
 }
-
 .no-spin-banner .ns-btn {
-  background: linear-gradient(135deg, #ff4500, #ff6a00);
-  color: #fff; font-family: inherit; font-size: 14px; font-weight: 900;
+  background: linear-gradient(135deg, #ff4500, #ff6a00); color: #fff;
+  font-family: inherit; font-size: 14px; font-weight: 900;
   border: none; border-radius: 12px; padding: 12px 28px;
-  cursor: pointer; letter-spacing: 0.5px;
-  display: block; width: 100%; margin-bottom: 10px;
+  cursor: pointer; letter-spacing: 0.5px; display: block; width: 100%; margin-bottom: 10px;
 }
 .no-spin-banner .ns-invite {
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7);
   font-family: inherit; font-size: 13px; font-weight: 700;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px; padding: 11px 28px;
-  cursor: pointer; display: block; width: 100%;
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  padding: 11px 28px; cursor: pointer; display: block; width: 100%;
 }
 
 .overlay {
   display: none; position: fixed; inset: 0; overflow: hidden;
-  background: rgba(0,0,0,0.92);
-  z-index: 200; align-items: center; justify-content: center;
-  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.92); z-index: 200;
+  align-items: center; justify-content: center; backdrop-filter: blur(8px);
 }
 .overlay.show { display: flex; }
-
 .overlay-rays {
   position: absolute; top: 50%; left: 50%;
   width: 200vw; height: 200vw; max-width: 1000px; max-height: 1000px;
-  background: repeating-conic-gradient(rgba(255, 100, 0, 0.12) 0 10deg, transparent 10deg 20deg);
-  transform: translate(-50%, -50%) rotate(0deg);
+  background: repeating-conic-gradient(rgba(255,100,0,0.12) 0 10deg, transparent 10deg 20deg);
+  transform: translate(-50%,-50%) rotate(0deg);
   animation: spinRays 30s linear infinite; pointer-events: none;
   opacity: 0; transition: opacity 0.5s; z-index: 0;
 }
 .overlay.show .overlay-rays { opacity: 1; }
-@keyframes spinRays { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes spinRays { 100% { transform: translate(-50%,-50%) rotate(360deg); } }
 
 .rcard {
-  position: relative; z-index: 1;
-  width: 88%; max-width: 320px;
-  background: rgba(20, 10, 5, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 20px; overflow: hidden;
-  border: 1px solid rgba(255, 100, 0, 0.4);
+  position: relative; z-index: 1; width: 88%; max-width: 320px;
+  background: rgba(20,10,5,0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,100,0,0.4);
   box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 2px 20px rgba(255,100,0,0.1);
   animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
 }
@@ -354,38 +284,58 @@ canvas#wheel {
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .rcard-top.lose-top { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.03); }
-
 .rcard-title { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(255,69,0,0.6); }
+
 .rcard-badge {
   display: inline-block;
   background: linear-gradient(180deg, #ff7b00 0%, #c42900 100%);
   color: #fff; font-size: 16px; font-weight: 900;
-  padding: 10px 30px; border-radius: 40px; letter-spacing: 1px;
-  text-transform: uppercase;
+  padding: 10px 30px; border-radius: 40px; letter-spacing: 1px; text-transform: uppercase;
   box-shadow: 0 5px 20px rgba(255,69,0,0.5), inset 0 2px 5px rgba(255,255,255,0.4);
   border: 1px solid #ff9245;
+}
+.rcard-badge.vip-badge {
+  background: linear-gradient(180deg, #ffe566 0%, #d4920e 50%, #7a4e00 100%);
+  border: 1px solid #ffe566;
+  color: #2a1200;
+  text-shadow: 0 1px 3px rgba(255,230,100,0.7);
+  box-shadow: 0 5px 30px rgba(255,210,0,0.7), inset 0 2px 6px rgba(255,255,180,0.5);
+  animation: vipGlow 2s infinite;
+}
+@keyframes vipGlow {
+  0%,100% { box-shadow: 0 5px 30px rgba(255,210,0,0.7), inset 0 2px 6px rgba(255,255,180,0.5); }
+  50%      { box-shadow: 0 5px 50px rgba(255,230,0,1),   inset 0 2px 6px rgba(255,255,200,0.8); }
+}
+
+/* Promokod kutusu */
+.promo-box { display: none; margin: 16px auto 0; text-align: center; }
+.promo-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 3px;
+  color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 7px;
+}
+.promo-code {
+  display: inline-block;
+  background: rgba(255,200,0,0.07);
+  border: 1px solid rgba(255,180,0,0.45);
+  border-radius: 10px; padding: 9px 24px;
+  font-size: 20px; font-weight: 900; letter-spacing: 5px;
+  color: #ffd166; text-shadow: 0 0 14px rgba(255,190,0,0.55);
+  font-family: 'Montserrat', monospace;
 }
 
 .rcard-bot { padding: 30px 24px 20px; text-align: center; background: rgba(0,0,0,0.4); }
 .rcard-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 24px; }
 .rcard-btn {
-  width: 100%;
-  background: linear-gradient(180deg, #ff4c00 0%, #b22500 100%);
+  width: 100%; background: linear-gradient(180deg, #ff4c00 0%, #b22500 100%);
   color: #fff; font-family: inherit; font-size: 16px; font-weight: 900;
-  letter-spacing: 1px; text-transform: uppercase;
-  border: 1px solid #ff7a33;
-  border-radius: 16px; padding: 18px;
-  cursor: pointer; box-shadow: 0 10px 20px rgba(255,69,0,0.3);
-  margin-bottom: 15px;
+  letter-spacing: 1px; text-transform: uppercase; border: 1px solid #ff7a33;
+  border-radius: 16px; padding: 18px; cursor: pointer;
+  box-shadow: 0 10px 20px rgba(255,69,0,0.3); margin-bottom: 15px;
 }
-
 .kapat-btn {
-  display: block; width: 100%;
-  background: transparent; border: none;
+  display: block; width: 100%; background: transparent; border: none;
   color: #6a5a54; font-family: inherit; font-size: 14px; font-weight: 800;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 10px; cursor: pointer;
-  transition: color 0.2s;
+  letter-spacing: 1.5px; text-transform: uppercase; padding: 10px; cursor: pointer; transition: color 0.2s;
 }
 .kapat-btn:active { color: #fff; }
 
@@ -445,6 +395,10 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     <div class="rcard-top" id="rTop">
       <div class="rcard-title" id="rTitle">TEBRİKLER</div>
       <div class="rcard-badge" id="rBadge">100 Freespin</div>
+      <div class="promo-box" id="promoBox">
+        <div class="promo-label">PROMOKOD</div>
+        <div class="promo-code" id="promoCode">BOSFS100GO</div>
+      </div>
     </div>
     <div class="rcard-bot">
       <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
@@ -468,16 +422,16 @@ const ADMIN_ID = 6943377103;
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
-  { lines:['ÖZEL YATIRIM','BONUSU'], bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'Özel Yatırım Bonusu'   },
-  { lines:['100₺','BAKİYE'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100₺ Bakiye'            },
-  { lines:['KAYBETTİN',''],          bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', icon:'', win:false, prize:null                    },
-  { lines:['100₺','BONUS BUY'],      bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'100₺ Bonus Buy'        },
-  { lines:['200','FREESPIN'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'200 Freespin'          },
-  { lines:['VİP','HEDİYE'],          bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
-  { lines:['200₺','BONUS BUY'],      bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'200₺ Bonus Buy'        },
-  { lines:['KAYBETTİN',''],          bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', icon:'', win:false, prize:null                    },
-  { lines:['+1','SPIN'],             bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
+  { lines:['100 FS','OLYMPUS'],   bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', win:true,  prize:'100 Freespin',    promo:'BOSFS100GO' },
+  { lines:['+1','SPIN'],          bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', win:true,  prize:'+1 Spin',         promo:null         },
+  { lines:['100₺','BONUS BUY'],  bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', win:true,  prize:'100₺ Bonus Buy',  promo:'BOSBYB'     },
+  { lines:['100 FS','SW.BONANZA'],bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', win:true,  prize:'100 Freespin',    promo:'BOSFS100S'  },
+  { lines:['KAYBETTİN',''],       bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', win:false, prize:null,              promo:null         },
+  { lines:['VİP','HEDİYE'],       bg:'#1a0e00', stroke:'#ffd700', tc:'#ffd700', win:true,  prize:'VİP Hediye',      promo:null, vip:true },
+  { lines:['KAYBETTİN',''],       bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', win:false, prize:null,              promo:null         },
+  { lines:['100₺','BONUS(HAL)'], bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', win:true,  prize:'100₺ Bonus Buy',  promo:'BOSBBH'     },
+  { lines:['+1','SPIN'],          bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', win:true,  prize:'+1 Spin',         promo:null         },
+  { lines:['KAYBETTİN',''],       bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', win:false, prize:null,              promo:null         },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
@@ -493,24 +447,11 @@ function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
   if(USER_ID === ADMIN_ID) return;
-  
   let lastSpin = localStorage.getItem(getSpinKey());
-  
-  if (!lastSpin) {
-    lastSpin = Date.now().toString();
-    localStorage.setItem(getSpinKey(), lastSpin);
-  }
-  
+  if (!lastSpin) { lastSpin = Date.now().toString(); localStorage.setItem(getSpinKey(), lastSpin); }
   const target = new Date(parseInt(lastSpin) + (24 * 60 * 60 * 1000));
   const diff = target - new Date();
-  
-  if (diff <= 0) { 
-    clearInterval(countdownInterval); 
-    countdownInterval = null; 
-    checkSpinRight(); 
-    return; 
-  }
-  
+  if (diff <= 0) { clearInterval(countdownInterval); countdownInterval = null; checkSpinRight(); return; }
   const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
   const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
   const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
@@ -529,515 +470,295 @@ function draw(a, t=0) {
   ctx.clearRect(0,0,286,286);
   for(let i=0;i<N;i++){
     const s=a+i*ARC, e=s+ARC, seg=SEGS[i];
-    const segGrd = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
-    segGrd.addColorStop(0, seg.bg);
-    segGrd.addColorStop(0.8, '#050201');
-    segGrd.addColorStop(1, '#000000');
+    const segGrd = ctx.createRadialGradient(CX,CY,R*0.3,CX,CY,R);
+    segGrd.addColorStop(0, seg.bg); segGrd.addColorStop(0.8,'#050201'); segGrd.addColorStop(1,'#000000');
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
-    ctx.fillStyle = segGrd; ctx.fill();
+    ctx.fillStyle=segGrd; ctx.fill();
+    if(seg.vip){
+      const vipGrd=ctx.createRadialGradient(CX,CY,R*0.2,CX,CY,R);
+      vipGrd.addColorStop(0,'rgba(255,210,0,0.18)'); vipGrd.addColorStop(1,'rgba(255,150,0,0.04)');
+      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
+      ctx.fillStyle=vipGrd; ctx.fill();
+    }
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R-3,s,e); ctx.closePath();
-    ctx.fillStyle = 'rgba(255,100,0,0.05)'; ctx.fill();
+    ctx.fillStyle='rgba(255,100,0,0.05)'; ctx.fill();
   }
-
   for(let i=0;i<N;i++){
-    const a2=a+i*ARC;
-    const endX = CX+R*Math.cos(a2), endY = CY+R*Math.sin(a2);
-    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2, endY-2);
+    const a2=a+i*ARC, endX=CX+R*Math.cos(a2), endY=CY+R*Math.sin(a2);
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2,endY-2);
     ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=4; ctx.stroke();
-    const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
-    lineGrd.addColorStop(0, '#5a3d00');
-    lineGrd.addColorStop(0.5, '#ffd900');
-    lineGrd.addColorStop(1, '#ff9900');
-    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
-    ctx.strokeStyle = lineGrd; ctx.lineWidth = 2.5; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2)); 
-    ctx.lineTo(endX*0.8, endY*0.8);
-    ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
+    const lg=ctx.createLinearGradient(CX,CY,endX,endY);
+    lg.addColorStop(0,'#5a3d00'); lg.addColorStop(0.5,'#ffd900'); lg.addColorStop(1,'#ff9900');
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX,endY);
+    ctx.strokeStyle=lg; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2),CY+10*Math.sin(a2)); ctx.lineTo(endX*0.8,endY*0.8);
+    ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.lineWidth=0.5; ctx.stroke();
   }
-
-  const domeGrd = ctx.createRadialGradient(CX - R*0.35, CY - R*0.35, 0, CX, CY, R);
-  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)'); 
-  domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');        
-  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');       
-  ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
-  ctx.fillStyle = domeGrd; ctx.fill();
-
-  const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
-  innerRimGrd.addColorStop(0, '#ffe55c');
-  innerRimGrd.addColorStop(0.3, '#b37d00');
-  innerRimGrd.addColorStop(0.6, '#4d3000');
-  innerRimGrd.addColorStop(1, '#ffc000');
-  ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
-  ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
-  ctx.beginPath(); ctx.arc(CX, CY, 44, 0, 2*Math.PI);
-  ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 2; ctx.stroke();
-
+  const domeGrd=ctx.createRadialGradient(CX-R*0.35,CY-R*0.35,0,CX,CY,R);
+  domeGrd.addColorStop(0,'rgba(255,255,255,0.08)'); domeGrd.addColorStop(0.35,'rgba(0,0,0,0)'); domeGrd.addColorStop(1,'rgba(0,0,0,0.9)');
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,2*Math.PI); ctx.fillStyle=domeGrd; ctx.fill();
+  const irg=ctx.createLinearGradient(CX-40,CY-40,CX+40,CY+40);
+  irg.addColorStop(0,'#ffe55c'); irg.addColorStop(0.3,'#b37d00'); irg.addColorStop(0.6,'#4d3000'); irg.addColorStop(1,'#ffc000');
+  ctx.beginPath(); ctx.arc(CX,CY,42,0,2*Math.PI); ctx.strokeStyle=irg; ctx.lineWidth=4; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,44,0,2*Math.PI); ctx.strokeStyle='rgba(0,0,0,0.8)'; ctx.lineWidth=2; ctx.stroke();
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
-    const ls=seg.lines.filter(l=>l);
-    const fs=ls.length>1?11.5:13.5; 
+    const ls=seg.lines.filter(l=>l), fs=ls.length>1?11.5:13.5;
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
-    ctx.shadowColor = 'rgba(0,0,0,0.95)';
-    ctx.shadowBlur = 5;
-    ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
-    ctx.fillStyle = seg.tc;
+    ctx.shadowColor='rgba(0,0,0,0.95)'; ctx.shadowBlur=5; ctx.shadowOffsetX=1; ctx.shadowOffsetY=3;
+    if(seg.vip){ ctx.fillStyle='#ffd700'; ctx.shadowColor='rgba(255,180,0,0.9)'; ctx.shadowBlur=8; }
+    else { ctx.fillStyle=seg.tc; }
     const lh=fs+4, oy=-(ls.length-1)*lh/2;
     ls.forEach((l,li)=>ctx.fillText(l,R-15,oy+li*lh+fs*0.35));
     ctx.restore();
   }
-
-  const glassGrd = ctx.createLinearGradient(CX - R*0.6, CY - R*0.8, CX + R*0.8, CY + R*0.8);
-  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
-  glassGrd.addColorStop(0.4, 'rgba(255, 255, 255, 0.04)');
-  glassGrd.addColorStop(0.45, 'transparent');
-  glassGrd.addColorStop(1, 'transparent');
-  ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
-  ctx.fillStyle = glassGrd; ctx.fill();
-
-  const dx = R * Math.cos(t), dy = R * Math.sin(t);
-  const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
-  rimGrd.addColorStop(0, '#2e0f00');
-  rimGrd.addColorStop(0.3, '#ffaa00');
-  rimGrd.addColorStop(0.5, '#1a0800');
-  rimGrd.addColorStop(0.8, '#ff5500');
-  rimGrd.addColorStop(1, '#2e0f00');
-  ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
-  ctx.strokeStyle = rimGrd; ctx.lineWidth = 14; ctx.stroke();
-
-  ctx.beginPath(); ctx.arc(CX, CY, R-7, 0, 2*Math.PI);
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)'; ctx.lineWidth = 3; ctx.stroke();
-  ctx.beginPath(); ctx.arc(CX, CY, R-8, 0, 2*Math.PI);
-  ctx.strokeStyle = 'rgba(255, 120, 0, 0.6)'; ctx.lineWidth = 1; ctx.stroke();
-
-  const numBulbs = 36;
-  for(let j=0; j<numBulbs; j++) {
-      const bAngle = j * (2 * Math.PI / numBulbs);
-      const bx = CX + (R - 3) * Math.cos(bAngle);
-      const by = CY + (R - 3) * Math.sin(bAngle);
-      const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
-      ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
-      ctx.fillStyle = `rgba(255, 255, 150, ${0.4 + glowLevel * 0.6})`;
-      ctx.shadowColor = '#ffffaa';
-      ctx.shadowBlur = glowLevel * 8;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+  const glassGrd=ctx.createLinearGradient(CX-R*0.6,CY-R*0.8,CX+R*0.8,CY+R*0.8);
+  glassGrd.addColorStop(0,'rgba(255,255,255,0.25)'); glassGrd.addColorStop(0.4,'rgba(255,255,255,0.04)');
+  glassGrd.addColorStop(0.45,'transparent'); glassGrd.addColorStop(1,'transparent');
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,2*Math.PI); ctx.fillStyle=glassGrd; ctx.fill();
+  const dx=R*Math.cos(t), dy=R*Math.sin(t);
+  const rimGrd=ctx.createLinearGradient(CX-dx,CY-dy,CX+dx,CY+dy);
+  rimGrd.addColorStop(0,'#2e0f00'); rimGrd.addColorStop(0.3,'#ffaa00'); rimGrd.addColorStop(0.5,'#1a0800'); rimGrd.addColorStop(0.8,'#ff5500'); rimGrd.addColorStop(1,'#2e0f00');
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,2*Math.PI); ctx.strokeStyle=rimGrd; ctx.lineWidth=14; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,R-7,0,2*Math.PI); ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=3; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,R-8,0,2*Math.PI); ctx.strokeStyle='rgba(255,120,0,0.6)'; ctx.lineWidth=1; ctx.stroke();
+  for(let j=0;j<36;j++){
+    const bA=j*(2*Math.PI/36), bx=CX+(R-3)*Math.cos(bA), by=CY+(R-3)*Math.sin(bA);
+    const gl=(Math.sin(t*10+bA*4)+1)/2;
+    ctx.beginPath(); ctx.arc(bx,by,1.8,0,2*Math.PI);
+    ctx.fillStyle=`rgba(255,255,150,${0.4+gl*0.6})`; ctx.shadowColor='#ffffaa'; ctx.shadowBlur=gl*8; ctx.fill(); ctx.shadowBlur=0;
   }
-
-  ctx.shadowColor = 'rgba(0,0,0,0.95)';
-  ctx.shadowBlur = 15;
-  ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
-  const centerBase = ctx.createRadialGradient(CX-15, CY-15, 2, CX, CY, 38);
-  centerBase.addColorStop(0, '#552200');
-  centerBase.addColorStop(0.5, '#170b07');
-  centerBase.addColorStop(1, '#000000');
-  ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
-  ctx.fillStyle = centerBase; ctx.fill();
-  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
-
-  ctx.save();
-  ctx.translate(CX, CY);
-  const rotA = -a * 1.5;
-  ctx.rotate(rotA);
-  const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
-  cRim.addColorStop(0, '#ffcc00'); cRim.addColorStop(0.5, '#441100'); cRim.addColorStop(1, '#ff5500');
-  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI);
-  ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
-  for(let j=0; j<8; j++) {
-      ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
-      ctx.fillStyle = '#ffaa00'; ctx.fill();
-  }
+  ctx.shadowColor='rgba(0,0,0,0.95)'; ctx.shadowBlur=15; ctx.shadowOffsetX=0; ctx.shadowOffsetY=8;
+  const cb=ctx.createRadialGradient(CX-15,CY-15,2,CX,CY,38);
+  cb.addColorStop(0,'#552200'); cb.addColorStop(0.5,'#170b07'); cb.addColorStop(1,'#000000');
+  ctx.beginPath(); ctx.arc(CX,CY,36,0,2*Math.PI); ctx.fillStyle=cb; ctx.fill();
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+  ctx.save(); ctx.translate(CX,CY); ctx.rotate(-a*1.5);
+  const cRim=ctx.createLinearGradient(-35,-35,35,35);
+  cRim.addColorStop(0,'#ffcc00'); cRim.addColorStop(0.5,'#441100'); cRim.addColorStop(1,'#ff5500');
+  ctx.beginPath(); ctx.arc(0,0,36,0,2*Math.PI); ctx.strokeStyle=cRim; ctx.lineWidth=5; ctx.stroke();
+  for(let j=0;j<8;j++){ ctx.beginPath(); ctx.arc(33*Math.cos(j*Math.PI/4),33*Math.sin(j*Math.PI/4),2.5,0,2*Math.PI); ctx.fillStyle='#ffaa00'; ctx.fill(); }
   ctx.restore();
-
-  ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI);
-  ctx.strokeStyle='rgba(0,0,0, 0.8)'; ctx.lineWidth=3; ctx.stroke();
-  ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
-  ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
-
-  ctx.textAlign='center';
-  ctx.font='900 12.5px Montserrat, sans-serif'; 
-  ctx.shadowColor = 'rgba(255,100,0,1)'; ctx.shadowBlur = 8;
+  ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI); ctx.strokeStyle='rgba(0,0,0,0.8)'; ctx.lineWidth=3; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI); ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+  ctx.textAlign='center'; ctx.font='900 12.5px Montserrat, sans-serif';
+  ctx.shadowColor='rgba(255,100,0,1)'; ctx.shadowBlur=8;
   ctx.fillStyle='#ff5500'; ctx.fillText('BETOR',CX,CY-3);
   ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
-  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
+  ctx.shadowColor='transparent'; ctx.shadowBlur=0;
 }
 
-function drawSpotlight(a, idx, alpha) {
-  sctx.clearRect(0,0,286,286);
-  if(alpha<=0) return;
+function drawSpotlight(a,idx,alpha){
+  sctx.clearRect(0,0,286,286); if(alpha<=0) return;
   sctx.save();
   sctx.fillStyle=`rgba(0,0,0,${alpha*0.72})`;
   sctx.beginPath(); sctx.arc(CX,CY,R-5,0,2*Math.PI); sctx.fill();
   const s=a+idx*ARC, e=s+ARC;
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
-  sctx.fillStyle=`rgba(255,255,255,${alpha})`; sctx.fill();
-  sctx.restore();
-  sctx.save();
-  sctx.globalAlpha=alpha*0.9;
+  sctx.fillStyle=`rgba(255,255,255,${alpha})`; sctx.fill(); sctx.restore();
+  sctx.save(); sctx.globalAlpha=alpha*0.9;
   const seg=SEGS[idx], mid=s+ARC/2;
   const grd=sctx.createRadialGradient(CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),2,CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),R*0.5);
   grd.addColorStop(0,seg.tc+'aa'); grd.addColorStop(1,'transparent');
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
-  sctx.fillStyle=grd; 
-  sctx.globalCompositeOperation='source-over'; 
-  sctx.fill();
-  sctx.restore();
-  sctx.save();
-  sctx.globalCompositeOperation='destination-out';
-  sctx.beginPath(); sctx.arc(CX, CY, 38, 0, 2*Math.PI); sctx.fill();
-  sctx.restore();
+  sctx.fillStyle=grd; sctx.globalCompositeOperation='source-over'; sctx.fill(); sctx.restore();
+  sctx.save(); sctx.globalCompositeOperation='destination-out';
+  sctx.beginPath(); sctx.arc(CX,CY,38,0,2*Math.PI); sctx.fill(); sctx.restore();
 }
 function animateSpotlight(a,idx){
-  sc.style.opacity='1'; let alpha=0,t0=null;
+  sc.style.opacity='1'; let alpha=0, t0=null;
   function frame(ts){ if(!t0)t0=ts; alpha=Math.min((ts-t0)/600,1); drawSpotlight(a,idx,alpha); if(alpha<1)requestAnimationFrame(frame); }
   requestAnimationFrame(frame);
 }
 function clearSpotlight(){ sc.style.opacity='0'; sctx.clearRect(0,0,286,286); }
 
-async function checkSpinRight() {
-  if(!USER_ID){ disableSpin(); document.getElementById('spinInfo').textContent = 'KİMLİK BULUNAMADI'; return; }
+async function checkSpinRight(){
+  if(!USER_ID){ disableSpin(); document.getElementById('spinInfo').textContent='KİMLİK BULUNAMADI'; return; }
   try {
-    const res = await fetch(`/api/check_spin?user_id=${USER_ID}`);
-    const data = await res.json();
-    if(data.allowed) enableSpin(data.spins);
-    else disableSpin();
-  } catch(e) { 
-    disableSpin(); 
-    document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
-  }
+    const res=await fetch(`/api/check_spin?user_id=${USER_ID}`);
+    const data=await res.json();
+    if(data.allowed) enableSpin(data.spins); else disableSpin();
+  } catch(e){ disableSpin(); document.getElementById('spinInfo').textContent='BAĞLANTI HATASI'; }
 }
-
-function enableSpin(spins) {
-  spinAllowed = true;
-  document.getElementById('spinBtn').disabled = false;
-  const s = spins || 1;
-  document.getElementById('spinInfo').textContent = `${s} ÇEVİRME HAKKIN VAR`;
-  document.getElementById('noSpinBanner').style.display = 'none';
-  stopCountdown();
+function enableSpin(spins){
+  spinAllowed=true; document.getElementById('spinBtn').disabled=false;
+  document.getElementById('spinInfo').textContent=`${spins||1} ÇEVİRME HAKKIN VAR`;
+  document.getElementById('noSpinBanner').style.display='none'; stopCountdown();
 }
-
-function disableSpin() {
-  spinAllowed = false;
-  document.getElementById('spinBtn').disabled = true;
-  document.getElementById('spinInfo').textContent = 'BUGÜNKÜ HAKKINI KULLANDIN';
-  document.getElementById('noSpinBanner').style.display = 'block';
-  startCountdown();
+function disableSpin(){
+  spinAllowed=false; document.getElementById('spinBtn').disabled=true;
+  document.getElementById('spinInfo').textContent='BUGÜNKÜ HAKKINI KULLANDIN';
+  document.getElementById('noSpinBanner').style.display='block'; startCountdown();
 }
 
 checkSpinRight();
+setInterval(()=>{ if(!spinAllowed&&USER_ID) checkSpinRight(); },5000);
 
-setInterval(() => {
-  if (!spinAllowed && USER_ID) {
-    checkSpinRight();
-  }
-}, 5000);
-
-async function spin() {
+async function spin(){
   if(spinning||!spinAllowed) return;
-  spinning=true; spinAllowed=false;
-  clearSpotlight();
+  spinning=true; spinAllowed=false; clearSpotlight();
   document.getElementById('spinBtn').disabled=true;
   document.getElementById('spinInfo').textContent='SONUÇ BEKLENİYOR...';
   cancelAnimationFrame(idleRaf);
-
-  let targetIdx = -1;
-
-  if(USER_ID) {
+  let targetIdx=-1;
+  if(USER_ID){
     try {
-      const res = await fetch('/api/use_spin', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ user_id: USER_ID, name: USER_NAME, username: USER_USERNAME })
-      });
-      const backendData = await res.json();
-      if (!backendData.ok) {
-        document.getElementById('spinInfo').textContent = 'SPİN HAKKIN YOK';
-        spinning = false;
-        disableSpin();
-        return;
-      }
-      targetIdx = backendData.segment_index;
-      if (USER_ID !== ADMIN_ID) {
-        localStorage.setItem(getSpinKey(), Date.now().toString());
-      }
-    } catch(e) {
-      document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
-      spinning = false;
-      enableSpin(1);
-      return;
-    }
-  } else {
-    targetIdx = Math.floor(Math.random() * N);
-  }
-
+      const res=await fetch('/api/use_spin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:USER_ID,name:USER_NAME,username:USER_USERNAME})});
+      const bd=await res.json();
+      if(!bd.ok){ document.getElementById('spinInfo').textContent='SPİN HAKKIN YOK'; spinning=false; disableSpin(); return; }
+      targetIdx=bd.segment_index;
+      if(USER_ID!==ADMIN_ID) localStorage.setItem(getSpinKey(),Date.now().toString());
+    } catch(e){ document.getElementById('spinInfo').textContent='BAĞLANTI HATASI'; spinning=false; enableSpin(1); return; }
+  } else { targetIdx=Math.floor(Math.random()*N); }
   document.getElementById('spinInfo').textContent='İYİ ŞANSLAR!';
   playSpinStart();
-  
-  const randomOffset = (Math.random() * 0.8 + 0.1) * ARC;
-  const K = Math.ceil(angle / (Math.PI * 2)) + 8 + Math.floor(Math.random() * 3);
-  const finalAngle = -Math.PI/2 - (targetIdx * ARC + randomOffset) + (K * 2 * Math.PI);
-  const total = finalAngle - angle;
-
-  const dur=7500, start=angle; let t0=null;
+  const randomOffset=(Math.random()*0.8+0.1)*ARC;
+  const K=Math.ceil(angle/(Math.PI*2))+8+Math.floor(Math.random()*3);
+  const finalAngle=-Math.PI/2-(targetIdx*ARC+randomOffset)+(K*2*Math.PI);
+  const total=finalAngle-angle, dur=7500, start=angle; let t0=null;
   function frame(ts){
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
-    angle=start+total*easeOut(prog);
-    draw(angle, ts * 0.005);
-    checkTick(angle);
-    if(prog<1) requestAnimationFrame(frame);
-    else { spinning=false; showResult(); startIdle(); }
+    angle=start+total*easeOut(prog); draw(angle,ts*0.005); checkTick(angle);
+    if(prog<1) requestAnimationFrame(frame); else { spinning=false; showResult(); startIdle(); }
   }
   requestAnimationFrame(frame);
 }
 function easeOut(t){ return 1-Math.pow(1-t,6); }
 
-function showResult() {
+function showResult(){
   const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
   const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
   animateSpotlight(angle,idx);
-  
+  const rTitle=document.getElementById('rTitle');
+  const rText=document.getElementById('rText');
+  const rBtn=document.getElementById('rBtn');
+  const rBadge=document.getElementById('rBadge');
+  const promoBox=document.getElementById('promoBox');
+  const promoCode=document.getElementById('promoCode');
+  promoBox.style.display='none';
+  rBadge.className='rcard-badge';
   if(seg.win){
-    const rTitle = document.getElementById('rTitle');
-    const rText = document.getElementById('rText');
-    const rBtn = document.getElementById('rBtn');
-
     document.getElementById('rTop').className='rcard-top';
-    document.getElementById('rBadge').style.display='inline-block';
-    document.getElementById('rBadge').textContent=seg.prize;
-    
-    if (seg.prize === '+1 Spin') {
-      rTitle.textContent = 'EKSTRA ŞANS!';
-      rText.innerHTML = 'Harika! Çarkı çevirmek için anında<br><b>+1 HAK</b> daha kazandın.';
-      rBtn.textContent = 'HEMEN TEKRAR ÇEVİR';
-      rBtn.onclick = () => { closeModal(); spin(); };
+    rBadge.style.display='inline-block';
+    rBadge.textContent=seg.prize;
+    if(seg.vip){
+      rBadge.className='rcard-badge vip-badge';
+      rTitle.textContent='TEBRİKLER';
+      rText.textContent='VIP ödülünü almak için siteye gir!';
+      rBtn.textContent='SİTEYE GİT VE OYNA'; rBtn.onclick=goSite;
+    } else if(seg.prize==='+1 Spin'){
+      rTitle.textContent='EKSTRA ŞANS!';
+      rText.innerHTML='Harika! Çarkı çevirmek için anında<br><b>+1 HAK</b> daha kazandın.';
+      rBtn.textContent='HEMEN TEKRAR ÇEVİR'; rBtn.onclick=()=>{ closeModal(); spin(); };
     } else {
-      rTitle.textContent = 'TEBRİKLER';
-      rText.textContent = 'Ödülün hesabına yatırıldı!';
-      rBtn.textContent = 'SİTEYE GİT VE OYNA';
-      rBtn.onclick = goSite;
+      rTitle.textContent='TEBRİKLER';
+      rText.textContent='Ödülünü almak için siteye gir!';
+      rBtn.textContent='SİTEYE GİT VE OYNA'; rBtn.onclick=goSite;
+      if(seg.promo){ promoCode.textContent=seg.promo; promoBox.style.display='block'; }
     }
-
     confetti(); playWin();
   } else {
     document.getElementById('rTop').className='rcard-top lose-top';
-    document.getElementById('rTitle').textContent='ŞANS YANINDA DEĞİLDİ!';
-    document.getElementById('rBadge').style.display='inline-block';
-    document.getElementById('rBadge').textContent='KAYBETTİN';
-    document.getElementById('rText').textContent='Yarın tekrar dene veya davet et!';
-    document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
-    document.getElementById('rBtn').onclick = goSite;
+    rTitle.textContent='ŞANS YANINDA DEĞİLDİ!';
+    rBadge.style.display='inline-block'; rBadge.textContent='KAYBETTİN';
+    rText.textContent='Yarın tekrar dene veya davet et!';
+    rBtn.textContent='SİTEYE GİT VE OYNA'; rBtn.onclick=goSite;
     playLose();
   }
-  setTimeout(()=>document.getElementById('overlay').classList.add('show'), 800);
-  setTimeout(()=>{ checkSpinRight(); }, 1000);
+  setTimeout(()=>document.getElementById('overlay').classList.add('show'),800);
+  setTimeout(()=>checkSpinRight(),1000);
 }
 
-function shareInvite() {
+function shareInvite(){
   if(!USER_ID){ goSiteDirect(); return; }
-  const botUsername = 'PrimeXBos_bot';
-  const link = `https://t.me/${botUsername}?start=ref_${USER_ID}`;
-  if(tg) {
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Betorspin Şans Çarkı\'nı dene! Günlük spin çevir, bonus kazan!')}`);
-  } else {
-    navigator.clipboard?.writeText(link).then(()=>alert('Davet linki kopyalandı!')).catch(()=>{});
-  }
-  setTimeout(()=>checkSpinRight(), 3000);
+  const link=`https://t.me/PrimeXBos_bot?start=ref_${USER_ID}`;
+  if(tg){ tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Betorspin Şans Çarkı\'nı dene! Günlük spin çevir, bonus kazan!')}`); }
+  else { navigator.clipboard?.writeText(link).then(()=>alert('Davet linki kopyalandı!')).catch(()=>{}); }
+  setTimeout(()=>checkSpinRight(),3000);
 }
-
 function goSite(){
-  document.getElementById('overlay').classList.remove('show');
-  clearSpotlight();
+  document.getElementById('overlay').classList.remove('show'); clearSpotlight();
   if(tg){ tg.openLink('https://cutt.ly/7tF5Ow3K'); setTimeout(()=>tg.close(),500); }
   else window.open('https://cutt.ly/7tF5Ow3K','_blank');
 }
-function goSiteDirect(){
-  if(tg) tg.close();
-  else window.open('https://cutt.ly/7tF5Ow3K','_blank');
-}
-
-function closeModal() {
-  document.getElementById('overlay').classList.remove('show');
-}
+function goSiteDirect(){ if(tg) tg.close(); else window.open('https://cutt.ly/7tF5Ow3K','_blank'); }
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
 
 function confetti(){
-  const cc=document.getElementById('confetti');
-  cc.width=window.innerWidth; cc.height=window.innerHeight;
+  const cc=document.getElementById('confetti'); cc.width=window.innerWidth; cc.height=window.innerHeight;
   const cx2=cc.getContext('2d');
   const cols=['#ff4500','#ff8c00','#ffc200','#ffffff','#ff6b6b','#4a8fff','#22ee66'];
-  const ps=Array.from({length:110},()=>({
-    x:Math.random()*cc.width, y:-20-Math.random()*80,
-    w:5+Math.random()*8, h:3+Math.random()*4,
-    c:cols[Math.floor(Math.random()*cols.length)],
-    vx:(Math.random()-.5)*5, vy:3+Math.random()*4,
-    rot:Math.random()*360, rs:(Math.random()-.5)*10, a:1
-  }));
+  const ps=Array.from({length:110},()=>({x:Math.random()*cc.width,y:-20-Math.random()*80,w:5+Math.random()*8,h:3+Math.random()*4,c:cols[Math.floor(Math.random()*cols.length)],vx:(Math.random()-.5)*5,vy:3+Math.random()*4,rot:Math.random()*360,rs:(Math.random()-.5)*10,a:1}));
   let raf;
   function go(){
     cx2.clearRect(0,0,cc.width,cc.height); let alive=false;
-    ps.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rs; p.vy+=0.06;
-      if(p.y<cc.height+20) alive=true; else p.a=Math.max(0,p.a-.02);
-      cx2.save(); cx2.globalAlpha=Math.max(0,p.a);
-      cx2.translate(p.x,p.y); cx2.rotate(p.rot*Math.PI/180);
-      cx2.fillStyle=p.c; cx2.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-      cx2.restore();
-    });
+    ps.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.rot+=p.rs; p.vy+=0.06; if(p.y<cc.height+20) alive=true; else p.a=Math.max(0,p.a-.02); cx2.save(); cx2.globalAlpha=Math.max(0,p.a); cx2.translate(p.x,p.y); cx2.rotate(p.rot*Math.PI/180); cx2.fillStyle=p.c; cx2.fillRect(-p.w/2,-p.h/2,p.w,p.h); cx2.restore(); });
     alive?raf=requestAnimationFrame(go):cx2.clearRect(0,0,cc.width,cc.height);
   }
   cancelAnimationFrame(raf); go();
-  setTimeout(()=>{cancelAnimationFrame(raf);cx2.clearRect(0,0,cc.width,cc.height);},5000);
+  setTimeout(()=>{ cancelAnimationFrame(raf); cx2.clearRect(0,0,cc.width,cc.height); },5000);
 }
 
-const AudioCtx=window.AudioContext||window.webkitAudioContext;
-let actx=null;
+const AudioCtx=window.AudioContext||window.webkitAudioContext; let actx=null;
 function getACtx(){ if(!actx) actx=new AudioCtx(); return actx; }
 function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
-
-function animatePointerTick() {
-  const ptr = document.querySelector('.pointer');
-  if(!ptr) return;
-  ptr.classList.remove('ticking');
-  void ptr.offsetWidth;
-  ptr.classList.add('ticking');
-  clearTimeout(ptr.tickTimeout);
-  ptr.tickTimeout = setTimeout(() => ptr.classList.remove('ticking'), 30);
+function animatePointerTick(){
+  const ptr=document.querySelector('.pointer'); if(!ptr) return;
+  ptr.classList.remove('ticking'); void ptr.offsetWidth; ptr.classList.add('ticking');
+  clearTimeout(ptr.tickTimeout); ptr.tickTimeout=setTimeout(()=>ptr.classList.remove('ticking'),30);
 }
-
 function playTick(){
-  try{
-    const a=getACtx(), t=a.currentTime;
-    const o=a.createOscillator(), g=a.createGain();
-    o.type='sine'; 
-    o.frequency.setValueAtTime(700, t); 
-    o.frequency.exponentialRampToValueAtTime(120, t+0.02);
-    g.gain.setValueAtTime(0.35, t); 
-    g.gain.exponentialRampToValueAtTime(0.001, t+0.03);
-    o.connect(g); g.connect(a.destination);
-    o.start(t); o.stop(t+0.04);
-  }catch(e){}
+  try{ const a=getACtx(),t=a.currentTime,o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.setValueAtTime(700,t); o.frequency.exponentialRampToValueAtTime(120,t+0.02); g.gain.setValueAtTime(0.35,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.03); o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+0.04); }catch(e){}
 }
 function playWin(){
-  try{
-    const a=getACtx(),notes=[523,659,784,1047];
-    notes.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='triangle';
-      const t=a.currentTime+i*0.13;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
-      o.start(t); o.stop(t+0.25);
-    });
-    vibrate([50,30,80,30,150]);
-  }catch(e){}
+  try{ const a=getACtx(),notes=[523,659,784,1047]; notes.forEach((freq,i)=>{ const o=a.createOscillator(),g=a.createGain(); o.connect(g); g.connect(a.destination); o.type='triangle'; const t=a.currentTime+i*0.13; o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.25); o.start(t); o.stop(t+0.25); }); vibrate([50,30,80,30,150]); }catch(e){}
 }
 function playLose(){
-  try{
-    const a=getACtx(),notes=[300,220];
-    notes.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='sawtooth';
-      const t=a.currentTime+i*0.18;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.15,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-      o.start(t); o.stop(t+0.3);
-    });
-    vibrate([100,50,100]);
-  }catch(e){}
+  try{ const a=getACtx(),notes=[300,220]; notes.forEach((freq,i)=>{ const o=a.createOscillator(),g=a.createGain(); o.connect(g); g.connect(a.destination); o.type='sawtooth'; const t=a.currentTime+i*0.18; o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.15,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3); o.start(t); o.stop(t+0.3); }); vibrate([100,50,100]); }catch(e){}
 }
 function playSpinStart(){
-  try{
-    const a=getACtx(),o=a.createOscillator(),g=a.createGain();
-    o.connect(g); g.connect(a.destination); o.type='sine';
-    o.frequency.setValueAtTime(200,a.currentTime); o.frequency.exponentialRampToValueAtTime(600,a.currentTime+0.3);
-    g.gain.setValueAtTime(0.15,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.3);
-    o.start(); o.stop(a.currentTime+0.3);
-    vibrate([30,20,30]);
-  }catch(e){}
+  try{ const a=getACtx(),o=a.createOscillator(),g=a.createGain(); o.connect(g); g.connect(a.destination); o.type='sine'; o.frequency.setValueAtTime(200,a.currentTime); o.frequency.exponentialRampToValueAtTime(600,a.currentTime+0.3); g.gain.setValueAtTime(0.15,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.3); o.start(); o.stop(a.currentTime+0.3); vibrate([30,20,30]); }catch(e){}
 }
 
 let lastTickProgress=null;
 const TICK_INTERVAL=(2*Math.PI)/10;
 function checkTick(a){
-  const progress = (a + Math.PI/2) / TICK_INTERVAL;
-  if(lastTickProgress === null) lastTickProgress = Math.floor(progress);
-  while (progress - lastTickProgress >= 1) {
-    lastTickProgress++;
-    playTick(); vibrate(8); animatePointerTick();
-  }
+  const progress=(a+Math.PI/2)/TICK_INTERVAL;
+  if(lastTickProgress===null) lastTickProgress=Math.floor(progress);
+  while(progress-lastTickProgress>=1){ lastTickProgress++; playTick(); vibrate(8); animatePointerTick(); }
 }
 
 let idleRaf=null;
-function startIdle(){
-  if(spinning) return;
-  const ts = performance.now();
-  draw(angle, ts*0.0015);
-  idleRaf = requestAnimationFrame(startIdle);
-}
+function startIdle(){ if(spinning) return; const ts=performance.now(); draw(angle,ts*0.0015); idleRaf=requestAnimationFrame(startIdle); }
 startIdle();
 
-function initEmbers() {
-  const c = document.getElementById('embers');
-  if(!c) return;
-  const ctx = c.getContext('2d');
-  c.width = window.innerWidth; c.height = window.innerHeight;
-  const ps = Array.from({length: 40}, () => ({
-    x: Math.random()*c.width, y: Math.random()*c.height,
-    r: Math.random()*2+0.5, vx: (Math.random()-0.5)*0.5, vy: -Math.random() - 0.2,
-    a: Math.random(), da: (Math.random()-0.5)*0.02
-  }));
-  function b(){
-    ctx.clearRect(0,0,c.width,c.height);
-    ps.forEach(p=>{
-      p.x+=p.vx; p.y+=p.vy; p.a+=p.da;
-      if(p.a<=0) p.da=Math.abs(p.da); if(p.a>=1) p.da=-Math.abs(p.da);
-      if(p.y < -10) { p.y = c.height+10; p.x = Math.random()*c.width; }
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 2*Math.PI);
-      ctx.fillStyle = `rgba(255, 100, 0, ${p.a})`;
-      ctx.shadowBlur = 6; ctx.shadowColor = '#ff4500';
-      ctx.fill(); ctx.shadowBlur = 0;
-    });
-    requestAnimationFrame(b);
-  }
+function initEmbers(){
+  const c=document.getElementById('embers'); if(!c) return;
+  const ctx=c.getContext('2d'); c.width=window.innerWidth; c.height=window.innerHeight;
+  const ps=Array.from({length:40},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2+0.5,vx:(Math.random()-0.5)*0.5,vy:-Math.random()-0.2,a:Math.random(),da:(Math.random()-0.5)*0.02}));
+  function b(){ ctx.clearRect(0,0,c.width,c.height); ps.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.a+=p.da; if(p.a<=0)p.da=Math.abs(p.da); if(p.a>=1)p.da=-Math.abs(p.da); if(p.y<-10){p.y=c.height+10;p.x=Math.random()*c.width;} ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,2*Math.PI); ctx.fillStyle=`rgba(255,100,0,${p.a})`; ctx.shadowBlur=6; ctx.shadowColor='#ff4500'; ctx.fill(); ctx.shadowBlur=0; }); requestAnimationFrame(b); }
   b();
 }
 initEmbers();
-window.addEventListener('resize', () => { 
-  const c=document.getElementById('embers'); 
-  if(c){ c.width=window.innerWidth; c.height=window.innerHeight; }
-});
+window.addEventListener('resize',()=>{ const c=document.getElementById('embers'); if(c){c.width=window.innerWidth;c.height=window.innerHeight;} });
 
 // ── KAYAN KAZANAN BANNER ──────────────────────────────────────────────
-const TICKER_PRIZES = ['100 Freespin','200 Freespin','VİP Hediye','100₺ Bakiye','200₺ Bonus Buy','Özel Bonus','100₺ Bonus Buy','+1 Spin'];
-const TICKER_LETTERS = 'ABCDEFGHKLMNRSTYZÇÖÜŞİ';
-
-function tickerRndName() {
-  const first = TICKER_LETTERS[Math.floor(Math.random()*TICKER_LETTERS.length)];
-  return first + '. ****';
+const TICKER_PRIZES=['100 Freespin','100₺ Bonus Buy','VİP Hediye','100 Freespin','100₺ Bonus Buy','+1 Spin'];
+const TICKER_LETTERS='ABCDEFGHKLMNRSTYZÇÖÜŞİ';
+function tickerRndName(){ const f=TICKER_LETTERS[Math.floor(Math.random()*TICKER_LETTERS.length)]; return f+'. ****'; }
+function tickerRndPrize(){ return TICKER_PRIZES[Math.floor(Math.random()*TICKER_PRIZES.length)]; }
+function renderTicker(){
+  const track=document.getElementById('tickerTrack'); if(!track) return;
+  const count=10+Math.floor(Math.random()*7);
+  const items=Array.from({length:count},()=>({name:tickerRndName(),prize:tickerRndPrize()}));
+  const doubled=[...items,...items];
+  track.innerHTML=doubled.map(item=>`<span class="ticker-item"><span class="ticker-dot"></span><span class="ticker-name">${item.name}</span><span class="ticker-won">kazandı:</span><span class="ticker-prize">${item.prize}</span></span><span class="ticker-sep">•</span>`).join('');
 }
-function tickerRndPrize() { return TICKER_PRIZES[Math.floor(Math.random()*TICKER_PRIZES.length)]; }
-
-function renderTicker() {
-  const track = document.getElementById('tickerTrack');
-  if(!track) return;
-  const count = 10 + Math.floor(Math.random() * 7);
-  const items = Array.from({length: count}, () => ({
-    name: tickerRndName(),
-    prize: tickerRndPrize()
-  }));
-  const doubled = [...items, ...items];
-  track.innerHTML = doubled.map(item => `
-    <span class="ticker-item">
-      <span class="ticker-dot"></span>
-      <span class="ticker-name">${item.name}</span>
-      <span class="ticker-won">kazandı:</span>
-      <span class="ticker-prize">${item.prize}</span>
-    </span>
-    <span class="ticker-sep">•</span>
-  `).join('');
-}
-
 renderTicker();
-setInterval(renderTicker, 30000);
+setInterval(renderTicker,30000);
 </script>
 </body>
 </html>
