@@ -196,7 +196,10 @@ canvas#wheel {
   transition: all .2s;
 }
 .invite-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.97); }
-.invite-badge { color: #ffffff; font-weight: 800; }
+.invite-badge {
+  color: #ffffff;
+  font-weight: 800;
+}
 
 .no-spin-banner {
   display: none;
@@ -245,7 +248,6 @@ canvas#wheel {
   cursor: pointer; display: block; width: 100%;
 }
 
-/* ── OVERLAY ── */
 .overlay {
   display: none; position: fixed; inset: 0; overflow: hidden;
   background: rgba(0,0,0,0.92);
@@ -267,7 +269,7 @@ canvas#wheel {
 
 .rcard {
   position: relative; z-index: 1;
-  width: 88%; max-width: 340px;
+  width: 88%; max-width: 320px;
   background: rgba(20, 10, 5, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -286,24 +288,8 @@ canvas#wheel {
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .rcard-top.lose-top { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.03); }
-.rcard-top.vip-top {
-  background: radial-gradient(circle at top, rgba(255,215,0,0.25) 0%, transparent 100%);
-  border-bottom: 1px solid rgba(255,215,0,0.2);
-}
 
 .rcard-title { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(255,69,0,0.6); }
-.rcard-title.vip-title {
-  background: linear-gradient(135deg, #ffe066, #ffaa00, #fff7c0, #ff8800);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  text-shadow: none;
-  animation: vipShimmer 2s linear infinite;
-  background-size: 200% auto;
-}
-@keyframes vipShimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
-}
-
 .rcard-badge {
   display: inline-block;
   background: linear-gradient(180deg, #ff7b00 0%, #c42900 100%);
@@ -313,72 +299,9 @@ canvas#wheel {
   box-shadow: 0 5px 20px rgba(255,69,0,0.5), inset 0 2px 5px rgba(255,255,255,0.4);
   border: 1px solid #ff9245;
 }
-.rcard-badge.vip-badge {
-  background: linear-gradient(135deg, #b8860b, #ffd700, #b8860b);
-  border: 1px solid #ffd700;
-  box-shadow: 0 0 20px rgba(255,215,0,0.6), 0 5px 20px rgba(0,0,0,0.4);
-  color: #1a0a00;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-}
 
-/* ── PROMOKOD KUTUSU ── */
-.promo-box {
-  margin: 18px 0 0;
-  background: rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,100,0,0.4);
-  border-radius: 14px;
-  padding: 14px 18px;
-  text-align: center;
-}
-.promo-box.vip-promo-box {
-  border-color: rgba(255,215,0,0.5);
-  background: rgba(0,0,0,0.6);
-}
-.promo-label {
-  font-size: 10px; font-weight: 800;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 3px; text-transform: uppercase;
-  margin-bottom: 8px;
-}
-.promo-code-row {
-  display: flex; align-items: center; gap: 10px; justify-content: center;
-}
-.promo-code {
-  font-size: 22px; font-weight: 900;
-  color: #ffffff;
-  letter-spacing: 4px;
-  text-shadow: 0 0 20px rgba(255,100,0,0.6);
-  flex: 1; text-align: center;
-}
-.promo-code.vip-code {
-  background: linear-gradient(135deg, #ffe066, #ffaa00, #fff7c0, #ff8800);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  text-shadow: none;
-  animation: vipShimmer 2s linear infinite;
-  background-size: 200% auto;
-}
-.copy-btn {
-  background: rgba(255,100,0,0.2);
-  border: 1px solid rgba(255,100,0,0.4);
-  border-radius: 8px; padding: 8px 14px;
-  color: #ff8844; font-family: inherit; font-size: 12px; font-weight: 800;
-  cursor: pointer; letter-spacing: 1px; text-transform: uppercase;
-  transition: all 0.2s; flex-shrink: 0;
-}
-.copy-btn.vip-copy {
-  background: rgba(255,215,0,0.15);
-  border-color: rgba(255,215,0,0.4);
-  color: #ffd700;
-}
-.copy-btn:active { transform: scale(0.95); }
-.copy-btn.copied { background: rgba(0,200,100,0.2); border-color: rgba(0,200,100,0.4); color: #00cc66; }
-.promo-hint {
-  font-size: 10px; color: rgba(255,255,255,0.25);
-  margin-top: 8px; font-weight: 600; letter-spacing: 0.5px;
-}
-
-.rcard-bot { padding: 20px 24px 20px; text-align: center; background: rgba(0,0,0,0.4); }
-.rcard-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 20px; }
+.rcard-bot { padding: 30px 24px 20px; text-align: center; background: rgba(0,0,0,0.4); }
+.rcard-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 24px; }
 .rcard-btn {
   width: 100%;
   background: linear-gradient(180deg, #ff4c00 0%, #b22500 100%);
@@ -389,6 +312,19 @@ canvas#wheel {
   cursor: pointer; box-shadow: 0 10px 20px rgba(255,69,0,0.3);
   margin-bottom: 15px;
 }
+
+.promo-box {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(0,0,0,0.6); border: 1px dashed #ff9245;
+  border-radius: 12px; padding: 12px 16px; margin-bottom: 20px;
+}
+.promo-box span { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,100,0,0.6); }
+.promo-btn {
+  background: #ff4c00; border: none; color: #fff; font-weight: 800;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer; text-transform: uppercase;
+  font-size: 12px; transition: transform 0.1s;
+}
+.promo-btn:active { transform: scale(0.95); }
 
 .kapat-btn {
   display: block; width: 100%;
@@ -445,25 +381,19 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
   </div>
 </div>
 
-<!-- SONUÇ OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="overlay-rays"></div>
   <div class="rcard">
     <div class="rcard-top" id="rTop">
       <div class="rcard-title" id="rTitle">TEBRİKLER</div>
       <div class="rcard-badge" id="rBadge">100 Freespin</div>
-      <!-- Promokod kutusu -->
-      <div class="promo-box" id="promoBox" style="display:none;">
-        <div class="promo-label">Promokodun</div>
-        <div class="promo-code-row">
-          <div class="promo-code" id="promoCode">BOSFS100GO</div>
-          <button class="copy-btn" id="copyBtn" onclick="copyPromo()">KOPYALA</button>
-        </div>
-        <div class="promo-hint">Siteye gidip promokodu gir ve ödülünü al!</div>
-      </div>
     </div>
     <div class="rcard-bot">
-      <div class="rcard-text" id="rText">Ödülün hazır, promokodunu kullan!</div>
+      <div class="rcard-text" id="rText">Ödülün hesabına yatırıldı!</div>
+      <div class="promo-box" id="promoBox" style="display:none;">
+        <span id="promoCodeText">CODE</span>
+        <button class="promo-btn" id="promoCopyBtn" onclick="copyCode()">KOPYALA</button>
+      </div>
       <button class="rcard-btn" id="rBtn" onclick="goSite()">SİTEYE GİT VE OYNA</button>
       <button class="kapat-btn" onclick="closeModal()">KAPAT</button>
     </div>
@@ -482,17 +412,17 @@ const USER_NAME = tg?.initDataUnsafe?.user?.first_name || '';
 const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
 const ADMIN_ID = 6943377103;
 
-// ── 9 Çark Dilimi ────────────────────────────────────────────────────
+// ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],    bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', win:true,  prize:'100 Freespin',      promo:'BOSFS100GO', vip:false },
-  { lines:['+1','SPİN'],         bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', win:true,  prize:'+1 Spin',           promo:null,         vip:false },
-  { lines:['100','FREESPIN'],    bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', win:true,  prize:'100 Freespin',      promo:'BOSFS100S',  vip:false },
-  { lines:['+1','SPİN'],         bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', win:true,  prize:'+1 Spin',           promo:null,         vip:false },
-  { lines:['100TL','BONUS BUY'], bg:'#1a0b03', stroke:'#ff5500', tc:'#ffffff', win:true,  prize:'100TL Bonus Buy',   promo:'BOSBYB',     vip:false },
-  { lines:['100TL','BONUS BUY'], bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', win:true,  prize:'100TL Bonus Buy',   promo:'BOSBHB',     vip:false },
-  { lines:['KAYBETTİN',''],      bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', win:false, prize:null,                promo:null,         vip:false },
-  { lines:['VİP','HEDİYE'],      bg:'#1a1200', stroke:'#ffd700', tc:'#ffd700', win:true,  prize:'VİP Hediye',        promo:'BOSBBh',     vip:true  },
-  { lines:['KAYBETTİN',''],      bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', win:false, prize:null,                promo:null,         vip:false },
+  { lines:['100','FREESPIN'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
+  { lines:['+1','SPIN'],             bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
+  { lines:['100','FREESPIN'],         bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
+  { lines:['+1','SPIN'],             bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
+  { lines:['100₺','BONUS BUY'],      bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
+  { lines:['100₺','BONUS BUY'],      bg:'#240e04', stroke:'#ff6600', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
+  { lines:['KAYBETTİN',''],          bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', icon:'', win:false, prize:null                    },
+  { lines:['VİP','HEDİYE'],          bg:'#140803', stroke:'#ff4c00', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
+  { lines:['KAYBETTİN',''],          bg:'#0a0402', stroke:'#ff1100', tc:'#ffffff', icon:'', win:false, prize:null                    },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
@@ -500,6 +430,7 @@ const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
+let lastWonCode = null;
 let countdownInterval=null;
 
 function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
@@ -507,191 +438,212 @@ function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
 function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
-  if(USER_ID === ADMIN_ID) return;
+  if(USER_ID === ADMIN_ID) return; // Adminler için sayaca ihtiyaç yok
+  
   let lastSpin = localStorage.getItem(getSpinKey());
-  if (!lastSpin) { lastSpin = Date.now().toString(); localStorage.setItem(getSpinKey(), lastSpin); }
+  
+  // Eğer localStorage'da kayıt yoksa ama yine de hakkı kalmamışsa (başka cihazdan girmiş vs),
+  // sayacı tam 24 saat sonrasına ayarlıyoruz.
+  if (!lastSpin) {
+    lastSpin = Date.now().toString();
+    localStorage.setItem(getSpinKey(), lastSpin);
+  }
+  
   const target = new Date(parseInt(lastSpin) + (24 * 60 * 60 * 1000));
   const diff = target - new Date();
-  if (diff <= 0) { clearInterval(countdownInterval); countdownInterval = null; checkSpinRight(); return; }
+  
+  if (diff <= 0) { 
+    clearInterval(countdownInterval); 
+    countdownInterval = null; 
+    checkSpinRight(); 
+    return; 
+  }
+  
   const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
   const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
   const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
   el.textContent = `${h}:${m}:${s}`;
 }
-function startCountdown() { updateCountdown(); if (countdownInterval) clearInterval(countdownInterval); countdownInterval = setInterval(updateCountdown, 1000); }
-function stopCountdown() { if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; } }
+function startCountdown() {
+  updateCountdown();
+  if (countdownInterval) clearInterval(countdownInterval);
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+function stopCountdown() {
+  if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+}
 
-// ── ÇARK ÇİZİMİ ──────────────────────────────────────────────────────
 function draw(a, t=0) {
   ctx.clearRect(0,0,286,286);
-
-  // 1. Dilim zeminleri
+  // 1. Dilim Zeminleri ve Derinlikli Gradient (Inner Shadow İlüzyonu)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, e=s+ARC, seg=SEGS[i];
+    
+    // Her dilime 3D eğimli çukur hissi veren custom gradient
     const segGrd = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
-    if(seg.vip) {
-      segGrd.addColorStop(0, '#2a1e00');
-      segGrd.addColorStop(0.7, '#110e00');
-      segGrd.addColorStop(1, '#000000');
-    } else {
-      segGrd.addColorStop(0, seg.bg);
-      segGrd.addColorStop(0.8, '#050201');
-      segGrd.addColorStop(1, '#000000');
-    }
+    segGrd.addColorStop(0, seg.bg);
+    segGrd.addColorStop(0.8, '#050201'); // Dışa doğru kararma (Çukur hissi)
+    segGrd.addColorStop(1, '#000000');
+    
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
     ctx.fillStyle = segGrd; ctx.fill();
-
-    // VIP dilimine altın parıltı
-    if(seg.vip) {
-      const vipGlow = ctx.createRadialGradient(
-        CX + (R*0.65)*Math.cos(s+ARC/2), CY + (R*0.65)*Math.sin(s+ARC/2), 0,
-        CX + (R*0.65)*Math.cos(s+ARC/2), CY + (R*0.65)*Math.sin(s+ARC/2), R*0.5
-      );
-      const gAlpha = (Math.sin(t*3) + 1) / 2;
-      vipGlow.addColorStop(0, `rgba(255, 215, 0, ${0.12 + gAlpha * 0.18})`);
-      vipGlow.addColorStop(1, 'transparent');
-      ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
-      ctx.fillStyle = vipGlow; ctx.fill();
-    }
+    
+    // Hafif parlayan iç ışık (Vurgu)
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R-3,s,e); ctx.closePath();
+    ctx.fillStyle = 'rgba(255,100,0,0.05)'; ctx.fill();
   }
 
-  // 2. Altın çıtalar
+  // 2. Altın Mekanik Çıtalar (Dividers)
   for(let i=0;i<N;i++){
     const a2=a+i*ARC;
     const endX = CX+R*Math.cos(a2), endY = CY+R*Math.sin(a2);
+    
+    // Çıta gölgesi (Derinlik)
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2, endY-2);
     ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=4; ctx.stroke();
+    
+    // Altın ışıltılı ana çıta
     const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
-    lineGrd.addColorStop(0, '#5a3d00');
-    lineGrd.addColorStop(0.5, '#ffd900');
-    lineGrd.addColorStop(1, '#ff9900');
+    lineGrd.addColorStop(0, '#5a3d00'); // Merkeze yakın koyu
+    lineGrd.addColorStop(0.5, '#ffd900'); // Ortada güçlü parlama
+    lineGrd.addColorStop(1, '#ff9900'); // Kenara yakın turuncu-altın
+    
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
     ctx.strokeStyle = lineGrd; ctx.lineWidth = 2.5; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2));
+    
+    // Çıta üzeri keskin beyaz/sarı yansıma
+    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2)); 
     ctx.lineTo(endX*0.8, endY*0.8);
     ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
   }
 
-  // 3. Dome efekti
+  // 3. 3D BOMBE OLUŞTURUCU KÜRESEL GÖLGE EFEKTİ (DOME EFFECT)
   const domeGrd = ctx.createRadialGradient(CX - R*0.35, CY - R*0.35, 0, CX, CY, R);
-  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
-  domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');
-  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');
+  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)'); 
+  domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');        
+  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');       
+  
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = domeGrd; ctx.fill();
 
-  // 3.5. İç altın çerçeve
+  // 3.5. ALTIN İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
   const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
   innerRimGrd.addColorStop(0, '#ffe55c');
   innerRimGrd.addColorStop(0.3, '#b37d00');
   innerRimGrd.addColorStop(0.6, '#4d3000');
   innerRimGrd.addColorStop(1, '#ffc000');
+  
   ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
   ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, 44, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 2; ctx.stroke();
 
-  // 4. Yazılar
+  // 4. YAZILAR (Gölgelerin üstünde parlak durmaları için)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
     const ls=seg.lines.filter(l=>l);
-    const fs=ls.length>1?11:13;
+    
+    const fs=ls.length>1?11.5:13.5; 
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
+    
+    // Keskin Metalik Yazı Stili Drop-Shadow
     ctx.shadowColor = 'rgba(0,0,0,0.95)';
     ctx.shadowBlur = 5;
     ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
-
-    if(seg.vip) {
-      // VIP için altın gradient yazı efekti (canvas'ta simüle)
-      const gAlpha = (Math.sin(t*3 + 0.5) + 1) / 2;
-      const r = Math.floor(255);
-      const g2 = Math.floor(180 + gAlpha * 75);
-      const b = Math.floor(0 + gAlpha * 50);
-      ctx.fillStyle = `rgb(${r},${g2},${b})`;
-      ctx.shadowColor = `rgba(255, 215, 0, 0.8)`;
-      ctx.shadowBlur = 8 + gAlpha * 6;
-    } else {
-      ctx.fillStyle = '#ffffff';
-    }
-
+    
+    ctx.fillStyle = seg.tc;
     const lh=fs+4, oy=-(ls.length-1)*lh/2;
     ls.forEach((l,li)=>ctx.fillText(l,R-15,oy+li*lh+fs*0.35));
     ctx.restore();
   }
 
-  // 4.5. Cam parlaması
+  // 4.5. CAM PARLAMASI (Glossy Tabaka)
   const glassGrd = ctx.createLinearGradient(CX - R*0.6, CY - R*0.8, CX + R*0.8, CY + R*0.8);
-  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)'); // Üst köşe parlaması
   glassGrd.addColorStop(0.4, 'rgba(255, 255, 255, 0.04)');
   glassGrd.addColorStop(0.45, 'transparent');
   glassGrd.addColorStop(1, 'transparent');
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = glassGrd; ctx.fill();
 
-  // 5. Metalik dış çerçeve
+  // 5. METALİK DIŞ ÇERÇEVE (Kalın Lüks Kasa)
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
   const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
   rimGrd.addColorStop(0, '#2e0f00');
-  rimGrd.addColorStop(0.3, '#ffaa00');
+  rimGrd.addColorStop(0.3, '#ffaa00'); // Işık yansıması (Glow)
   rimGrd.addColorStop(0.5, '#1a0800');
   rimGrd.addColorStop(0.8, '#ff5500');
   rimGrd.addColorStop(1, '#2e0f00');
+  
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.strokeStyle = rimGrd; ctx.lineWidth = 14; ctx.stroke();
+
+  // Kasa iç yansıma detayı
   ctx.beginPath(); ctx.arc(CX, CY, R-7, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)'; ctx.lineWidth = 3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, R-8, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(255, 120, 0, 0.6)'; ctx.lineWidth = 1; ctx.stroke();
 
-  // 6. LED ampüller
+  // 6. CASINO LED AMPULLERİ ÇERÇEVESİ (Buls/Rim Lights)
   const numBulbs = 36;
   for(let j=0; j<numBulbs; j++) {
-    const bAngle = j * (2 * Math.PI / numBulbs);
-    const bx = CX + (R - 3) * Math.cos(bAngle);
-    const by = CY + (R - 3) * Math.sin(bAngle);
-    const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2;
-    ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
-    ctx.fillStyle = `rgba(255, 255, 150, ${0.4 + glowLevel * 0.6})`;
-    ctx.shadowColor = '#ffffaa';
-    ctx.shadowBlur = glowLevel * 8;
-    ctx.fill();
-    ctx.shadowBlur = 0;
+      const bAngle = j * (2 * Math.PI / numBulbs);
+      const bx = CX + (R - 3) * Math.cos(bAngle);
+      const by = CY + (R - 3) * Math.sin(bAngle);
+      
+      // Işıkların dönüyormuş gibi yanıp sönmesini sağlayan sinüs dalgası
+      const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
+      
+      ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
+      ctx.fillStyle = `rgba(255, 255, 150, ${0.4 + glowLevel * 0.6})`;
+      ctx.shadowColor = '#ffffaa';
+      ctx.shadowBlur = glowLevel * 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
   }
 
-  // 7. Merkez göbek
+  // 7. MERKEZ GÖBEK (Neon Işıklı 3D Vida)
   ctx.shadowColor = 'rgba(0,0,0,0.95)';
   ctx.shadowBlur = 15;
   ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
+  
   const centerBase = ctx.createRadialGradient(CX-15, CY-15, 2, CX, CY, 38);
   centerBase.addColorStop(0, '#552200');
   centerBase.addColorStop(0.5, '#170b07');
   centerBase.addColorStop(1, '#000000');
   ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
   ctx.fillStyle = centerBase; ctx.fill();
+  
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 
+  // ZIT DÖNEN IŞIKLI MEKANİK HALKA
   ctx.save();
   ctx.translate(CX, CY);
-  const rotA = -a * 1.5;
+  const rotA = -a * 1.5; // Çarkın yönüne tam ters ve daha hızlı
   ctx.rotate(rotA);
+  
   const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
   cRim.addColorStop(0, '#ffcc00'); cRim.addColorStop(0.5, '#441100'); cRim.addColorStop(1, '#ff5500');
-  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI);
+  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI); // Çizim 0,0 merkezli yapılıyor translate yüzünden
   ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
-  for(let j=0; j<8; j++) {
-    ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
-    ctx.fillStyle = '#ffaa00'; ctx.fill();
-  }
-  ctx.restore();
 
+  // Mekanik dişli çiviler
+  for(let j=0; j<8; j++) {
+      ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
+      ctx.fillStyle = '#ffaa00'; ctx.fill();
+  }
+  ctx.restore(); // Matrix geri yükleniyor ki yazılar ters dönmesin
+
+  // İç koruyucu halka statik
   ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI);
   ctx.strokeStyle='rgba(0,0,0, 0.8)'; ctx.lineWidth=3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
+  // "BETOR SPIN" Yüzen 3D Yazı (Düz kalacak)
   ctx.textAlign='center';
-  ctx.font='900 12.5px Montserrat, sans-serif';
+  ctx.font='900 12.5px Montserrat, sans-serif'; 
   ctx.shadowColor = 'rgba(255,100,0,1)'; ctx.shadowBlur = 8;
   ctx.fillStyle='#ff5500'; ctx.fillText('BETOR',CX,CY-3);
   ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
@@ -702,27 +654,34 @@ function drawSpotlight(a, idx, alpha) {
   sctx.clearRect(0,0,286,286);
   if(alpha<=0) return;
   sctx.save();
+  
+  // Dış metal rimi maskelemek için yarıçap R-5
   sctx.fillStyle=`rgba(0,0,0,${alpha*0.72})`;
   sctx.beginPath(); sctx.arc(CX,CY,R-5,0,2*Math.PI); sctx.fill();
+  
   const s=a+idx*ARC, e=s+ARC;
+  
+  // Kazanan dilimi kes maskele
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
   sctx.fillStyle=`rgba(255,255,255,${alpha})`; sctx.fill();
   sctx.restore();
+  
+  // Renkli Vurgu (Spotlight glow)
   sctx.save();
   sctx.globalAlpha=alpha*0.9;
   const seg=SEGS[idx], mid=s+ARC/2;
   const grd=sctx.createRadialGradient(CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),2,CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),R*0.5);
-  if(seg.vip) {
-    grd.addColorStop(0,'rgba(255,215,0,0.5)'); grd.addColorStop(1,'transparent');
-  } else {
-    grd.addColorStop(0,seg.tc+'aa'); grd.addColorStop(1,'transparent');
-  }
+  grd.addColorStop(0,seg.tc+'aa'); grd.addColorStop(1,'transparent');
+  
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
-  sctx.fillStyle=grd;
-  sctx.globalCompositeOperation='source-over';
+  sctx.fillStyle=grd; 
+  sctx.globalCompositeOperation='source-over'; 
   sctx.fill();
   sctx.restore();
+
+  // En son, merkezdeki vidayı (bolt) tamamen maskeden çıkar
+  // Taşan renkli vurguyu da temizlemiş oluruz
   sctx.save();
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.arc(CX, CY, 38, 0, 2*Math.PI); sctx.fill();
@@ -742,8 +701,8 @@ async function checkSpinRight() {
     const data = await res.json();
     if(data.allowed) enableSpin(data.spins);
     else disableSpin();
-  } catch(e) {
-    disableSpin();
+  } catch(e) { 
+    disableSpin(); 
     document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
   }
 }
@@ -766,7 +725,13 @@ function disableSpin() {
 }
 
 checkSpinRight();
-setInterval(() => { if (!spinAllowed && USER_ID) checkSpinRight(); }, 5000);
+
+// Arkadaş davetinden gelebilecek ekstra hakları algılaması için arka plan kontrolü
+setInterval(() => {
+  if (!spinAllowed && USER_ID) {
+    checkSpinRight();
+  }
+}, 5000);
 
 async function spin() {
   if(spinning||!spinAllowed) return;
@@ -788,21 +753,29 @@ async function spin() {
       const backendData = await res.json();
       if (!backendData.ok) {
         document.getElementById('spinInfo').textContent = 'SPİN HAKKIN YOK';
-        spinning = false; disableSpin(); return;
+        spinning = false;
+        disableSpin();
+        return;
       }
       targetIdx = backendData.segment_index;
-      if (USER_ID !== ADMIN_ID) localStorage.setItem(getSpinKey(), Date.now().toString());
+      lastWonCode = backendData.code || null;
+      if (USER_ID !== ADMIN_ID) {
+        localStorage.setItem(getSpinKey(), Date.now().toString());
+      }
     } catch(e) {
       document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
-      spinning = false; enableSpin(1); return;
+      spinning = false;
+      enableSpin(1);
+      return;
     }
   } else {
+    // Misafir (Kimlik yok)
     targetIdx = Math.floor(Math.random() * N);
   }
 
   document.getElementById('spinInfo').textContent='İYİ ŞANSLAR!';
   playSpinStart();
-
+  
   const randomOffset = (Math.random() * 0.8 + 0.1) * ARC;
   const K = Math.ceil(angle / (Math.PI * 2)) + 8 + Math.floor(Math.random() * 3);
   const finalAngle = -Math.PI/2 - (targetIdx * ARC + randomOffset) + (K * 2 * Math.PI);
@@ -822,101 +795,80 @@ async function spin() {
 }
 function easeOut(t){ return 1-Math.pow(1-t,6); }
 
-// ── SONUÇ EKRANI ──────────────────────────────────────────────────────
 function showResult() {
   const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
   const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
   animateSpotlight(angle,idx);
+  
+  if(seg.win){
+    const rTitle = document.getElementById('rTitle');
+    const rText = document.getElementById('rText');
+    const rBtn = document.getElementById('rBtn');
 
-  const rTop = document.getElementById('rTop');
-  const rTitle = document.getElementById('rTitle');
-  const rBadge = document.getElementById('rBadge');
-  const rText = document.getElementById('rText');
-  const rBtn = document.getElementById('rBtn');
-  const promoBox = document.getElementById('promoBox');
-  const promoCode = document.getElementById('promoCode');
-  const copyBtn = document.getElementById('copyBtn');
-
-  // Sıfırla
-  rTitle.className = 'rcard-title';
-  rBadge.className = 'rcard-badge';
-  promoBox.className = 'promo-box';
-  promoCode.className = 'promo-code';
-  copyBtn.className = 'copy-btn';
-  promoBox.style.display = 'none';
-
-  if(seg.win) {
-    if(seg.vip) {
-      rTop.className = 'rcard-top vip-top';
-      rTitle.className = 'rcard-title vip-title';
-      rBadge.className = 'rcard-badge vip-badge';
-      promoBox.className = 'promo-box vip-promo-box';
-      promoCode.className = 'promo-code vip-code';
-      copyBtn.className = 'copy-btn vip-copy';
-    } else {
-      rTop.className = 'rcard-top';
-    }
-
-    rBadge.textContent = seg.prize;
-    rBadge.style.display = 'inline-block';
-
-    if(seg.prize === '+1 Spin') {
+    document.getElementById('rTop').className='rcard-top';
+    document.getElementById('rBadge').style.display='inline-block';
+    document.getElementById('rBadge').textContent=seg.prize;
+    
+    if (seg.prize === '+1 Spin') {
       rTitle.textContent = 'EKSTRA ŞANS!';
       rText.innerHTML = 'Harika! Çarkı çevirmek için anında<br><b>+1 HAK</b> daha kazandın.';
       rBtn.textContent = 'HEMEN TEKRAR ÇEVİR';
       rBtn.onclick = () => { closeModal(); spin(); };
-      promoBox.style.display = 'none';
     } else {
-      rTitle.textContent = seg.vip ? 'VİP ÖDÜL!' : 'TEBRİKLER';
-      rText.textContent = 'Promokodunu kopyala, siteye git ve ödülünü al!';
+      rTitle.textContent = 'TEBRİKLER';
+      rText.textContent = 'Ödülün hesabına yatırıldı!';
       rBtn.textContent = 'SİTEYE GİT VE OYNA';
       rBtn.onclick = goSite;
-
-      if(seg.promo) {
-        promoCode.textContent = seg.promo;
-        promoBox.style.display = 'block';
-        copyBtn.textContent = 'KOPYALA';
-        copyBtn.classList.remove('copied');
+      
+      const pBox = document.getElementById('promoBox');
+      const pText = document.getElementById('promoCodeText');
+      if (lastWonCode) {
+        pBox.style.display = 'flex';
+        pText.textContent = lastWonCode;
+        document.getElementById('promoCopyBtn').textContent = 'KOPYALA';
+      } else {
+        pBox.style.display = 'none';
       }
     }
 
     confetti(); playWin();
+    // tg.sendData kaldırıldı, backend zaten DB'ye işleyip mesaj attı
   } else {
-    rTop.className = 'rcard-top lose-top';
-    rTitle.textContent = 'ŞANS YANINDA DEĞİLDİ!';
-    rBadge.style.display = 'inline-block';
-    rBadge.textContent = 'KAYBETTİN';
-    rText.textContent = 'Yarın tekrar dene veya davet et!';
-    rBtn.textContent = 'SİTEYE GİT VE OYNA';
-    rBtn.onclick = goSite;
-    promoBox.style.display = 'none';
+    document.getElementById('rTop').className='rcard-top lose-top';
+    document.getElementById('rTitle').textContent='ŞANS YANINDA DEĞİLDİ!';
+    document.getElementById('rBadge').style.display='inline-block';
+    document.getElementById('rBadge').textContent='KAYBETTİN';
+    document.getElementById('rText').textContent='Yarın tekrar dene veya davet et!';
+    document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
+    document.getElementById('rBtn').onclick = goSite;
+    document.getElementById('promoBox').style.display = 'none';
     playLose();
-  }
-
   setTimeout(()=>document.getElementById('overlay').classList.add('show'), 800);
-  setTimeout(()=>checkSpinRight(), 1000);
+  setTimeout(()=>{ 
+    // Çark durduktan sonra Backend'e bonus ya da admin hakkımız var mı diye tekrar soruyoruz
+    checkSpinRight(); 
+  }, 1000);
 }
 
-// ── PROMOKOD KOPYALA ──────────────────────────────────────────────────
-function copyPromo() {
-  const code = document.getElementById('promoCode').textContent;
-  const btn = document.getElementById('copyBtn');
-  if(navigator.clipboard) {
-    navigator.clipboard.writeText(code).then(() => {
-      btn.textContent = '✓ KOPYALANDI';
-      btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'KOPYALA'; btn.classList.remove('copied'); }, 2500);
+function copyCode() {
+  if (!lastWonCode) return;
+  const btn = document.getElementById('promoCopyBtn');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(lastWonCode).then(() => {
+      btn.textContent = 'KOPYALANDI!';
+      setTimeout(() => btn.textContent = 'KOPYALA', 2000);
     });
   } else {
-    // Fallback
-    const ta = document.createElement('textarea');
-    ta.value = code; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    btn.textContent = '✓ KOPYALANDI';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'KOPYALA'; btn.classList.remove('copied'); }, 2500);
+    // For older webview compatibility
+    const tempInput = document.createElement("input");
+    tempInput.value = lastWonCode;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    btn.textContent = 'KOPYALANDI!';
+    setTimeout(() => btn.textContent = 'KOPYALA', 2000);
   }
-  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 }
 
 function shareInvite() {
@@ -941,6 +893,7 @@ function goSiteDirect(){
   if(tg) tg.close();
   else window.open('https://cutt.ly/7tF5Ow3K','_blank');
 }
+
 function closeModal() {
   document.getElementById('overlay').classList.remove('show');
 }
@@ -949,7 +902,7 @@ function confetti(){
   const cc=document.getElementById('confetti');
   cc.width=window.innerWidth; cc.height=window.innerHeight;
   const cx2=cc.getContext('2d');
-  const cols=['#ff4500','#ff8c00','#ffc200','#ffffff','#ff6b6b','#4a8fff','#22ee66','#ffd700'];
+  const cols=['#ff4500','#ff8c00','#ffc200','#ffffff','#ff6b6b','#4a8fff','#22ee66'];
   const ps=Array.from({length:110},()=>({
     x:Math.random()*cc.width, y:-20-Math.random()*80,
     w:5+Math.random()*8, h:3+Math.random()*4,
@@ -983,7 +936,7 @@ function animatePointerTick() {
   const ptr = document.querySelector('.pointer');
   if(!ptr) return;
   ptr.classList.remove('ticking');
-  void ptr.offsetWidth;
+  void ptr.offsetWidth; // Zıplamayı sıfırla (reflow)
   ptr.classList.add('ticking');
   clearTimeout(ptr.tickTimeout);
   ptr.tickTimeout = setTimeout(() => ptr.classList.remove('ticking'), 30);
@@ -991,13 +944,19 @@ function animatePointerTick() {
 
 function playTick(){
   try{
+    // Premium, tok bir casino çarkı "pıt" tıklaması (Kulak tırmalamayan plastik sentezi)
     const a=getACtx(), t=a.currentTime;
     const o=a.createOscillator(), g=a.createGain();
-    o.type='sine';
-    o.frequency.setValueAtTime(700, t);
+    o.type='sine'; 
+    
+    // Sesin başlarken çok kısa süreli tizden kalına inmesi tok bir 'tık' hissi yaratır.
+    o.frequency.setValueAtTime(700, t); 
     o.frequency.exponentialRampToValueAtTime(120, t+0.02);
-    g.gain.setValueAtTime(0.35, t);
+    
+    // Sesi 0.03 saniye içinde hızla sönümlendirerek keskin vurma hissi veriyoruz
+    g.gain.setValueAtTime(0.35, t); 
     g.gain.exponentialRampToValueAtTime(0.001, t+0.03);
+    
     o.connect(g); g.connect(a.destination);
     o.start(t); o.stop(t+0.04);
   }catch(e){}
@@ -1040,10 +999,13 @@ function playSpinStart(){
 }
 
 let lastTickProgress=null;
-const TICK_INTERVAL=(2*Math.PI)/N;
+const TICK_INTERVAL=(2*Math.PI)/10;
 function checkTick(a){
+  // Math.PI/2 = Çarkın tepe noktasının ofseti
   const progress = (a + Math.PI/2) / TICK_INTERVAL;
   if(lastTickProgress === null) lastTickProgress = Math.floor(progress);
+  
+  // Çarkın çizgisi her tepe noktasını kusursuz vurduğunda işlemi (Tık'ı) tetikle
   while (progress - lastTickProgress >= 1) {
     lastTickProgress++;
     playTick(); vibrate(8); animatePointerTick();
@@ -1085,8 +1047,8 @@ function initEmbers() {
   b();
 }
 initEmbers();
-window.addEventListener('resize', () => {
-  const c=document.getElementById('embers');
+window.addEventListener('resize', () => { 
+  const c=document.getElementById('embers'); 
   if(c){ c.width=window.innerWidth; c.height=window.innerHeight; }
 });
 </script>
