@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -202,6 +201,72 @@ canvas#wheel {
   font-weight: 800;
 }
 
+/* ── KAYAN BANNER ────────────────────────────────────────────────── */
+.ticker-wrap {
+  width: 100%;
+  max-width: 300px;
+  margin: 12px auto 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,100,0,0.25);
+  padding: 10px 0;
+  position: relative;
+}
+.ticker-wrap::before, .ticker-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 40px;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, #0d0806 60%, transparent);
+}
+.ticker-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, #0d0806 60%, transparent);
+}
+.ticker-track {
+  display: flex;
+  gap: 0;
+  width: max-content;
+  animation: ticker 28s linear infinite;
+}
+.ticker-track:hover { animation-play-state: paused; }
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: rgba(255,255,255,0.75);
+}
+.ticker-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #ff4500;
+  flex-shrink: 0;
+}
+.ticker-name { color: #ff8c00; }
+.ticker-won { color: #ff6a00; font-weight: 800; }
+.ticker-prize { color: #fff; }
+.ticker-sep {
+  color: rgba(255,69,0,0.4);
+  margin: 0 4px;
+  font-size: 10px;
+}
+/* ── /KAYAN BANNER ───────────────────────────────────────────────── */
+
 .no-spin-banner {
   display: none;
   margin-top: 18px;
@@ -357,6 +422,11 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
     Arkadaşını Davet Et <span class="invite-badge">+1 Spin</span>
   </button>
 
+  <!-- KAYAN KAZANAN BANNER -->
+  <div class="ticker-wrap">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
   <div class="no-spin-banner" id="noSpinBanner">
     <div class="ns-title">Bugünkü Hakkını Kullandın!</div>
     <div class="ns-text">Yeni spin hakkın için kalan süre:</div>
@@ -422,12 +492,10 @@ function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
 function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
-  if(USER_ID === ADMIN_ID) return; // Adminler için sayaca ihtiyaç yok
+  if(USER_ID === ADMIN_ID) return;
   
   let lastSpin = localStorage.getItem(getSpinKey());
   
-  // Eğer localStorage'da kayıt yoksa ama yine de hakkı kalmamışsa (başka cihazdan girmiş vs),
-  // sayacı tam 24 saat sonrasına ayarlıyoruz.
   if (!lastSpin) {
     lastSpin = Date.now().toString();
     localStorage.setItem(getSpinKey(), lastSpin);
@@ -459,126 +527,95 @@ function stopCountdown() {
 
 function draw(a, t=0) {
   ctx.clearRect(0,0,286,286);
-  // 1. Dilim Zeminleri ve Derinlikli Gradient (Inner Shadow İlüzyonu)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, e=s+ARC, seg=SEGS[i];
-    
-    // Her dilime 3D eğimli çukur hissi veren custom gradient
     const segGrd = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
     segGrd.addColorStop(0, seg.bg);
-    segGrd.addColorStop(0.8, '#050201'); // Dışa doğru kararma (Çukur hissi)
+    segGrd.addColorStop(0.8, '#050201');
     segGrd.addColorStop(1, '#000000');
-    
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
     ctx.fillStyle = segGrd; ctx.fill();
-    
-    // Hafif parlayan iç ışık (Vurgu)
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R-3,s,e); ctx.closePath();
     ctx.fillStyle = 'rgba(255,100,0,0.05)'; ctx.fill();
   }
 
-  // 2. Altın Mekanik Çıtalar (Dividers)
   for(let i=0;i<N;i++){
     const a2=a+i*ARC;
     const endX = CX+R*Math.cos(a2), endY = CY+R*Math.sin(a2);
-    
-    // Çıta gölgesi (Derinlik)
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2, endY-2);
     ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=4; ctx.stroke();
-    
-    // Altın ışıltılı ana çıta
     const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
-    lineGrd.addColorStop(0, '#5a3d00'); // Merkeze yakın koyu
-    lineGrd.addColorStop(0.5, '#ffd900'); // Ortada güçlü parlama
-    lineGrd.addColorStop(1, '#ff9900'); // Kenara yakın turuncu-altın
-    
+    lineGrd.addColorStop(0, '#5a3d00');
+    lineGrd.addColorStop(0.5, '#ffd900');
+    lineGrd.addColorStop(1, '#ff9900');
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
     ctx.strokeStyle = lineGrd; ctx.lineWidth = 2.5; ctx.stroke();
-    
-    // Çıta üzeri keskin beyaz/sarı yansıma
     ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2)); 
     ctx.lineTo(endX*0.8, endY*0.8);
     ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
   }
 
-  // 3. 3D BOMBE OLUŞTURUCU KÜRESEL GÖLGE EFEKTİ (DOME EFFECT)
   const domeGrd = ctx.createRadialGradient(CX - R*0.35, CY - R*0.35, 0, CX, CY, R);
   domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)'); 
   domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');        
   domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');       
-  
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = domeGrd; ctx.fill();
 
-  // 3.5. ALTIN İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
   const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
   innerRimGrd.addColorStop(0, '#ffe55c');
   innerRimGrd.addColorStop(0.3, '#b37d00');
   innerRimGrd.addColorStop(0.6, '#4d3000');
   innerRimGrd.addColorStop(1, '#ffc000');
-  
   ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
   ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, 44, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 2; ctx.stroke();
 
-  // 4. YAZILAR (Gölgelerin üstünde parlak durmaları için)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); ctx.textAlign='right';
     const ls=seg.lines.filter(l=>l);
-    
     const fs=ls.length>1?11.5:13.5; 
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
-    
-    // Keskin Metalik Yazı Stili Drop-Shadow
     ctx.shadowColor = 'rgba(0,0,0,0.95)';
     ctx.shadowBlur = 5;
     ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
-    
     ctx.fillStyle = seg.tc;
     const lh=fs+4, oy=-(ls.length-1)*lh/2;
     ls.forEach((l,li)=>ctx.fillText(l,R-15,oy+li*lh+fs*0.35));
     ctx.restore();
   }
 
-  // 4.5. CAM PARLAMASI (Glossy Tabaka)
   const glassGrd = ctx.createLinearGradient(CX - R*0.6, CY - R*0.8, CX + R*0.8, CY + R*0.8);
-  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)'); // Üst köşe parlaması
+  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
   glassGrd.addColorStop(0.4, 'rgba(255, 255, 255, 0.04)');
   glassGrd.addColorStop(0.45, 'transparent');
   glassGrd.addColorStop(1, 'transparent');
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = glassGrd; ctx.fill();
 
-  // 5. METALİK DIŞ ÇERÇEVE (Kalın Lüks Kasa)
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
   const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
   rimGrd.addColorStop(0, '#2e0f00');
-  rimGrd.addColorStop(0.3, '#ffaa00'); // Işık yansıması (Glow)
+  rimGrd.addColorStop(0.3, '#ffaa00');
   rimGrd.addColorStop(0.5, '#1a0800');
   rimGrd.addColorStop(0.8, '#ff5500');
   rimGrd.addColorStop(1, '#2e0f00');
-  
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.strokeStyle = rimGrd; ctx.lineWidth = 14; ctx.stroke();
 
-  // Kasa iç yansıma detayı
   ctx.beginPath(); ctx.arc(CX, CY, R-7, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)'; ctx.lineWidth = 3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, R-8, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(255, 120, 0, 0.6)'; ctx.lineWidth = 1; ctx.stroke();
 
-  // 6. CASINO LED AMPULLERİ ÇERÇEVESİ (Buls/Rim Lights)
   const numBulbs = 36;
   for(let j=0; j<numBulbs; j++) {
       const bAngle = j * (2 * Math.PI / numBulbs);
       const bx = CX + (R - 3) * Math.cos(bAngle);
       const by = CY + (R - 3) * Math.sin(bAngle);
-      
-      // Işıkların dönüyormuş gibi yanıp sönmesini sağlayan sinüs dalgası
       const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
-      
       ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
       ctx.fillStyle = `rgba(255, 255, 150, ${0.4 + glowLevel * 0.6})`;
       ctx.shadowColor = '#ffffaa';
@@ -587,45 +624,36 @@ function draw(a, t=0) {
       ctx.shadowBlur = 0;
   }
 
-  // 7. MERKEZ GÖBEK (Neon Işıklı 3D Vida)
   ctx.shadowColor = 'rgba(0,0,0,0.95)';
   ctx.shadowBlur = 15;
   ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
-  
   const centerBase = ctx.createRadialGradient(CX-15, CY-15, 2, CX, CY, 38);
   centerBase.addColorStop(0, '#552200');
   centerBase.addColorStop(0.5, '#170b07');
   centerBase.addColorStop(1, '#000000');
   ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
   ctx.fillStyle = centerBase; ctx.fill();
-  
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
 
-  // ZIT DÖNEN IŞIKLI MEKANİK HALKA
   ctx.save();
   ctx.translate(CX, CY);
-  const rotA = -a * 1.5; // Çarkın yönüne tam ters ve daha hızlı
+  const rotA = -a * 1.5;
   ctx.rotate(rotA);
-  
   const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
   cRim.addColorStop(0, '#ffcc00'); cRim.addColorStop(0.5, '#441100'); cRim.addColorStop(1, '#ff5500');
-  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI); // Çizim 0,0 merkezli yapılıyor translate yüzünden
+  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI);
   ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
-
-  // Mekanik dişli çiviler
   for(let j=0; j<8; j++) {
       ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
       ctx.fillStyle = '#ffaa00'; ctx.fill();
   }
-  ctx.restore(); // Matrix geri yükleniyor ki yazılar ters dönmesin
+  ctx.restore();
 
-  // İç koruyucu halka statik
   ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI);
   ctx.strokeStyle='rgba(0,0,0, 0.8)'; ctx.lineWidth=3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
-  // "BETOR SPIN" Yüzen 3D Yazı (Düz kalacak)
   ctx.textAlign='center';
   ctx.font='900 12.5px Montserrat, sans-serif'; 
   ctx.shadowColor = 'rgba(255,100,0,1)'; ctx.shadowBlur = 8;
@@ -638,34 +666,23 @@ function drawSpotlight(a, idx, alpha) {
   sctx.clearRect(0,0,286,286);
   if(alpha<=0) return;
   sctx.save();
-  
-  // Dış metal rimi maskelemek için yarıçap R-5
   sctx.fillStyle=`rgba(0,0,0,${alpha*0.72})`;
   sctx.beginPath(); sctx.arc(CX,CY,R-5,0,2*Math.PI); sctx.fill();
-  
   const s=a+idx*ARC, e=s+ARC;
-  
-  // Kazanan dilimi kes maskele
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
   sctx.fillStyle=`rgba(255,255,255,${alpha})`; sctx.fill();
   sctx.restore();
-  
-  // Renkli Vurgu (Spotlight glow)
   sctx.save();
   sctx.globalAlpha=alpha*0.9;
   const seg=SEGS[idx], mid=s+ARC/2;
   const grd=sctx.createRadialGradient(CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),2,CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),R*0.5);
   grd.addColorStop(0,seg.tc+'aa'); grd.addColorStop(1,'transparent');
-  
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
   sctx.fillStyle=grd; 
   sctx.globalCompositeOperation='source-over'; 
   sctx.fill();
   sctx.restore();
-
-  // En son, merkezdeki vidayı (bolt) tamamen maskeden çıkar
-  // Taşan renkli vurguyu da temizlemiş oluruz
   sctx.save();
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.arc(CX, CY, 38, 0, 2*Math.PI); sctx.fill();
@@ -710,7 +727,6 @@ function disableSpin() {
 
 checkSpinRight();
 
-// Arkadaş davetinden gelebilecek ekstra hakları algılaması için arka plan kontrolü
 setInterval(() => {
   if (!spinAllowed && USER_ID) {
     checkSpinRight();
@@ -752,7 +768,6 @@ async function spin() {
       return;
     }
   } else {
-    // Misafir (Kimlik yok)
     targetIdx = Math.floor(Math.random() * N);
   }
 
@@ -805,7 +820,6 @@ function showResult() {
     }
 
     confetti(); playWin();
-    // tg.sendData kaldırıldı, backend zaten DB'ye işleyip mesaj attı
   } else {
     document.getElementById('rTop').className='rcard-top lose-top';
     document.getElementById('rTitle').textContent='ŞANS YANINDA DEĞİLDİ!';
@@ -815,13 +829,9 @@ function showResult() {
     document.getElementById('rBtn').textContent='SİTEYE GİT VE OYNA';
     document.getElementById('rBtn').onclick = goSite;
     playLose();
-    // tg.sendData kaldırıldı
   }
   setTimeout(()=>document.getElementById('overlay').classList.add('show'), 800);
-  setTimeout(()=>{ 
-    // Çark durduktan sonra Backend'e bonus ya da admin hakkımız var mı diye tekrar soruyoruz
-    checkSpinRight(); 
-  }, 1000);
+  setTimeout(()=>{ checkSpinRight(); }, 1000);
 }
 
 function shareInvite() {
@@ -889,7 +899,7 @@ function animatePointerTick() {
   const ptr = document.querySelector('.pointer');
   if(!ptr) return;
   ptr.classList.remove('ticking');
-  void ptr.offsetWidth; // Zıplamayı sıfırla (reflow)
+  void ptr.offsetWidth;
   ptr.classList.add('ticking');
   clearTimeout(ptr.tickTimeout);
   ptr.tickTimeout = setTimeout(() => ptr.classList.remove('ticking'), 30);
@@ -897,19 +907,13 @@ function animatePointerTick() {
 
 function playTick(){
   try{
-    // Premium, tok bir casino çarkı "pıt" tıklaması (Kulak tırmalamayan plastik sentezi)
     const a=getACtx(), t=a.currentTime;
     const o=a.createOscillator(), g=a.createGain();
     o.type='sine'; 
-    
-    // Sesin başlarken çok kısa süreli tizden kalına inmesi tok bir 'tık' hissi yaratır.
     o.frequency.setValueAtTime(700, t); 
     o.frequency.exponentialRampToValueAtTime(120, t+0.02);
-    
-    // Sesi 0.03 saniye içinde hızla sönümlendirerek keskin vurma hissi veriyoruz
     g.gain.setValueAtTime(0.35, t); 
     g.gain.exponentialRampToValueAtTime(0.001, t+0.03);
-    
     o.connect(g); g.connect(a.destination);
     o.start(t); o.stop(t+0.04);
   }catch(e){}
@@ -954,11 +958,8 @@ function playSpinStart(){
 let lastTickProgress=null;
 const TICK_INTERVAL=(2*Math.PI)/10;
 function checkTick(a){
-  // Math.PI/2 = Çarkın tepe noktasının ofseti
   const progress = (a + Math.PI/2) / TICK_INTERVAL;
   if(lastTickProgress === null) lastTickProgress = Math.floor(progress);
-  
-  // Çarkın çizgisi her tepe noktasını kusursuz vurduğunda işlemi (Tık'ı) tetikle
   while (progress - lastTickProgress >= 1) {
     lastTickProgress++;
     playTick(); vibrate(8); animatePointerTick();
@@ -1004,6 +1005,39 @@ window.addEventListener('resize', () => {
   const c=document.getElementById('embers'); 
   if(c){ c.width=window.innerWidth; c.height=window.innerHeight; }
 });
+
+// ── KAYAN KAZANAN BANNER ──────────────────────────────────────────────
+const TICKER_PRIZES = ['100 Freespin','200 Freespin','VİP Hediye','100₺ Bakiye','200₺ Bonus Buy','Özel Bonus','100₺ Bonus Buy','+1 Spin'];
+const TICKER_LETTERS = 'ABCDEFGHKLMNRSTYZÇÖÜŞİ';
+
+function tickerRndName() {
+  const first = TICKER_LETTERS[Math.floor(Math.random()*TICKER_LETTERS.length)];
+  return first + '. ****';
+}
+function tickerRndPrize() { return TICKER_PRIZES[Math.floor(Math.random()*TICKER_PRIZES.length)]; }
+
+function renderTicker() {
+  const track = document.getElementById('tickerTrack');
+  if(!track) return;
+  const count = 10 + Math.floor(Math.random() * 7);
+  const items = Array.from({length: count}, () => ({
+    name: tickerRndName(),
+    prize: tickerRndPrize()
+  }));
+  const doubled = [...items, ...items];
+  track.innerHTML = doubled.map(item => `
+    <span class="ticker-item">
+      <span class="ticker-dot"></span>
+      <span class="ticker-name">${item.name}</span>
+      <span class="ticker-won">kazandı:</span>
+      <span class="ticker-prize">${item.prize}</span>
+    </span>
+    <span class="ticker-sep">•</span>
+  `).join('');
+}
+
+renderTicker();
+setInterval(renderTicker, 30000);
 </script>
 </body>
 </html>
