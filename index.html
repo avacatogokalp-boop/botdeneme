@@ -38,7 +38,7 @@ body {
   position: relative; z-index: 1;
   display: flex; flex-direction: column; align-items: center;
   min-height: 100vh;
-  padding: 30px 16px 40px;
+  padding: 65px 16px 40px;
 }
 
 .logo { font-size: 30px; font-weight: 900; letter-spacing: 0px; margin-bottom: 4px; text-transform: uppercase; }
@@ -677,14 +677,18 @@ function draw(a, t=0) {
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); 
-    ctx.textAlign='center'; 
+    ctx.textAlign='right'; 
     const ls=seg.lines.filter(l=>l);
     
-    const fs=ls.length>1?10.5:12.5; 
+    // Uzun yazılar (ör. KAYBETTİN) için fontu biraz daha küçült
+    let fs = 12.5;
+    if (ls.length > 1) fs = 10.5;
+    if (ls[0].length >= 8) fs = 9.5;
+    
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
     
     const lh=fs+3.5, oy=-(ls.length-1)*lh/2;
-    const textX = R - 38; // Merkeze hizalayarak taşmayı önler
+    const textX = R - 15; // Dış çembere yakın (sağa yaslı) ki iç göbeğe çarpmasın
     
     if (seg.lines.includes('VİP')) {
       // VİP yazısı için özel ALTIN parlama ve renk
