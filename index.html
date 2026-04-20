@@ -249,6 +249,30 @@ canvas#wheel {
   cursor: pointer; display: block; width: 100%;
 }
 
+/* --- KAZANANLAR BANNER --- */
+.marquee-wrapper {
+  width: 100%; overflow: hidden; background: #130f0d;
+  border: 1px solid rgba(255, 88, 0, 0.15); border-radius: 8px;
+  padding: 10px 0; margin-bottom: 15px; position: relative;
+  white-space: nowrap; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+.marquee-wrapper::before, .marquee-wrapper::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 30px; z-index: 2; pointer-events: none;
+}
+.marquee-wrapper::before { left: 0; background: linear-gradient(to right, #130f0d, transparent); }
+.marquee-wrapper::after { right: 0; background: linear-gradient(to left, #130f0d, transparent); }
+
+.marquee-content {
+  display: inline-block; animation: scroll-marquee 25s linear infinite;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);
+}
+.marquee-content span { display: inline-flex; align-items: center; margin-right: 35px; letter-spacing: 0.5px; }
+.marquee-content span i { color: #FF5800; font-style: normal; font-weight: 900; margin: 0 5px; }
+@keyframes scroll-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } 
+}
+
 .overlay {
   display: none; position: fixed; inset: 0; overflow: hidden;
   background: rgba(0,0,0,0.92);
@@ -340,12 +364,97 @@ canvas#wheel {
 }
 .kapat-btn:active { color: #fff; }
 
-canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300; }
+/* --- TOP NAV & WALLET --- */
+.top-nav {
+  position: absolute; top: 15px; left: 15px; right: 15px;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 100;
+}
+.store-btn {
+  background: linear-gradient(135deg, #101010, #202020);
+  border: 1px solid #FF5800; border-radius: 8px;
+  padding: 8px 12px; color: #fff; font-weight: 800; font-size: 11px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 10px rgba(255,88,0,0.3); transition: 0.2s;
+}
+.store-btn:active { transform: scale(0.95); }
+.wallet-box {
+  background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1);
+  padding: 8px 14px; border-radius: 20px; color: #FF5800;
+  font-weight: 900; font-size: 13px; display: flex; align-items: center; gap: 6px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+.wallet-icon { font-size: 16px; margin-right: 2px; }
+
+/* --- STORE MODAL --- */
+.store-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300;
+  align-items: center; justify-content: center; backdrop-filter: blur(5px);
+}
+.store-overlay.show { display: flex; }
+.store-modal {
+  width: 90%; max-width: 340px; background: #1a1716;
+  border-radius: 16px; border: 1px solid #FF5800;
+  box-shadow: 0 10px 40px rgba(255,88,0,0.2); overflow: hidden;
+}
+.store-header {
+  background: #FF5800; padding: 15px; display: flex; justify-content: space-between; align-items: center;
+}
+.store-header h2 { margin: 0; font-size: 16px; font-weight: 900; color: #000; letter-spacing: 1px; }
+.store-close { background: transparent; border: none; font-size: 20px; font-weight: 900; color: #000; cursor: pointer; }
+.store-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+.store-item {
+  background: #252322; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+  padding: 12px; display: flex; justify-content: space-between; align-items: center;
+}
+.si-info h3 { margin: 0 0 4px; font-size: 13px; color: #fff; font-weight: 800; }
+.si-info p { margin: 0; font-size: 10px; color: rgba(255,255,255,0.6); }
+.si-buy {
+  background: #FF5800; border: none; border-radius: 6px; color: #fff;
+  padding: 8px 12px; font-weight: 800; font-size: 11px; cursor: pointer;
+  white-space: nowrap; box-shadow: 0 2px 5px rgba(255,88,0,0.4);
+}
+.si-buy:disabled { background: #555; color: #aaa; box-shadow: none; cursor: not-allowed; border: 1px solid #333; }
+
+canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
 </style>
 </head>
 <body>
 <div class="bg"></div>
 <canvas id="embers" style="position:fixed; inset:0; z-index:0; pointer-events:none;"></canvas>
+
+<div class="top-nav">
+  <button class="store-btn" onclick="openStore()">
+    <span class="store-icon">🛒</span> MAĞAZA
+  </button>
+  <div class="wallet-box">
+    <span class="wallet-icon">🪙</span>
+    <span id="walletBalance">0</span> BOS
+  </div>
+</div>
+
+<div class="store-overlay" id="storeOverlay">
+  <div class="store-modal">
+    <div class="store-header">
+      <h2>MAĞAZA</h2>
+      <button class="store-close" onclick="closeStore()">X</button>
+    </div>
+    <div class="store-body">
+      <div class="store-item">
+        <div class="si-info"><h3>100 Freespin</h3><p>Seçili oyunlarda geçerli</p></div>
+        <button class="si-buy" onclick="buyItem('freespin', 300)">300 BOS</button>
+      </div>
+      <div class="store-item">
+        <div class="si-info"><h3>100₺ Bonus Buy</h3><p>Anında bonusa girin</p></div>
+        <button class="si-buy" onclick="buyItem('bonusbuy', 500)">500 BOS</button>
+      </div>
+      <div class="store-item" style="border: 1px solid #FFD700; background: linear-gradient(45deg, #1a1716, #2d2400);">
+        <div class="si-info"><h3 style="color:#FFD700;">VİP Hediye Kodu</h3><p style="color:#FFF;">VIP Müşterilere özel ödül</p></div>
+        <button class="si-buy" style="background:#FFD700; color:#000;" onclick="buyItem('vip', 1000)">1000 BOS</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="container">
   <div class="logo"><span class="w">BETOR</span><span class="o">SPİN</span><span class="d">.</span></div>
@@ -368,6 +477,24 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 300;
   </div>
 
   <div class="spin-info" id="spinInfo">YÜKLENİYOR...</div>
+
+  <div class="marquee-wrapper">
+    <div class="marquee-content">
+      <span>Ah*** Y. <i>100 FREESPIN</i> kazandı!</span>
+      <span>Gö*** K. <i>VİP HEDİYE</i> kazandı!</span>
+      <span>Me*** Ç. <i>+1 SPİN</i> kazandı!</span>
+      <span>Ay*** T. <i>100₺ BONUS BUY</i> kazandı!</span>
+      <span>Se*** D. <i>100 FREESPIN</i> kazandı!</span>
+      <span>Bu*** S. <i>100₺ BONUS BUY</i> kazandı!</span>
+      <!-- Çift kopya (Sonsuz kayma illüzyonu için zorunlu) -->
+      <span>Ah*** Y. <i>100 FREESPIN</i> kazandı!</span>
+      <span>Gö*** K. <i>VİP HEDİYE</i> kazandı!</span>
+      <span>Me*** Ç. <i>+1 SPİN</i> kazandı!</span>
+      <span>Ay*** T. <i>100₺ BONUS BUY</i> kazandı!</span>
+      <span>Se*** D. <i>100 FREESPIN</i> kazandı!</span>
+      <span>Bu*** S. <i>100₺ BONUS BUY</i> kazandı!</span>
+    </div>
+  </div>
 
   <button class="invite-btn" onclick="shareInvite()">
     Arkadaşını Davet Et <span class="invite-badge">+1 Spin</span>
@@ -421,15 +548,15 @@ const ADMIN_ID = 6943377103;
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
-  { lines:['+1','SPIN'],             bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
-  { lines:['100','FREESPIN'],         bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'100 Freespin'          },
-  { lines:['+1','SPIN'],             bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'               },
-  { lines:['100₺','BONUS BUY'],      bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
-  { lines:['100₺','BONUS BUY'],      bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'100TL Bonus Buy'       },
-  { lines:['KAYBETTİN',''],          bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null                    },
-  { lines:['VİP','HEDİYE'],          bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'VİP Hediye'            },
-  { lines:['KAYBETTİN',''],          bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null                    },
+  { lines:['10','BOSCOIN'],            bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'10 BOSCOIN' },
+  { lines:['50','BOSCOIN'],            bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'50 BOSCOIN' },
+  { lines:['5','BOSCOIN'],             bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'5 BOSCOIN'  },
+  { lines:['KAYBETTİN',''],            bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null         },
+  { lines:['100','BOSCOIN'],           bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'100 BOSCOIN'},
+  { lines:['+1','SPIN'],               bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'+1 Spin'    },
+  { lines:['10','BOSCOIN'],            bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'10 BOSCOIN' },
+  { lines:['VİP 200','BOSCOIN'],       bg:'#101010', stroke:'#FF5800', tc:'#FFD700', icon:'', win:true,  prize:'200 BOSCOIN (VİP)'},
+  { lines:['KAYBETTİN',''],            bg:'#000000', stroke:'#aa0000', tc:'#ffffff', icon:'', win:false, prize:null         },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
@@ -437,7 +564,8 @@ const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
-let lastWonCode = null;
+let pendingBoscoinUpdate = null;
+let WALLET_BALANCE = 0;
 let countdownInterval=null;
 
 function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
@@ -720,13 +848,53 @@ function clearSpotlight(){ sc.style.opacity='0'; sctx.clearRect(0,0,286,286); }
 async function checkSpinRight() {
   if(!USER_ID){ disableSpin(); document.getElementById('spinInfo').textContent = 'KİMLİK BULUNAMADI'; return; }
   try {
-    const res = await fetch(`/api/check_spin?user_id=${USER_ID}`);
+    const res = await fetch(`/api/get_user_data?user_id=${USER_ID}`);
     const data = await res.json();
     if(data.allowed) enableSpin(data.spins);
     else disableSpin();
+    
+    if(data.boscoin !== undefined) {
+      WALLET_BALANCE = data.boscoin;
+      document.getElementById('walletBalance').textContent = WALLET_BALANCE;
+    }
   } catch(e) { 
     disableSpin(); 
     document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
+  }
+}
+
+// --- MAĞAZA DÜKKANI SİSTEMİ ---
+function openStore() {
+  document.getElementById('storeOverlay').classList.add('show');
+}
+function closeStore() {
+  document.getElementById('storeOverlay').classList.remove('show');
+}
+async function buyItem(itemId, price) {
+  if(!USER_ID) return;
+  if(WALLET_BALANCE < price) {
+    alert("Yetersiz BOSCOIN! Önce çarkı çevirip bakiye biriktirmelisin.");
+    return;
+  }
+  
+  if(!confirm("Bu ödülü satın almak istediğine emin misin?")) return;
+  
+  try {
+    const res = await fetch('/api/buy_item', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ user_id: USER_ID, item_id: itemId })
+    });
+    const data = await res.json();
+    if(data.ok) {
+      WALLET_BALANCE = data.new_balance;
+      document.getElementById('walletBalance').textContent = WALLET_BALANCE;
+      alert(`🎉 Satın alım başarılı!\n\nPromokodun: ${data.code}\n\nBu kodu kopyalayıp sitemizde bozdurabilirsin.`);
+    } else {
+      alert("Hata: " + (data.reason === 'insufficient_funds' ? "Yetersiz bakiye." : "İşlem reddedildi."));
+    }
+  } catch(e) {
+    alert("Sunucu ile bağlantı koptu.");
   }
 }
 
@@ -781,7 +949,10 @@ async function spin() {
         return;
       }
       targetIdx = backendData.segment_index;
-      lastWonCode = backendData.code || null;
+      if (backendData.boscoin !== undefined) {
+        pendingBoscoinUpdate = backendData.boscoin;
+      }
+
       if (USER_ID !== ADMIN_ID) {
         localStorage.setItem(getSpinKey(), Date.now().toString());
       }
@@ -839,23 +1010,18 @@ function showResult() {
       rBtn.onclick = () => { closeModal(); spin(); };
     } else {
       rTitle.textContent = 'TEBRİKLER';
-      rText.textContent = 'Ödülün hesabına yatırıldı!';
-      rBtn.textContent = 'SİTEYE GİT VE OYNA';
-      rBtn.onclick = goSite;
+      rText.style.display = 'block';
+      rText.innerHTML = `Çarktan başarıyla <b>${seg.prize}</b> kazandın!<br>Ödül, BOSCOIN Cüzdanına işlendi.`;
+      rBtn.textContent = 'MAĞAZAYA GİT';
+      rBtn.onclick = () => { closeModal(); openStore(); };
       
       const pBox = document.getElementById('promoBox');
-      const pText = document.getElementById('promoCodeText');
-      const rTextEl = document.getElementById('rText');
-      if (lastWonCode) {
-        rTextEl.style.display = 'none';
-        pBox.style.display = 'flex';
-        pText.textContent = lastWonCode;
-        const btn = document.getElementById('promoCopyBtn');
-        btn.textContent = 'KOPYALA';
-        btn.className = 'promo-btn';
-      } else {
-        rTextEl.style.display = 'block';
-        pBox.style.display = 'none';
+      if (pBox) pBox.style.display = 'none';
+      
+      if (pendingBoscoinUpdate !== null) {
+        WALLET_BALANCE = pendingBoscoinUpdate;
+        document.getElementById('walletBalance').textContent = WALLET_BALANCE;
+        pendingBoscoinUpdate = null;
       }
     }
 
