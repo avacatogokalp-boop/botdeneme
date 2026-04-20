@@ -200,6 +200,31 @@ def excel_indir():
         headers={"Content-Disposition": "attachment; filename=BetorSpin_Rapor_2026.csv"}
     )
 
+@app.route('/admin/kullanici_raporu')
+def kullanici_excel_indir():
+    secret = request.args.get('sifre')
+    if secret != "VIP_MUDUR_2026":
+        return "Yetkisiz Erisim", 403
+
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT id, name, username, invite_count, boscoin, last_spin_date FROM users ORDER BY boscoin DESC")
+        rows = c.fetchall()
+        conn.close()
+
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerow(['Kullanici ID', 'Isim Soyisim', 'Kullanici Adi', 'Davet Sayisi', 'Cuzdan (BOSCOIN)', 'Son Spin'])
+    for r in rows:
+        cw.writerow([r['id'], r['name'], r['username'], r['invite_count'], r['boscoin'], r['last_spin_date']])
+    
+    return Response(
+        si.getvalue().encode('utf-8-sig'),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=Kullanici_Cuzdanlari_Rapor.csv"}
+    )
+
 @app.route('/wheel')
 def wheel():
     return send_from_directory('.', 'index.html')
