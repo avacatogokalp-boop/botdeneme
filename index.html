@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -386,35 +385,45 @@ canvas#wheel {
 }
 .wallet-icon { font-size: 16px; margin-right: 2px; }
 
-/* --- STORE MODAL --- */
+/* --- STORE PAGE (NEW TAB ILLUSION) --- */
 .store-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300;
-  align-items: center; justify-content: center; backdrop-filter: blur(5px);
+  display: none; position: fixed; inset: 0; 
+  background: radial-gradient(ellipse at center, #2b0a00 0%, #0d0806 100%); 
+  z-index: 300; align-items: flex-start; justify-content: center; overflow-y: auto;
 }
 .store-overlay.show { display: flex; }
 .store-modal {
-  width: 90%; max-width: 340px; background: #1a1716;
-  border-radius: 16px; border: 1px solid #FF5800;
-  box-shadow: 0 10px 40px rgba(255,88,0,0.2); overflow: hidden;
+  width: 100%; max-width: 500px; min-height: 100vh;
+  background: transparent; border: none; border-radius: 0;
+  box-shadow: none; display: flex; flex-direction: column;
+  padding: 40px 20px;
 }
 .store-header {
-  background: #FF5800; padding: 15px; display: flex; justify-content: space-between; align-items: center;
+  background: transparent; box-shadow: none;
+  padding: 0 0 30px 0; display: flex; justify-content: center; align-items: center; position: relative;
 }
-.store-header h2 { margin: 0; font-size: 16px; font-weight: 900; color: #000; letter-spacing: 1px; }
-.store-close { background: transparent; border: none; font-size: 20px; font-weight: 900; color: #000; cursor: pointer; }
-.store-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
+.store-header h2 { margin: 0; font-size: 28px; font-weight: 900; color: #FF5800; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(255,88,0,0.5); }
+.store-close { 
+  position: absolute; right: 0; background: rgba(255,88,0,0.1); border: 1px solid rgba(255,88,0,0.3); 
+  width: 36px; height: 36px; border-radius: 12px; font-size: 16px; font-weight: 900; 
+  color: #FF5800; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.store-body { padding: 0; display: flex; flex-direction: column; gap: 15px; overflow: visible; }
 .store-item {
-  background: #252322; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-  padding: 12px; display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+  padding: 15px; display: flex; justify-content: space-between; align-items: center;
+  transition: all 0.3s;
 }
-.si-info h3 { margin: 0 0 4px; font-size: 13px; color: #fff; font-weight: 800; }
-.si-info p { margin: 0; font-size: 10px; color: rgba(255,255,255,0.6); }
+.store-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,88,0,0.3); }
+.si-info h3 { margin: 0 0 5px; font-size: 15px; color: #fff; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+.si-info p { margin: 0; font-size: 11px; color: rgba(255,255,255,0.6); }
 .si-buy {
-  background: #FF5800; border: none; border-radius: 6px; color: #fff;
-  padding: 8px 12px; font-weight: 800; font-size: 11px; cursor: pointer;
-  white-space: nowrap; box-shadow: 0 2px 5px rgba(255,88,0,0.4);
+  background: linear-gradient(180deg, #FF5800, #b33900); border: 1px solid rgba(255,255,255,0.1); 
+  border-radius: 8px; color: #fff; padding: 10px 16px; font-weight: 900; font-size: 13px; 
+  cursor: pointer; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
 }
-.si-buy:disabled { background: #555; color: #aaa; box-shadow: none; cursor: not-allowed; border: 1px solid #333; }
+.si-buy:disabled { background: #333; color: #888; box-shadow: none; cursor: not-allowed; border: 1px solid #222; }
 
 canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
 </style>
@@ -448,9 +457,9 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
         <div class="si-info"><h3>100₺ Bonus Buy</h3><p>Anında bonusa girin</p></div>
         <button class="si-buy" onclick="buyItem('bonusbuy', 500)">500 BOS</button>
       </div>
-      <div class="store-item" style="border: 1px solid #FFD700; background: linear-gradient(45deg, #1a1716, #2d2400);">
-        <div class="si-info"><h3 style="color:#FFD700;">VİP Hediye Kodu</h3><p style="color:#FFF;">VIP Müşterilere özel ödül</p></div>
-        <button class="si-buy" style="background:#FFD700; color:#000;" onclick="buyItem('vip', 1000)">1000 BOS</button>
+      <div class="store-item" style="border: 1px solid rgba(255, 215, 0, 0.5); background: linear-gradient(45deg, rgba(26,23,22,0.8), rgba(45,36,0,0.8)); box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.1);">
+        <div class="si-info"><h3 style="color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.9);">VİP Hediye Kodu</h3><p style="color: #FFD700; opacity: 0.8;">VİP Müşterilere özel ödül</p></div>
+        <button class="si-buy" style="background: linear-gradient(180deg, #FFD700, #b39700); color: #000; text-shadow: none;" onclick="buyItem('vip', 1000)">1000 BOS</button>
       </div>
     </div>
   </div>
@@ -677,7 +686,7 @@ function draw(a, t=0) {
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
     ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); 
-    ctx.textAlign='right'; 
+    ctx.textAlign='center'; 
     const ls=seg.lines.filter(l=>l);
     
     // Uzun yazılar (ör. KAYBETTİN) için fontu biraz daha küçült
@@ -688,7 +697,8 @@ function draw(a, t=0) {
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
     
     const lh=fs+3.5, oy=-(ls.length-1)*lh/2;
-    const textX = R - 15; // Dış çembere yakın (sağa yaslı) ki iç göbeğe çarpmasın
+    // Dış ve iç kenarın tam ortasında (wedge / dilim merkezinde) hizala:
+    const textX = 96; 
     
     if (seg.lines.includes('VİP')) {
       // VİP yazısı için özel ALTIN parlama ve renk
