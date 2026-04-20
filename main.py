@@ -365,6 +365,7 @@ def api_buy_item():
     data = request.get_json(silent=True) or {}
     user_id = data.get('user_id')
     item_id = data.get('item_id')
+    casino_user = data.get('casino_user', 'Bilinmiyor')
     
     STORE = {
         "freespin": {"price": 300, "name": "100 Freespin", "code": "BOSFS100GO"},
@@ -391,12 +392,27 @@ def api_buy_item():
         c.execute("UPDATE users SET boscoin = ? WHERE id = ?", (new_balance, user_id))
         
         c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time) VALUES (?, ?, ?, ?)", 
-                 (user_id, row["name"], f"SATIN ALIM: {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")))
+                 (user_id, row["name"], f"SİPARİŞ (K.Adı: {casino_user}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")))
                  
         conn.commit()
         conn.close()
         
-    return jsonify({"ok": True, "code": item["code"], "new_balance": new_balance})
+    try:
+        if ADMIN_IDS:
+            admin_msg = (
+                f"🚨 *YENİ MAĞAZA SİPARİŞİ*\n\n"
+                f"👤 *Telegram İsim:* {row['name']} (`{user_id}`)\n"
+                f"🎮 *Site K.Adı:* `{casino_user}`\n"
+                f"🎁 *Sipariş:* {item['name']}\n"
+                f"💰 *Kalan Cüzdan:* {new_balance} BOSCOIN\n\n"
+                f"_(Kullanıcının ödülünü hesabına tanımlayabilirsiniz)_"
+            )
+            bot.send_message(ADMIN_IDS[0], admin_msg, parse_mode="Markdown")
+    except Exception as e:
+        print(f"Admin mesaj hatası: {e}")
+        
+    return jsonify({"ok": True, "new_balance": new_balance})
+
 
 # ── /start ────────────────────────────────────────────────────────────
 @bot.message_handler(commands=['start'])
