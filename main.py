@@ -57,6 +57,12 @@ def init_db():
             prize TEXT,
             date_time TEXT
         )''')
+        
+        try:
+            c.execute("ALTER TABLE spin_logs ADD COLUMN status TEXT DEFAULT 'processed'")
+        except sqlite3.OperationalError:
+            pass
+            
         conn.commit()
         conn.close()
 
@@ -391,8 +397,8 @@ def api_buy_item():
         new_balance = row["boscoin"] - item["price"]
         c.execute("UPDATE users SET boscoin = ? WHERE id = ?", (new_balance, user_id))
         
-        c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time) VALUES (?, ?, ?, ?)", 
-                 (user_id, row["name"], f"SİPARİŞ (K.Adı: {casino_user}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")))
+        c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time, status) VALUES (?, ?, ?, ?, ?)", 
+                 (user_id, row["name"], f"SİPARİŞ (K.Adı: {casino_user}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S"), 'pending'))
                  
         conn.commit()
         conn.close()
@@ -598,21 +604,77 @@ def admin_logs(message):
         conn.close()
     
     if not rows:
-        bot.reply_to(message, f"Sayfa {page}'de henüz hiç kayıt yok.")
+        bot.reply_to(message, f"Son işlemler (Sayfa {page}): Kayıt yok.")
         return
         
-    total_pages = (total_logs + limit - 1) // limit
-    lines = [f"📋 *Çevirme Kayıtları (Sayfa {page}/{total_pages})*"]
+    msg_lines = [f"*Son İşlemler (Sayfa {page})*"]
     for r in rows:
-        dt = r['date_time'][5:16]
-        lines.append(f"• *{r['name']}* ➜ {r['prize']} ({dt})")
+        msg_lines.append(f"• `{r['date_time'][:16]}` | {r['name']} | {r['prize']}")
         
-    if page < total_pages:
-        lines.append(f"\n_Sonraki sayfa için komut: /logs {page+1}_")
-        
-    bot.reply_to(message, "\n".join(lines), parse_mode="Markdown")
+    bot.reply_to(message, "\n".join(msg_lines), parse_mode="Markdown")
 
-# ── Diğer mesajlar ────────────────────────────────────────────────────
+@bot.message_handler(commands=['bekleyenler'])
+def admin_bekleyenler(message):
+    user_id = message.from_user.id
+    if not is_admin(user_id): return
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT id, user_id, name, prize, date_time FROM spin_logs WHERE status = 'pending' ORDER BY id ASC")
+        rows = c.fetchall()
+        
+        if not rows:
+            conn.close()
+            bot.reply_to(message, "✅ Şu an bekleyen/aktarılmamış hiçbir mağaza siparişi bulunmuyor.")
+            return
+            
+        si = io.StringIO()
+        cw = csv.writer(si)
+        cw.writerow(["Kayit ID", "Kullanici ID", "Telegram Isim", "Siparis ve Site K.Adi", "Tarih"])
+        for r in rows:
+            cw.writerow([r['id'], r['user_id'], r['name'], r['prize'], r['date_time']])
+            
+        # Hepsini processed'e çevir
+        c.execute("UPDATE spin_logs SET status = 'processed' WHERE status = 'pending'")
+        conn.commit()
+        conn.close()
+        
+    file_data = io.BytesIO(si.getvalue().encode('utf-8-sig'))
+    file_data.name = f"Bekleyen_Siparisler_{datetime.now(timezone(timedelta(hours=3))).strftime('%d_%m_%H%M')}.csv"
+    
+    bot.send_document(
+        message.chat.id, 
+        file_data, 
+        caption=f"📦 *Toplam {len(rows)} beklemedeki mağaza siparişi dışarı aktarıldı.*\n\n_Bu dosyadaki tüm işlemler otomatik olarak 'İşlendi (Processed)' durumuna getirildi ve bir daha listelenmeyecek._", 
+        parse_mode="Markdown"
+    )
+
+@bot.message_handler(commands=['boscoin_bas'])
+def admin_boscoin_bas(message):
+    user_id = message.from_user.id
+    if not is_admin(user_id): return
+    
+    args = message.text.split()
+    if len(args) < 2 or not args[1].isdigit():
+        bot.reply_to(message, "Kullanım: `/boscoin_bas 100` (Herkese 100 BOSCOIN ekler)", parse_mode="Markdown")
+        return
+        
+    miktar = int(args[1])
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("UPDATE users SET boscoin = boscoin + ?", (miktar,))
+        conn.commit()
+        
+        c.execute("SELECT COUNT(id) as total FROM users")
+        total_users = c.fetchone()["total"]
+        conn.close()
+        
+    bot.reply_to(message, f"💸 Başarılı! Veritabanındaki tüm ({total_users}) üyelerin cüzdanına *{miktar} BOSCOIN* eklendi.", parse_mode="Markdown")
+
+# ── Webhook / Polling ────────────────────────────────────────────────────
 @bot.message_handler(func=lambda m: m.text and not m.text.startswith('/'))
 def fallback(message):
     bot.reply_to(message, "Lütfen /start yazın.")
