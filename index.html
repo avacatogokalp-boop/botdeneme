@@ -409,20 +409,25 @@ canvas#wheel {
   color: #FF5800; cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
 .store-body { padding: 0; display: flex; flex-direction: column; gap: 15px; overflow: visible; }
+#storeItems { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .store-item {
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-  padding: 15px; display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+  padding: 12px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
   transition: all 0.3s;
 }
-.store-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,88,0,0.3); }
-.si-info h3 { margin: 0 0 5px; font-size: 15px; color: #fff; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-.si-info p { margin: 0; font-size: 11px; color: rgba(255,255,255,0.6); }
+.store-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,88,0,0.3); transform: translateY(-3px); }
+.si-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin-bottom: 15px; }
+.si-info h3 { margin: 0 0 5px; font-size: 14px; color: #fff; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); line-height: 1.2; }
+.si-info p { margin: 0; font-size: 10px; color: rgba(255,255,255,0.6); line-height: 1.3; }
+.si-img { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; object-fit: cover; background: rgba(0,0,0,0.4); margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 .si-buy {
   background: linear-gradient(180deg, #FF5800, #b33900); border: 1px solid rgba(255,255,255,0.1); 
-  border-radius: 8px; color: #fff; padding: 10px 16px; font-weight: 900; font-size: 13px; 
+  border-radius: 10px; color: #fff; padding: 10px 10px; font-weight: 900; font-size: 14px; 
   cursor: pointer; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  width: 100%; transition: transform 0.2s;
 }
+.si-buy:active { transform: scale(0.95); }
 .si-buy:disabled { background: #333; color: #888; box-shadow: none; cursor: not-allowed; border: 1px solid #222; }
 
 canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
@@ -450,10 +455,12 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
     </div>
     <div class="store-body" id="storeItems">
       <div class="store-item">
+        <img src="https://i.ibb.co/Nds7hy9T/big-bass-bonanza-logo.avif" class="si-img" alt="freespin">
         <div class="si-info"><h3>100 Freespin</h3><p>Seçili oyunlarda geçerli</p></div>
         <button class="si-buy" onclick="buyItem('freespin', 300)">300 BOS</button>
       </div>
       <div class="store-item">
+        <img src="https://i.ibb.co/HpdZfwyC/gatesofolympuslogo.png" class="si-img" alt="bonusbuy">
         <div class="si-info"><h3>100₺ Bonus Buy</h3><p>Anında bonusa girin</p></div>
         <button class="si-buy" onclick="buyItem('bonusbuy', 500)">500 BOS</button>
       </div>
@@ -885,7 +892,7 @@ async function checkSpinRight() {
     if(data.allowed) enableSpin(data.spins);
     else disableSpin();
     
-    if(data.boscoin !== undefined) {
+    if(data.boscoin !== undefined && !spinning) {
       WALLET_BALANCE = data.boscoin;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
     }
@@ -988,7 +995,7 @@ checkSpinRight();
 
 // Arkadaş davetinden gelebilecek ekstra hakları algılaması için arka plan kontrolü
 setInterval(() => {
-  if (!spinAllowed && USER_ID) {
+  if (!spinAllowed && USER_ID && !spinning) {
     checkSpinRight();
   }
 }, 5000);
