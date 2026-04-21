@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -1225,9 +1224,31 @@ async function submitPurchase() {
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
       document.getElementById('storeWalletBalance').textContent = WALLET_BALANCE;
+      
       closePrompt();
+      closeStore();
       loadPurchaseHistory(); // Geçmişi tazele
-      alert("Satın alım başarılı! Ödülünüz incelenip hesabınıza eklenecektir.");
+      
+      const rTitle = document.getElementById('rTitle');
+      const rText = document.getElementById('rText');
+      const rBtn = document.getElementById('rBtn');
+      const rTop = document.getElementById('rTop');
+      const rBadge = document.getElementById('rBadge');
+      const pBox = document.getElementById('promoBox');
+      
+      rTop.className = 'rcard-top';
+      rBadge.style.display = 'inline-block';
+      rBadge.textContent = 'SİPARİŞİNİZ ALINDI!';
+      rTitle.textContent = 'TEBRİKLER';
+      rText.style.display = 'block';
+      rText.innerHTML = `Ödülünüz ayrılmıştır!<br><br>Kalite standartlarımız gereği <b style="color:#FF5800;">${cUser}</b> kullanıcı adlı hesabınıza <b>bu gece saat 00:00'da</b> otomatik olarak yüklenecektir.`;
+      
+      if (pBox) pBox.style.display = 'none';
+      rBtn.textContent = 'SİTEYE GİT VE OYNA';
+      rBtn.onclick = goSite;
+      
+      document.getElementById('overlay').classList.add('show');
+      confetti();
     } else {
       alert("Hata: " + (data.reason === 'insufficient_funds' ? "Yetersiz bakiye." : "İşlem reddedildi."));
     }
