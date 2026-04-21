@@ -737,11 +737,12 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 <canvas id="confetti"></canvas>
 
 <!-- Ses Efektleri (Kurumsal & Dinamik Kütüphane) -->
-<audio id="tickSound" src="https://www.soundjay.com/button/button-50.mp3" preload="auto"></audio>
-<audio id="buySound" src="https://www.soundjay.com/misc/sounds/cash-register-purchase-1.mp3" preload="auto"></audio>
+<!-- Ses Efektleri (Doğrudan Servis Edilen Stabil Linkler) -->
+<audio id="tickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_82c6946777.mp3" preload="auto"></audio>
+<audio id="buySound" src="https://cdn.pixabay.com/audio/2021/08/09/audio_2d53bf3d74.mp3" preload="auto"></audio>
 <audio id="winSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_c89658399e.mp3" preload="auto"></audio>
-<audio id="errorSound" src="https://www.soundjay.com/misc/sounds/fail-buzzer-01.mp3" preload="auto"></audio>
-<audio id="clickSound" src="https://www.soundjay.com/button/button-4.mp3" preload="auto"></audio>
+<audio id="errorSound" src="https://cdn.pixabay.com/audio/2022/03/10/audio_c35078406d.mp3" preload="auto"></audio>
+<audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/10/audio_51a660a92f.mp3" preload="auto"></audio>
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -813,8 +814,40 @@ function vibrate(type = 'light') {
 
 function playSfx(id) {
   const a = document.getElementById(id);
-  if (a) { a.currentTime = 0; a.play().catch(()=>{}); }
+  if (a) { 
+    a.muted = false;
+    a.currentTime = 0; 
+    const p = a.play();
+    if (p !== undefined) {
+      p.catch(e => console.log("Ses çalma hatası:", id, e));
+    }
+  }
 }
+
+// --- SES MOTORU KİLİDİNİ AÇMA (AGRESIF AUDIO UNLOCKER) ---
+function unlockAudio() {
+  const sounds = ['tickSound','buySound','winSound','errorSound','clickSound'];
+  sounds.forEach(id => {
+    const a = document.getElementById(id);
+    if (a) { 
+      a.play().then(() => { 
+        a.pause(); 
+        a.currentTime = 0; 
+        console.log(id + " uyandırıldı.");
+      }).catch(e => console.log(id + " uyandırılamadı:", e)); 
+    }
+  });
+  
+  // Titreşimi de test edelim
+  vibrate('light');
+  
+  document.body.removeEventListener('touchstart', unlockAudio);
+  document.body.removeEventListener('mousedown', unlockAudio);
+  document.body.removeEventListener('click', unlockAudio);
+}
+document.body.addEventListener('touchstart', unlockAudio, {passive: false});
+document.body.addEventListener('mousedown', unlockAudio);
+document.body.addEventListener('click', unlockAudio);
 
 let WALLET_BALANCE = 0;
 let countdownInterval=null;
