@@ -89,14 +89,14 @@ body {
   position: absolute; top: -14px; left: 50%;
   transform-origin: 50% 10px;
   transform: translateX(-50%) rotate(0deg);
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
   filter: drop-shadow(0 15px 15px rgba(0,0,0,0.95)) drop-shadow(0 4px 6px rgba(255,69,0,0.6));
 }
 .pointer.ticking {
-  transform: translateX(-50%) rotate(-30deg);
-  transition: transform 0.03s ease-out;
+  transform: translateX(-50%) rotate(-35deg);
+  transition: transform 0.04s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 .ptr-ball {
   width: 24px; height: 24px; border-radius: 50%;
@@ -798,6 +798,18 @@ ctx.scale(dpr, dpr); sctx.scale(dpr, dpr);
 
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
+let dur = 15000; // Varsayılan süre
+
+// Dinamik Süre Alma (Ses dosyasına göre)
+const spinAudio = document.getElementById('tickSound');
+if (spinAudio) {
+  spinAudio.addEventListener('loadedmetadata', () => {
+    if (spinAudio.duration && spinAudio.duration > 0) {
+      dur = Math.floor(spinAudio.duration * 1000);
+      console.log("Çark süresi sese göre güncellendi:", dur);
+    }
+  });
+}
 let pendingBoscoinUpdate = null;
 function vibrate(type = 'light') {
   if (!tg || !tg.HapticFeedback) return;
@@ -1457,7 +1469,7 @@ async function spin() {
   const finalAngle = -Math.PI/2 - (targetIdx * ARC + randomOffset) + (K * 2 * Math.PI);
   const total = finalAngle - angle;
 
-  const dur=15000, start=angle; let t0=null;
+  const start=angle; let t0=null;
   function frame(ts){
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
@@ -1628,17 +1640,17 @@ function getACtx(){ if(!actx) actx=new AudioCtx(); return actx; }
 function animatePointerTick() {
   const ptr = document.querySelector('.pointer');
   if(!ptr) return;
+  
+  // Önceki animasyonu sıfırla
   ptr.classList.remove('ticking');
-  void ptr.offsetWidth; 
+  void ptr.offsetWidth; // Reflow zorla
+  
   ptr.classList.add('ticking');
   
-  // Önceki timeout'u temizle
   if(ptr.tickTimeout) clearTimeout(ptr.tickTimeout);
-  
-  // Daha uzun bir eşik (okun geri dönmesine izin ver)
   ptr.tickTimeout = setTimeout(() => {
     ptr.classList.remove('ticking');
-  }, 40);
+  }, 50); // Görünürlük için biraz daha uzun tutuyoruz
 }
 
 function playTick(){
