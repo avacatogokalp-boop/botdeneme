@@ -16,7 +16,7 @@ SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
 GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_IDS = [6943377103,6659874588,8284892694]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
+ADMIN_IDS = [6943377103]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
 
 db_lock = threading.Lock()
 
@@ -378,12 +378,12 @@ def api_buy_item():
     casino_user = data.get('casino_user', 'Bilinmiyor')
     
     STORE = {
-        "freespin_100": {"price": 750,  "name": "100 Freespin (Gate Of Olympus)", "code": "COINFS100G"},
-        "bonusbuy_100": {"price": 750,  "name": "100₺ Bonus Buy (Sweet Bonanza)", "code": "COINBB100S"},
-        "vip_bonus":    {"price": 1250, "name": "Vip Hediye Bonusu (Tüm Slotlar)", "code": "COINVIP"},
         "cash_500":    {"price": 3000, "name": "500₺ Nakit Hediye (Direkt Çekim)", "code": "COINCASH"},
+        "vip_bonus":    {"price": 2000, "name": "Vip Hediye Bonusu (Tüm Slotlar)", "code": "COINVIP"},
         "freespin_200": {"price": 1500, "name": "200 Freespin (Sugar Rush)", "code": "COINFS200S"},
-        "bonusbuy_200": {"price": 1500, "name": "200₺ Bonus Buy (The Dog House)", "code": "COINBB200D"}
+        "bonusbuy_200": {"price": 1500, "name": "200₺ Bonus Buy (The Dog House)", "code": "COINBB200D"},
+        "freespin_100": {"price": 750,  "name": "100 Freespin (Gate Of Olympus)", "code": "COINFS100G"},
+        "bonusbuy_100": {"price": 750,  "name": "100₺ Bonus Buy (Sweet Bonanza)", "code": "COINBB100S"}
     }
     
     if not user_id or item_id not in STORE:
@@ -425,6 +425,34 @@ def api_buy_item():
         print(f"Admin mesaj hatası: {e}")
         
     return jsonify({"ok": True, "new_balance": new_balance})
+
+@app.route('/api/get_history', methods=['GET'])
+def api_get_history():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify([])
+        
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT prize, date_time, status FROM spin_logs WHERE user_id = ? AND prize LIKE 'SİPARİŞ%' ORDER BY id DESC LIMIT 10", (user_id,))
+        rows = c.fetchall()
+        conn.close()
+        
+    history = []
+    for r in rows:
+        # "SİPARİŞ (K.Adı: ...): 500₺ Nakit Hediye" -> "500₺ Nakit Hediye"
+        contents = r["prize"].split(": ", 1)[-1] if ": " in r["prize"] else r["prize"]
+        # Durum türkçeleştirme
+        status_tr = "Beklemede" if r["status"] == "pending" else "Onaylandı"
+        
+        history.append({
+            "content": contents,
+            "date": r["date_time"][:16],
+            "status": status_tr
+        })
+        
+    return jsonify(history)
 
 
 # ── /start ────────────────────────────────────────────────────────────
@@ -688,8 +716,8 @@ def admin_siparis_onayla(message):
                 print(f"Bildirim hatası ({u['user_id']}): {e}")
                 fail_count += 1
         
-        # Tüm bekleyenleri 'processed' yap
-        c.execute("UPDATE spin_logs SET status = 'processed' WHERE status = 'pending'")
+        # Tüm bekleyenleri 'approved' yap
+        c.execute("UPDATE spin_logs SET status = 'approved' WHERE status = 'pending'")
         conn.commit()
         conn.close()
         
