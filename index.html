@@ -644,6 +644,10 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 
 <canvas id="confetti"></canvas>
 
+<!-- Ses Efektleri (Telif Ücretsiz / CDN) -->
+<audio id="buySound" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="auto"></audio>
+<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3" preload="auto"></audio>
+
 <script>
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#0d0806'); tg.setBackgroundColor('#0d0806'); }
@@ -1021,7 +1025,11 @@ async function submitPurchase() {
       body: JSON.stringify({ user_id: USER_ID, item_id: pendingItemId, casino_user: cUser })
     });
     const data = await res.json();
-    if(data.ok) {
+    if(res.ok) {
+      // Başarılı alım sesi
+      const audio = document.getElementById('buySound');
+      if(audio) { audio.currentTime = 0; audio.play().catch(()=>{}); }
+      
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
       closePrompt();
@@ -1152,6 +1160,10 @@ function showResult() {
   animateSpotlight(angle,idx);
   
   if(seg.win){
+    // Kazanç sesi (Para sesi)
+    const winAudio = document.getElementById('winSound');
+    if(winAudio) { winAudio.currentTime = 0; winAudio.play().catch(()=>{}); }
+    
     const rTitle = document.getElementById('rTitle');
     const rText = document.getElementById('rText');
     const rBtn = document.getElementById('rBtn');
