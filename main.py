@@ -221,7 +221,7 @@ def kullanici_excel_indir():
 
     si = io.StringIO()
     cw = csv.writer(si)
-    cw.writerow(['Kullanici ID', 'Isim Soyisim', 'Kullanici Adi', 'Davet Sayisi', 'Cuzdan (BOSCOIN)', 'Son Spin'])
+    cw.writerow(['Kullanici ID', 'Isim Soyisim', 'Kullanici Adi', 'Davet Sayisi', 'Cuzdan (COIN)', 'Son Spin'])
     for r in rows:
         cw.writerow([r['id'], r['name'], r['username'], r['invite_count'], r['boscoin'], r['last_spin_date']])
     
@@ -281,18 +281,16 @@ def api_use_spin():
     use_spin(user_id)
 
     PRIZES = [
-        {"win": True, "prize": "10 BOSCOIN", "amount": 10},
-        {"win": True, "prize": "50 BOSCOIN", "amount": 50},
-        {"win": True, "prize": "5 BOSCOIN", "amount": 5},
-        {"win": False, "prize": None, "amount": 0},
-        {"win": True, "prize": "100 BOSCOIN", "amount": 100},
-        {"win": True, "prize": "+1 Spin", "amount": 0},
-        {"win": True, "prize": "10 BOSCOIN", "amount": 10},
-        {"win": True, "prize": "200 BOSCOIN (VİP)", "amount": 200},
-        {"win": False, "prize": None, "amount": 0},
+        {"win": True, "prize": "+1 Freespin", "amount": 0},
+        {"win": True, "prize": "200 COIN", "amount": 200},
+        {"win": True, "prize": "150 COIN", "amount": 150},
+        {"win": True, "prize": "100 COIN", "amount": 100},
+        {"win": True, "prize": "75 COIN", "amount": 75},
+        {"win": True, "prize": "50 COIN", "amount": 50},
+        {"win": True, "prize": "25 COIN", "amount": 25},
     ]
     
-    index = random.randint(0, 8)
+    index = random.randint(0, 6)
     result = PRIZES[index]
     prize = result["prize"]
     win = result["win"]
@@ -325,17 +323,17 @@ def api_use_spin():
         conn.commit()
         conn.close()
 
-    if prize == "+1 Spin":
+    if prize == "+1 Freespin":
         add_bonus_spin(user_id, 1)
 
     def delayed_message():
         time.sleep(8.5)
         try:
             if win and prize:
-                if prize == "+1 Spin":
+                if prize == "+1 Freespin":
                     bot.send_message(
                         user_id,
-                        f"*Tebrikler {name}!*\n\n*+1 Spin* kazandın! Çarkı tekrar çevirebilirsin.",
+                        f"*Tebrikler {name}!*\n\n*+1 Freespin* kazandın! Çarkı tekrar çevirebilirsin.",
                         parse_mode="Markdown",
                         reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Şans Çarkını Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
                     )
@@ -374,9 +372,12 @@ def api_buy_item():
     casino_user = data.get('casino_user', 'Bilinmiyor')
     
     STORE = {
-        "freespin": {"price": 300, "name": "100 Freespin", "code": "BOSFS100GO"},
-        "bonusbuy": {"price": 500, "name": "100₺ Bonus Buy", "code": "BOSBYB"},
-        "vip": {"price": 1000, "name": "VİP Hediye", "code": "BOSBBH"}
+        "freespin_100": {"price": 750, "name": "100 Freespin", "code": "COINFS100"},
+        "bonusbuy_100": {"price": 750, "name": "100₺ Bonus Buy", "code": "COINBB100"},
+        "vip_bonus":    {"price": 1250, "name": "Vip Hediye Bonusu", "code": "COINVIP"},
+        "cash_500":     {"price": 2000, "name": "500₺ Nakit Hediye", "code": "COINCASH"},
+        "freespin_200": {"price": 1500, "name": "200 Freespin", "code": "COINFS200"},
+        "bonusbuy_200": {"price": 1500, "name": "200₺ Bonus Buy", "code": "COINBB200"}
     }
     
     if not user_id or item_id not in STORE:
@@ -410,7 +411,7 @@ def api_buy_item():
                 f"👤 *Telegram İsim:* {row['name']} (`{user_id}`)\n"
                 f"🎮 *Site K.Adı:* `{casino_user}`\n"
                 f"🎁 *Sipariş:* {item['name']}\n"
-                f"💰 *Kalan Cüzdan:* {new_balance} BOSCOIN\n\n"
+                f"💰 *Kalan Cüzdan:* {new_balance} COIN\n\n"
                 f"_(Kullanıcının ödülünü hesabına tanımlayabilirsiniz)_"
             )
             bot.send_message(ADMIN_IDS[0], admin_msg, parse_mode="Markdown")
@@ -490,7 +491,7 @@ def start(message):
         text = (
             "🦁 *BetorSpin VIP Sadakat Dünyasına Hoş Geldiniz!*\n\n"
             f"{spin_status}\n\n"
-            "Her gün çarkı çevirin, BOSCOIN biriktirin ve mağazadan ödülünüzü alın. "
+            "Her gün çarkı çevirin, COIN biriktirin ve mağazadan ödülünüzü alın. "
             "Kazandığınız tüm hediyeler, kalite standartlarımız gereği her gece saat *00:00*'da aktif BetorSpin hesabınıza otomatik olarak tanımlanır!"
         )
 
@@ -644,14 +645,14 @@ def admin_bekleyenler(message):
         parse_mode="Markdown"
     )
 
-@bot.message_handler(commands=['boscoin_bas'])
-def admin_boscoin_bas(message):
+@bot.message_handler(commands=['coin_bas'])
+def admin_coin_bas(message):
     user_id = message.from_user.id
     if not is_admin(user_id): return
     
     args = message.text.split()
     if len(args) < 2 or not args[1].isdigit():
-        bot.reply_to(message, "Kullanım: `/boscoin_bas 100` (Herkese 100 BOSCOIN ekler)", parse_mode="Markdown")
+        bot.reply_to(message, "Kullanım: `/coin_bas 100` (Herkese 100 COIN ekler)", parse_mode="Markdown")
         return
         
     miktar = int(args[1])
@@ -666,7 +667,7 @@ def admin_boscoin_bas(message):
         total_users = c.fetchone()["total"]
         conn.close()
         
-    bot.reply_to(message, f"💸 Başarılı! Veritabanındaki tüm ({total_users}) üyelerin cüzdanına *{miktar} BOSCOIN* eklendi.", parse_mode="Markdown")
+    bot.reply_to(message, f"💸 Başarılı! Veritabanındaki tüm ({total_users}) üyelerin cüzdanına *{miktar} COIN* eklendi.", parse_mode="Markdown")
 
 # ── Webhook / Polling ────────────────────────────────────────────────────
 @bot.message_handler(func=lambda m: m.text and not m.text.startswith('/'))
