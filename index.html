@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -480,19 +481,14 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
   align-items: center;
   justify-content: center;
   text-transform: lowercase;
-  filter: drop-shadow(0 0 10px rgba(255, 40, 0, 0.7)); /* Daha keskin parlama */
+  filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.4)); /* Parlama azaltıldı */
 }
-.logo .bet {
-  background: linear-gradient(180deg, #FF6600, #FF2200);
+.logo .bet, .logo .spin {
+  background: linear-gradient(180deg, #ff9153, #ff5e00);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.logo .or { color: #ffffff; text-shadow: 0 0 10px rgba(255,255,255,0.6); }
-.logo .spin {
-  background: linear-gradient(180deg, #FF2200, #990000);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+.logo .or { color: #ffffff; text-shadow: 0 0 8px rgba(255,255,255,0.3); }
 .logo .dot { color: #ffffff; }
 </style>
 </head>
@@ -564,9 +560,8 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
       <div class="store-item">
         <div class="si-card" style="background: radial-gradient(circle at 30% 30%, #27ae60, #1e8449, #0a3d1d);">
           <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="10" width="18" height="11" rx="2" fill="rgba(255,255,255,0.2)" stroke="#fff" stroke-width="1.2"/>
-            <circle cx="12" cy="15.5" r="3" stroke="#fff" stroke-width="1"/>
-            <text x="12" y="17.5" font-family="Montserrat" font-weight="900" font-size="5" fill="#fff" text-anchor="middle">₺</text>
+            <rect x="3" y="6" width="18" height="12" rx="3" stroke="#fff" stroke-width="1.5" fill="none"/>
+            <text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="7" fill="#fff" text-anchor="middle">TL</text>
           </svg>
         </div>
         <div class="si-info"><h3>500₺ Nakit Hediye</h3><p>Direkt çekim</p></div>
@@ -586,9 +581,8 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
       <div class="store-item">
         <div class="si-card card-bass" style="background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad, #2c003d);">
           <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Arka fon karesi -->
-            <rect x="3" y="3" width="18" height="18" rx="4" stroke="rgba(255,255,255,0.8)" stroke-width="1.5" fill="rgba(255,255,255,0.05)"/>
-            <text x="12" y="14" font-family="Montserrat" font-weight="900" font-size="6" fill="#fff" text-anchor="middle">SUPER</text>
+            <rect x="2" y="4" width="20" height="16" rx="5" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" fill="none"/>
+            <text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="4.5" fill="#fff" text-anchor="middle">SUPER</text>
           </svg>
         </div>
         <div class="si-info"><h3>200₺ Bonus Buy</h3><p>The Dog House Oyununda Geçerli</p></div>
@@ -980,7 +974,7 @@ function draw(a, t=0) {
 
   // SATIR 2: spin.
   const botParts = [
-    { text: "spin", color: "#ff4500" },
+    { text: "spin", color: "#ff9153" }, // BET ile ayı renk yapıldı
     { text: ".", color: "#ffffff" }
   ];
   let botW = 0;
@@ -1261,8 +1255,13 @@ function showResult() {
       rTitle.textContent = 'TEBRİKLER';
       rText.style.display = 'block';
       rText.innerHTML = `Çarktan başarıyla <b>${seg.prize}</b> kazandın!<br>Ödül, cüzdanına eklendi.`;
-      rBtn.textContent = 'MAĞAZAYA GİT';
-      rBtn.onclick = () => { closeModal(); openStore(); };
+      if (seg.prize.includes('SPİN')) {
+        rBtn.textContent = 'TEKRAR ÇEVİR';
+        rBtn.onclick = () => { closeModal(); };
+      } else {
+        rBtn.textContent = 'MAĞAZAYA GİT';
+        rBtn.onclick = () => { closeModal(); openStore(); };
+      }
       
       const pBox = document.getElementById('promoBox');
       if (pBox) pBox.style.display = 'none';
