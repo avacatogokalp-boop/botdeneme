@@ -333,7 +333,7 @@ def api_use_spin():
         add_bonus_spin(user_id, 1)
 
     def delayed_message():
-        time.sleep(17.5)
+        time.sleep(12.5)
         try:
             if win and prize:
                 if prize == "+1 Freespin":
