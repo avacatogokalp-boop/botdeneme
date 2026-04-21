@@ -16,7 +16,7 @@ SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
 GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_IDS = [6943377103]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
+ADMIN_IDS = [6943377103,8284892694,6659874588]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
 
 db_lock = threading.Lock()
 
