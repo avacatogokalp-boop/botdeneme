@@ -316,8 +316,8 @@ def api_use_spin():
         
         # Log Kaydı
         log_prize = prize if prize else "KAYBETTİN"
-        c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time) VALUES (?, ?, ?, ?)", 
-                 (user_id, name, log_prize, current_time))
+        c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time, status) VALUES (?, ?, ?, ?, ?)", 
+                 (user_id, name, log_prize, current_time, 'processed'))
 
         if win and prize:
             c.execute("SELECT count FROM wins WHERE prize = ?", (prize,))
@@ -402,10 +402,12 @@ def api_buy_item():
             return jsonify({"ok": False, "reason": "insufficient_funds"})
             
         new_balance = row["boscoin"] - item["price"]
+        user_name_val = row["name"] or "Bilinmiyor"
+        
         c.execute("UPDATE users SET boscoin = ? WHERE id = ?", (new_balance, user_id))
         
         c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time, status) VALUES (?, ?, ?, ?, ?)", 
-                 (user_id, row["name"], f"SİPARİŞ (K.Adı: {casino_user}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S"), 'pending'))
+                 (user_id, user_name_val, f"SİPARİŞ (K.Adı: {casino_user}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S"), 'pending'))
                  
         conn.commit()
         conn.close()
@@ -414,7 +416,7 @@ def api_buy_item():
         if ADMIN_IDS:
             admin_msg = (
                 f"🚨 *YENİ MAĞAZA SİPARİŞİ*\n\n"
-                f"👤 *Telegram İsim:* {row['name']} (`{user_id}`)\n"
+                f"👤 *Telegram İsim:* {user_name_val} (`{user_id}`)\n"
                 f"🎮 *Site K.Adı:* `{casino_user}`\n"
                 f"🎁 *Sipariş:* {item['name']}\n"
                 f"💰 *Kalan Cüzdan:* {new_balance} COIN\n\n"
@@ -441,8 +443,15 @@ def api_get_history():
         
     history = []
     for r in rows:
-        # "SİPARİŞ (K.Adı: ...): 500₺ Nakit Hediye" -> "500₺ Nakit Hediye"
-        contents = r["prize"].split(": ", 1)[-1] if ": " in r["prize"] else r["prize"]
+        # "SİPARİŞ (K.Adı: ...): 500₺ Nakit Hediye" -> En sondaki ":" işaretinden sonrasını al
+        raw_prize = r["prize"]
+        if "SİPARİŞ" in raw_prize and "): " in raw_prize:
+            contents = raw_prize.split("): ", 1)[-1]
+        elif ": " in raw_prize:
+            contents = raw_prize.split(": ", 1)[-1]
+        else:
+            contents = raw_prize
+            
         # Durum türkçeleştirme
         status_tr = "Beklemede" if r["status"] == "pending" else "Onaylandı"
         
