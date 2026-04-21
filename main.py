@@ -13,7 +13,7 @@ from flask import Flask, send_from_directory, request, jsonify, Response
 
 TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
-GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif"
+GIF_URL = "https://i.ibb.co/jPtFMZJC/0414.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
 ADMIN_IDS = [6943377103]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
@@ -488,16 +488,10 @@ def start(message):
         ))
 
         text = (
-            "*HOŞ GELDİN, KAZANMAYA HAZIR MISIN?*\n\n"
+            "🦁 *BetorSpin VIP Sadakat Dünyasına Hoş Geldiniz!*\n\n"
             f"{spin_status}\n\n"
-            "*BetorSpin* çarkına adım attın, şansını deneme zamanı!\n\n"
-            "*Şans Çarkın seni bekliyor:*\n"
-            "• 500 TL Bonus\n"
-            "• 100 Freespin\n"
-            "• Büyük Ödül\n"
-            "• ve daha fazlası...\n\n"
-            "Gecikmeden çevir, kazanmaya hemen başla!\n"
-            "Aşağıdaki butona bas ve ilk spini ücretsiz kazan!"
+            "Her gün çarkı çevirin, BOSCOIN biriktirin ve mağazadan ödülünüzü alın. "
+            "Kazandığınız tüm hediyeler, kalite standartlarımız gereği her gece saat *00:00*'da aktif BetorSpin hesabınıza otomatik olarak tanımlanır!"
         )
 
         try:
