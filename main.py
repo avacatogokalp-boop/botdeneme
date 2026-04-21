@@ -16,7 +16,7 @@ SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
 GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_IDS = [6943377103, 8284892694, 6659874588,5589314456]  # Şefin ve ekibin ID'leri
+ADMIN_IDS = [6943377103, 8284892694, 6659874588]  # Şefin ve ekibin ID'leri
 
 db_lock = threading.Lock()
 
@@ -333,7 +333,7 @@ def api_use_spin():
         add_bonus_spin(user_id, 1)
 
     def delayed_message():
-        time.sleep(8.5)
+        time.sleep(13.0)
         try:
             if win and prize:
                 if prize == "+1 Freespin":
@@ -427,6 +427,12 @@ def api_buy_item():
         print(f"Admin mesaj hatası: {e}")
         
     return jsonify({"ok": True, "new_balance": new_balance})
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    if filename.endswith(('.wav', '.mp3', '.flac', '.png', '.jpg', '.gif')):
+        return send_from_directory('.', filename)
+    return "Erişim Engellendi", 403
 
 @app.route('/api/get_history', methods=['GET'])
 def api_get_history():
