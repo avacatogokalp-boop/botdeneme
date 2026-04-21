@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -738,9 +736,12 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 
 <canvas id="confetti"></canvas>
 
-<!-- Ses Efektleri (Sadece Saf Metal Para Sesi) -->
-<audio id="buySound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_3334208a3c.mp3" preload="auto"></audio>
-<audio id="winSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_3334208a3c.mp3" preload="auto"></audio>
+<!-- Ses Efektleri (Kurumsal & Dinamik Kütüphane) -->
+<audio id="tickSound" src="https://www.soundjay.com/button/button-50.mp3" preload="auto"></audio>
+<audio id="buySound" src="https://www.soundjay.com/misc/sounds/cash-register-purchase-1.mp3" preload="auto"></audio>
+<audio id="winSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_c89658399e.mp3" preload="auto"></audio>
+<audio id="errorSound" src="https://www.soundjay.com/misc/sounds/fail-buzzer-01.mp3" preload="auto"></audio>
+<audio id="clickSound" src="https://www.soundjay.com/button/button-4.mp3" preload="auto"></audio>
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -798,6 +799,23 @@ ctx.scale(dpr, dpr); sctx.scale(dpr, dpr);
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
 let pendingBoscoinUpdate = null;
+function vibrate(type = 'light') {
+  if (!tg || !tg.HapticFeedback) return;
+  try {
+    if (type === 'light') tg.HapticFeedback.impactOccurred('light');
+    else if (type === 'medium') tg.HapticFeedback.impactOccurred('medium');
+    else if (type === 'heavy') tg.HapticFeedback.impactOccurred('heavy');
+    else if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+    else if (type === 'warning') tg.HapticFeedback.notificationOccurred('warning');
+    else if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
+  } catch (e) {}
+}
+
+function playSfx(id) {
+  const a = document.getElementById(id);
+  if (a) { a.currentTime = 0; a.play().catch(()=>{}); }
+}
+
 let WALLET_BALANCE = 0;
 let countdownInterval=null;
 
@@ -1237,6 +1255,8 @@ let pendingItemId = null;
 function buyItem(itemId, price) {
   if(!USER_ID) return;
   if(WALLET_BALANCE < price) {
+    playSfx('errorSound');
+    vibrate('error');
     alert("Yetersiz COIN! Önce çarkı çevirip bakiye biriktirmelisin.");
     return;
   }
@@ -1253,7 +1273,12 @@ function closePrompt() {
 
 async function submitPurchase() {
   const cUser = document.getElementById('casinoUsername').value.trim();
-  if(!cUser) { alert("Lütfen site kullanıcı adınızı girin!"); return; }
+  if(!cUser) { 
+    playSfx('errorSound');
+    vibrate('warning');
+    alert("Lütfen site kullanıcı adınızı girin!"); 
+    return; 
+  }
   
   // Mobil ses kilidini açmak için sesi burada "uyandırıyoruz"
   const audio = document.getElementById('buySound');
@@ -1267,12 +1292,9 @@ async function submitPurchase() {
     });
     const data = await res.json();
     if(res.ok) {
-      // Tok metal para sesi
-      const audio = document.getElementById('buySound');
-      if(audio) { 
-        audio.currentTime = 0; 
-        setTimeout(() => { audio.play().catch(()=>{}); }, 0); 
-      }
+      // Başarı sesi ve titreşimi
+      playSfx('buySound');
+      vibrate('success');
       
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
@@ -1303,6 +1325,8 @@ async function submitPurchase() {
       document.getElementById('overlay').classList.add('show');
       confetti();
     } else {
+      playSfx('errorSound');
+      vibrate('error');
       alert("Hata: " + (data.reason === 'insufficient_funds' ? "Yetersiz bakiye." : "İşlem reddedildi."));
     }
   } catch(e) {
@@ -1407,12 +1431,10 @@ function showResult() {
   animateSpotlight(angle,idx);
   
   if(seg.win){
-    // Tok metal para sesi
-    const winAudio = document.getElementById('winSound');
-    if(winAudio) { 
-      winAudio.currentTime = 0; 
-      setTimeout(() => { winAudio.play().catch(()=>{}); }, 0);
-    }
+    // Zafer sesi ve titreşimi
+    playSfx('winSound');
+    vibrate('success');
+    confetti();
     
     const rTitle = document.getElementById('rTitle');
     const rText = document.getElementById('rText');
@@ -1555,7 +1577,7 @@ function confetti(){
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 let actx=null;
 function getACtx(){ if(!actx) actx=new AudioCtx(); return actx; }
-function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium'); }
+// Eski titreşim fonksiyonuna veda
 
 function animatePointerTick() {
   const ptr = document.querySelector('.pointer');
@@ -1568,63 +1590,24 @@ function animatePointerTick() {
 }
 
 function playTick(){
-  try{
-    // Premium, tok bir casino çarkı "pıt" tıklaması (Kulak tırmalamayan plastik sentezi)
-    const a=getACtx(), t=a.currentTime;
-    const o=a.createOscillator(), g=a.createGain();
-    o.type='sine'; 
-    
-    // Sesin başlarken çok kısa süreli tizden kalına inmesi tok bir 'tık' hissi yaratır.
-    o.frequency.setValueAtTime(700, t); 
-    o.frequency.exponentialRampToValueAtTime(120, t+0.02);
-    
-    // Sesi 0.03 saniye içinde hızla sönümlendirerek keskin vurma hissi veriyoruz
-    g.gain.setValueAtTime(0.35, t); 
-    g.gain.exponentialRampToValueAtTime(0.001, t+0.03);
-    
-    o.connect(g); g.connect(a.destination);
-    o.start(t); o.stop(t+0.04);
-  }catch(e){}
+  playSfx('tickSound');
+  vibrate('light');
 }
 function playWin(){
-  try{
-    const a=getACtx(),notes=[523,659,784,1047];
-    notes.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='triangle';
-      const t=a.currentTime+i*0.13;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.22,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.25);
-      o.start(t); o.stop(t+0.25);
-    });
-    vibrate([50,30,80,30,150]);
-  }catch(e){}
+  playSfx('winSound');
+  vibrate('success');
 }
 function playLose(){
-  try{
-    const a=getACtx(),notes=[300,220];
-    notes.forEach((freq,i)=>{
-      const o=a.createOscillator(),g=a.createGain();
-      o.connect(g); g.connect(a.destination); o.type='sawtooth';
-      const t=a.currentTime+i*0.18;
-      o.frequency.setValueAtTime(freq,t); g.gain.setValueAtTime(0.15,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-      o.start(t); o.stop(t+0.3);
-    });
-    vibrate([100,50,100]);
-  }catch(e){}
+  playSfx('errorSound');
+  vibrate('error');
 }
 function playSpinStart(){
-  try{
-    const a=getACtx(),o=a.createOscillator(),g=a.createGain();
-    o.connect(g); g.connect(a.destination); o.type='sine';
-    o.frequency.setValueAtTime(200,a.currentTime); o.frequency.exponentialRampToValueAtTime(600,a.currentTime+0.3);
-    g.gain.setValueAtTime(0.15,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.3);
-    o.start(); o.stop(a.currentTime+0.3);
-    vibrate([30,20,30]);
-  }catch(e){}
+  playSfx('clickSound');
+  vibrate('medium');
 }
 
 let lastTickProgress=null;
-const TICK_INTERVAL=(2*Math.PI)/10;
+const TICK_INTERVAL=(2*Math.PI)/N;
 function checkTick(a){
   // Math.PI/2 = Çarkın tepe noktasının ofseti
   const progress = (a + Math.PI/2) / TICK_INTERVAL;
