@@ -378,12 +378,12 @@ def api_buy_item():
     casino_user = data.get('casino_user', 'Bilinmiyor')
     
     STORE = {
-        "freespin_100": {"price": 750, "name": "100 Freespin", "code": "COINFS100"},
-        "bonusbuy_100": {"price": 750, "name": "100₺ Bonus Buy", "code": "COINBB100"},
-        "vip_bonus":    {"price": 1250, "name": "Vip Hediye Bonusu", "code": "COINVIP"},
-        "cash_500":     {"price": 2000, "name": "500₺ Nakit Hediye", "code": "COINCASH"},
-        "freespin_200": {"price": 1500, "name": "200 Freespin", "code": "COINFS200"},
-        "bonusbuy_200": {"price": 1500, "name": "200₺ Bonus Buy", "code": "COINBB200"}
+        "freespin_100": {"price": 750,  "name": "100 Freespin (Gate Of Olympus)", "code": "COINFS100G"},
+        "bonusbuy_100": {"price": 750,  "name": "100₺ Bonus Buy (Sweet Bonanza)", "code": "COINBB100S"},
+        "vip_bonus":    {"price": 1250, "name": "Vip Hediye Bonusu (Tüm Slotlar)", "code": "COINVIP"},
+        "cash_5000":    {"price": 3000, "name": "5000₺ Nakit Hediye (Direkt Çekim)", "code": "COINCASH5K"},
+        "freespin_200": {"price": 1500, "name": "200 Freespin (Sugar Rush)", "code": "COINFS200S"},
+        "bonusbuy_200": {"price": 1500, "name": "200₺ Bonus Buy (The Dog House)", "code": "COINBB200D"}
     }
     
     if not user_id or item_id not in STORE:
