@@ -471,6 +471,30 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
   border: 1px solid rgba(255, 255, 255, 0.3);
   font-family: 'Montserrat', sans-serif;
 }
+/* --- LOGO BRANDING --- */
+.logo {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 42px;
+  letter-spacing: -2px;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: lowercase;
+}
+.logo .bet {
+  background: linear-gradient(180deg, #ff9153, #ff5e00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.logo .or { color: #ffffff; }
+.logo .spin {
+  background: linear-gradient(180deg, #ff5e00, #ff2e00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.logo .dot { color: #ffffff; }
 </style>
 </head>
 <body>
@@ -576,7 +600,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 </div>
 
 <div class="container">
-  <div class="logo"><span class="w">BETOR</span><span class="o">SPİN</span><span class="d">.</span></div>
+  <div class="logo"><span class="bet">bet</span><span class="or">or</span><span class="spin">spin</span><span class="dot">.</span></div>
   <div class="logo-line"></div>
   <div class="logo-sub">ŞANS ÇARKI</div>
   <div class="main-title">ÇEVİR & <em>KAZAN!</em></div>
@@ -927,12 +951,32 @@ function draw(a, t=0) {
   ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
-  // "BETOR SPIN" Yüzen 3D Yazı (Düz kalacak)
+  // "betorspin." Yüzen LOGO Yazı
   ctx.textAlign='center';
-  ctx.font='900 12.5px Montserrat, sans-serif'; 
-  ctx.shadowColor = '#FF2E00'; ctx.shadowBlur = 8;
-  ctx.fillStyle='#FF5800'; ctx.fillText('BETOR',CX,CY-3);
-  ctx.fillStyle='#ffffff'; ctx.fillText('SPİN.',CX,CY+12);
+  ctx.textBaseline='middle';
+  ctx.font='900 13px Montserrat, sans-serif'; 
+  
+  const logoText = "betorspin.";
+  const parts = [
+    { text: "bet", color: "#ff9153" },
+    { text: "or", color: "#ffffff" },
+    { text: "spin", color: "#ff4500" },
+    { text: ".", color: "#ffffff" }
+  ];
+  
+  let totalW = 0;
+  parts.forEach(p => { totalW += ctx.measureText(p.text).width; });
+  
+  let startX = CX - totalW / 2;
+  parts.forEach(p => {
+    ctx.fillStyle = p.color;
+    // Küçük bir neon parlama ekleyelim (Logo öne çıksın)
+    ctx.shadowColor = p.color === "#ffffff" ? "rgba(255,255,255,0.3)" : "rgba(255,69,0,0.5)";
+    ctx.shadowBlur = 4;
+    
+    ctx.fillText(p.text, startX + ctx.measureText(p.text).width / 2, CY + 2);
+    startX += ctx.measureText(p.text).width;
+  });
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 }
 
