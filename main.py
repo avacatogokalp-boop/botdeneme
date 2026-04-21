@@ -651,6 +651,50 @@ def admin_bekleyenler(message):
         parse_mode="Markdown"
     )
 
+@bot.message_handler(commands=['siparisleri_onayla'])
+def admin_siparis_onayla(message):
+    user_id = message.from_user.id
+    if not is_admin(user_id): return
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        # Sadece bekleyen (pending) siparişleri bul
+        c.execute("SELECT DISTINCT user_id, name FROM spin_logs WHERE status = 'pending'")
+        users_to_notify = c.fetchall()
+        
+        if not users_to_notify:
+            conn.close()
+            bot.reply_to(message, "✅ Bildirim gönderilecek bekleyen sipariş bulunamadı.")
+            return
+            
+        success_count = 0
+        fail_count = 0
+        
+        # Site linkini buton olarak ekle
+        markup = InlineKeyboardMarkup()
+        markup.add(InlineKeyboardButton("Siteye Git ve Kontrol Et", url=SITE_LINKI))
+        
+        msg_text = (
+            "🎁 *Müjde! Bekleyen ödülünüz BetorSpin hesabınıza tanımlanmıştır.*\n\n"
+            "Hemen siteye giriş yaparak bakiyenizi veya freespinlerinizi kontrol edebilirsiniz. Bol şanslar dileriz! 🎁"
+        )
+        
+        for u in users_to_notify:
+            try:
+                bot.send_message(u['user_id'], msg_text, parse_mode="Markdown", reply_markup=markup)
+                success_count += 1
+            except Exception as e:
+                print(f"Bildirim hatası ({u['user_id']}): {e}")
+                fail_count += 1
+        
+        # Tüm bekleyenleri 'processed' yap
+        c.execute("UPDATE spin_logs SET status = 'processed' WHERE status = 'pending'")
+        conn.commit()
+        conn.close()
+        
+    bot.reply_to(message, f"✅ *İşlem Tamamlandı!*\n\n• Başarıyla iletilen: *{success_count}*\n• İletilemeyen: *{fail_count}*\n\n_Sistemdeki tüm bekleyen siparişler 'İşlendi' olarak işaretlendi._", parse_mode="Markdown")
+
 @bot.message_handler(commands=['coin_bas'])
 def admin_coin_bas(message):
     user_id = message.from_user.id
