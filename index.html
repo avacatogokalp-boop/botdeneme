@@ -644,9 +644,9 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 
 <canvas id="confetti"></canvas>
 
-<!-- Ses Efektleri (Optimize Edilmiş Metal Para Sesi) -->
-<audio id="buySound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_3334208a3c.mp3" preload="auto"></audio>
-<audio id="winSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_3334208a3c.mp3" preload="auto"></audio>
+<!-- Ses Efektleri (Mobil Uyumlu & Hızlı CDN) -->
+<audio id="buySound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
+<audio id="winSound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3" preload="auto"></audio>
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -1017,6 +1017,10 @@ function closePrompt() {
 async function submitPurchase() {
   const cUser = document.getElementById('casinoUsername').value.trim();
   if(!cUser) { alert("Lütfen site kullanıcı adınızı girin!"); return; }
+  
+  // Mobil ses kilidini açmak için sesi burada "uyandırıyoruz"
+  const audio = document.getElementById('buySound');
+  if(audio) { audio.load(); audio.muted = true; audio.play().then(() => { audio.pause(); audio.muted = false; }).catch(()=>{}); }
   
   try {
     const res = await fetch('/api/buy_item', {
