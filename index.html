@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -440,16 +442,35 @@ canvas#wheel {
 .card-bass { background: radial-gradient(circle at 30% 30%, #00f2fe, #4facfe, #001220); }
 .card-gates { background: radial-gradient(circle at 30% 30%, #ffcc00, #ff8c00, #2c004d); }
 .card-vip { background: linear-gradient(135deg, #1c1c1c 0%, #333 50%, #000 100%); border-color: #ffd70044; }
+.si-icon-svg { width: 55%; height: 55%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+
+/* --- ULTIMATE DIAMOND CARD --- */
 .card-diamond { 
   background: radial-gradient(circle at 30% 30%, #00d2ff, #3a7bd5, #0a192f); 
   border: 2px solid #fff;
-  box-shadow: 0 0 20px rgba(0, 210, 255, 0.8), inset 0 0 15px rgba(255,255,255,0.4);
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.4), inset 0 0 20px rgba(255,255,255,0.3);
+  animation: diamondPulse 3s infinite ease-in-out;
 }
-.card-diamond::before {
-  content: '✦'; position: absolute; top: 5px; right: 8px; color: #fff; font-size: 10px; opacity: 0.8;
+@keyframes diamondPulse {
+  0%, 100% { box-shadow: 0 0 25px rgba(0, 210, 255, 0.4), inset 0 0 20px rgba(255,255,255,0.3); }
+  50% { box-shadow: 0 0 45px rgba(0, 210, 255, 0.7), inset 0 0 30px rgba(255,255,255,0.5); }
 }
 
-.si-icon-svg { width: 55%; height: 55%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+/* --- PRESTIGE VIP CARD --- */
+.card-vip { 
+  background: linear-gradient(135deg, #1c1c1c 0%, #444 50%, #000 100%); 
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+  animation: vipGlow 4s infinite alternate;
+}
+@keyframes vipGlow {
+  from { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+  to { border-color: #fffb00; box-shadow: 0 0 35px rgba(255, 215, 0, 0.5); }
+}
+
+/* --- OUTER FRAME GLOWS --- */
+.item-card-diamond { border-color: rgba(0, 210, 255, 0.6) !important; box-shadow: 0 0 15px rgba(0, 210, 255, 0.1); }
+.item-card-vip { border-color: rgba(255, 215, 0, 0.6) !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
 
 .si-buy {
   background: linear-gradient(180deg, #FF4500, #b33900); border: 1px solid rgba(255,255,255,0.2); 
@@ -1133,7 +1154,7 @@ function renderStore() {
   ];
 
   container.innerHTML = items.map(item => `
-    <div class="store-item" style="${item.id === 'cash_500' ? 'background: linear-gradient(135deg, rgba(0,210,255,0.15), transparent); border-color: rgba(0,210,255,0.4);' : ''}">
+    <div class="store-item ${item.cardClass ? 'item-' + item.cardClass : ''}">
       <div class="si-card ${item.cardClass}" style="${item.id === 'freespin_200' ? 'background: radial-gradient(circle at 30% 30%, #e67e22, #d35400, #5a2a00);' : ''}">
         <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           ${item.id === 'vip_bonus' ? '<path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#FFD700"/><circle cx="12" cy="19" r="2" fill="#FFD700"/>' : 
