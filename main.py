@@ -16,7 +16,7 @@ SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
 GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_IDS = [6943377103,8284892694,6659874588]  # Şefin ID'sini eklemek için: [6943377103, SEFİN_ID]
+ADMIN_IDS = [6943377103, 8284892694, 6659874588]  # Şefin ve ekibin ID'leri
 
 db_lock = threading.Lock()
 
@@ -443,22 +443,21 @@ def api_get_history():
         
     history = []
     for r in rows:
-        # "SİPARİŞ (K.Adı: ...): 500₺ Nakit Hediye" -> En sondaki ":" işaretinden sonrasını al
         raw_prize = r["prize"]
-        if "SİPARİŞ" in raw_prize and "): " in raw_prize:
+        site_user = "Bilinmiyor"
+        if "K.Adı: " in raw_prize and "): " in raw_prize:
+            site_user = raw_prize.split("K.Adı: ", 1)[1].split("):", 1)[0]
             contents = raw_prize.split("): ", 1)[-1]
         elif ": " in raw_prize:
             contents = raw_prize.split(": ", 1)[-1]
         else:
             contents = raw_prize
             
-        # Durum türkçeleştirme
-        status_tr = "Beklemede" if r["status"] == "pending" else "Onaylandı"
-        
         history.append({
             "content": contents,
+            "site_user": site_user,
             "date": r["date_time"][:16],
-            "status": status_tr
+            "status": "Beklemede" if r["status"] == "pending" else "Onaylandı"
         })
         
     return jsonify(history)
