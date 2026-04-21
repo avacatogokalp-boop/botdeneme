@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -468,6 +469,16 @@ canvas#wheel {
   backdrop-filter: blur(10px);
 }
 
+/* --- HISTORY TABLE (MAX VISIBILITY) --- */
+.history-section { border-top: 2px solid rgba(255,100,0,0.4); margin-top: 40px; padding-top: 30px; width: 100%; }
+.history-title { font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 25px; text-align: left; letter-spacing: 1px; text-shadow: 0 2px 10px rgba(255,255,255,0.2); }
+.history-table { width: 100%; border-collapse: collapse; font-size: 14px; color: #fff; text-align: left; }
+.history-table th { padding: 15px 5px; color: #fff; text-transform: uppercase; border-bottom: 3px solid rgba(255,255,255,0.15); font-weight: 900; letter-spacing: 0.5px; }
+.history-table td { padding: 18px 5px; border-bottom: 1px solid rgba(255,255,255,0.15); font-weight: 700; color: #fff; }
+.status-pending { color: #ffae00; font-weight: 900; text-shadow: 0 0 10px rgba(255,174,0,0.5); }
+.status-approved { color: #00ff88; font-weight: 900; text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+.empty-history { padding: 50px 0; color: rgba(255,255,255,0.6); font-weight: 800; text-align: center; font-size: 16px; }
+
 canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
 /* --- B HEART ICON --- */
 .b-heart-icon {
@@ -560,10 +571,16 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 </div>
 
 <div class="store-overlay" id="storeOverlay">
-  <div class="store-modal">
-    <div class="store-header">
-      <button class="store-close" style="left:0; right:auto; font-size: 10px; width: auto; padding: 0 10px;" onclick="scrollToHistory()">GEÇMİŞ 🕒</button>
-      <h2>MAĞAZA</h2>
+  <div class="store-modal" style="max-height: 85vh;">
+    <div class="store-header" style="justify-content: space-between; padding: 15px 20px;">
+      <div class="wallet-box" style="margin: 0; padding: 5px 12px; height: 32px; font-size: 14px;">
+        <svg class="b-heart-icon" viewBox="0 0 32 32" style="width: 18px; height: 18px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));">
+          <path fill="url(#heartGrd)" d="M16 28.5L14.1 26.8C7.1 20.6 2.5 16.1 2.5 10.5C2.5 5.9 6.1 2.5 10.5 2.5C13.1 2.5 15.5 3.7 17 5.7C18.5 3.7 20.9 2.5 23.5 2.5C27.9 2.5 31.5 5.9 31.5 10.5C31.5 16.1 26.9 20.6 19.9 26.8L16 28.5Z" />
+          <text x="16" y="19" font-family="Montserrat" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">b</text>
+        </svg>
+        <span id="storeWalletBalance">0</span>
+      </div>
+      <h2 style="position: absolute; left: 50%; transform: translateX(-50%); font-size: 18px;">MAĞAZA</h2>
       <button class="store-close" onclick="closeStore()">X</button>
     </div>
     <div class="store-body" id="storeItemsContainer">
@@ -576,8 +593,8 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
         <table class="history-table">
           <thead>
             <tr>
-              <th>İçerik</th>
-              <th>Tarih</th>
+              <th>Satınalınan İçerik</th>
+              <th>Harcanan Para</th>
               <th>Durum</th>
             </tr>
           </thead>
@@ -1073,6 +1090,7 @@ async function checkSpinRight() {
 // --- MAĞAZA DÜKKANI SİSTEMİ ---
 function openStore() {
   document.getElementById('storeOverlay').classList.add('show');
+  document.getElementById('storeWalletBalance').textContent = WALLET_BALANCE;
   renderStore();
   loadPurchaseHistory();
 }
@@ -1108,9 +1126,9 @@ function renderStore() {
       </div>
       <div class="si-info"><h3>${item.name}</h3><p>${item.desc}</p></div>
       <button class="si-buy" onclick="buyItem('${item.id}', ${item.price})">
-        <svg class="b-heart-icon" viewBox="0 0 32 32" style="width:14px; height:14px; margin-right:4px;">
-          <path d="M16 28.5L14.5 27.1C9.1 22.2 5.5 19 5.5 15C5.5 11.7 8.1 9.1 11.4 9.1C13.2 9.1 15 10 16.1 11.4C17.2 10 19 9.1 20.8 9.1C24.1 9.1 26.7 11.7 26.7 15C26.7 19 23.1 22.2 17.7 27.1L16 28.5Z" fill="rgba(255,255,255,0.9)"/>
-          <text x="16" y="19" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="9" fill="#FF4500">b</text>
+        <svg class="b-heart-icon" viewBox="0 0 32 32" style="width:18px; height:18px; margin-right:6px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));">
+          <path fill="url(#heartGrd)" d="M16 28.5L14.1 26.8C7.1 20.6 2.5 16.1 2.5 10.5C2.5 5.9 6.1 2.5 10.5 2.5C13.1 2.5 15.5 3.7 17 5.7C18.5 3.7 20.9 2.5 23.5 2.5C27.9 2.5 31.5 5.9 31.5 10.5C31.5 16.1 26.9 20.6 19.9 26.8L16 28.5Z" />
+          <text x="16" y="19" font-family="Montserrat" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">b</text>
         </svg>
         ${item.price}
       </button>
@@ -1131,13 +1149,29 @@ async function loadPurchaseHistory() {
       return;
     }
     
-    list.innerHTML = data.map(order => `
+    list.innerHTML = data.map(order => {
+      // Order tutarını bulmaya çalış (İçinden ayıkla)
+      let priceMatch = "---";
+      if(order.content.includes("100 Freespin") || order.content.includes("100₺ Bonus Buy")) priceMatch = "750";
+      else if(order.content.includes("Vip Hediye") ) priceMatch = "2000";
+      else if(order.content.includes("200 Freespin") || order.content.includes("200₺ Bonus Buy")) priceMatch = "1500";
+      else if(order.content.includes("500₺ Nakit")) priceMatch = "3000";
+
+      return `
       <tr>
         <td>${order.content}</td>
-        <td>${order.date}</td>
+        <td>
+          <div style="display:flex; align-items:center;">
+            <svg class="b-heart-icon" viewBox="0 0 32 32" style="width:12px; height:12px; margin-right:4px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));">
+              <path fill="url(#heartGrd)" d="M16 28.5L14.1 26.8C7.1 20.6 2.5 16.1 2.5 10.5C2.5 5.9 6.1 2.5 10.5 2.5C13.1 2.5 15.5 3.7 17 5.7C18.5 3.7 20.9 2.5 23.5 2.5C27.9 2.5 31.5 5.9 31.5 10.5C31.5 16.1 26.9 20.6 19.9 26.8L16 28.5Z" />
+              <text x="16" y="19" font-family="Montserrat" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">b</text>
+            </svg>
+            ${priceMatch}
+          </div>
+        </td>
         <td class="${order.status === 'Beklemede' ? 'status-pending' : 'status-approved'}">${order.status}</td>
       </tr>
-    `).join('');
+    `;}).join('');
   } catch (e) {
     console.error("Geçmiş yükleme hatası:", e);
   }
@@ -1190,6 +1224,7 @@ async function submitPurchase() {
       
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
+      document.getElementById('storeWalletBalance').textContent = WALLET_BALANCE;
       closePrompt();
       loadPurchaseHistory(); // Geçmişi tazele
       alert("Satın alım başarılı! Ödülünüz incelenip hesabınıza eklenecektir.");
@@ -1322,7 +1357,7 @@ function showResult() {
       rTitle.textContent = 'TEBRİKLER';
       rText.style.display = 'block';
       rText.innerHTML = `Çarktan başarıyla <b>${seg.prize}</b> kazandın!<br>Ödül, cüzdanına eklendi.`;
-      if (seg.prize.includes('SPİN')) {
+      if (seg.prize.toLowerCase().includes('spin') || seg.prize.toLowerCase().includes('çevir')) {
         rBtn.textContent = 'TEKRAR ÇEVİR';
         rBtn.onclick = () => { closeModal(); };
       } else {
