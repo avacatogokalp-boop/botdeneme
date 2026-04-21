@@ -798,18 +798,9 @@ ctx.scale(dpr, dpr); sctx.scale(dpr, dpr);
 
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
-let dur = 15000; // Varsayılan süre
-
-// Dinamik Süre Alma (Ses dosyasına göre)
-const spinAudio = document.getElementById('tickSound');
-if (spinAudio) {
-  spinAudio.addEventListener('loadedmetadata', () => {
-    if (spinAudio.duration && spinAudio.duration > 0) {
-      dur = Math.floor(spinAudio.duration * 1000);
-      console.log("Çark süresi sese göre güncellendi:", dur);
-    }
-  });
-}
+let dur = 12000; // Kullanıcı isteği üzerine tam 12 saniye
+let lastTickTime = 0;
+const MIN_TICK_GAP = 70; // Tıklamalar arası minimum 70ms (Gürültü önleme)
 let pendingBoscoinUpdate = null;
 function vibrate(type = 'light') {
   if (!tg || !tg.HapticFeedback) return;
@@ -1674,14 +1665,19 @@ function playSpinStart(){
 let lastTickProgress=null;
 const TICK_INTERVAL=(2*Math.PI)/N;
 function checkTick(a){
-  // Math.PI/2 = Çarkın tepe noktasının ofseti
   const progress = (a + Math.PI/2) / TICK_INTERVAL;
   if(lastTickProgress === null) lastTickProgress = Math.floor(progress);
   
-  // Çarkın çizgisi her tepe noktasını kusursuz vurduğunda işlemi (Tık'ı) tetikle
   while (progress - lastTickProgress >= 1) {
     lastTickProgress++;
-    playTick(); animatePointerTick();
+    
+    // Tık seslerini ve animasyonu seyreltme (Throttle)
+    const now = performance.now();
+    if (now - lastTickTime > MIN_TICK_GAP) {
+      playTick(); 
+      animatePointerTick();
+      lastTickTime = now;
+    }
   }
 }
 
