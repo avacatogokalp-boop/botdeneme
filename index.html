@@ -461,15 +461,13 @@ canvas#wheel {
 }
 
 canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
-/* --- B COIN ICON --- */
-.b-coin-icon {
-  width: 20px; height: 20px; border-radius: 50%;
-  background: linear-gradient(135deg, #FF9153, #FF4500);
-  color: #fff; font-size: 13px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  font-family: 'Montserrat', sans-serif;
+/* --- B HEART ICON --- */
+.b-heart-icon {
+  width: 24px; height: 24px;
+  filter: drop-shadow(0 0 5px rgba(255, 69, 0, 0.4));
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
 }
 /* --- LOGO BRANDING --- */
 .logo {
@@ -506,7 +504,16 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
     <span class="store-icon">🛒</span> MAĞAZA
   </button>
   <div class="wallet-box">
-    <div class="b-coin-icon">B</div>
+    <svg class="b-heart-icon" viewBox="0 0 32 32">
+      <defs>
+        <linearGradient id="heartGrd" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:#ff4b2b" />
+          <stop offset="100%" style="stop-color:#ff9153" />
+        </linearGradient>
+      </defs>
+      <path fill="url(#heartGrd)" d="M16 28.5L14.1 26.8C7.1 20.6 2.5 16.1 2.5 10.5C2.5 5.9 6.1 2.5 10.5 2.5C13.1 2.5 15.5 3.7 17 5.7C18.5 3.7 20.9 2.5 23.5 2.5C27.9 2.5 31.5 5.9 31.5 10.5C31.5 16.1 26.9 20.6 19.9 26.8L16 28.5Z" />
+      <text x="16" y="19" font-family="Montserrat" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">b</text>
+    </svg>
     <span id="walletBalance">0</span>
   </div>
 </div>
@@ -951,32 +958,39 @@ function draw(a, t=0) {
   ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
 
-  // "betorspin." Yüzen LOGO Yazı
+  // "betorspin." Yüzen LOGO Yazı (Alt Alta)
   ctx.textAlign='center';
   ctx.textBaseline='middle';
-  ctx.font='900 13px Montserrat, sans-serif'; 
+  ctx.font='900 14px Montserrat, sans-serif'; 
   
-  const logoText = "betorspin.";
-  const parts = [
+  // SATIR 1: betor
+  const topParts = [
     { text: "bet", color: "#ff9153" },
-    { text: "or", color: "#ffffff" },
+    { text: "or", color: "#ffffff" }
+  ];
+  let topW = 0;
+  topParts.forEach(p => { topW += ctx.measureText(p.text).width; });
+  let startX1 = CX - topW / 2;
+  topParts.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.fillText(p.text, startX1 + ctx.measureText(p.text).width / 2, CY - 7);
+    startX1 += ctx.measureText(p.text).width;
+  });
+
+  // SATIR 2: spin.
+  const botParts = [
     { text: "spin", color: "#ff4500" },
     { text: ".", color: "#ffffff" }
   ];
-  
-  let totalW = 0;
-  parts.forEach(p => { totalW += ctx.measureText(p.text).width; });
-  
-  let startX = CX - totalW / 2;
-  parts.forEach(p => {
+  let botW = 0;
+  botParts.forEach(p => { botW += ctx.measureText(p.text).width; });
+  let startX2 = CX - botW / 2;
+  botParts.forEach(p => {
     ctx.fillStyle = p.color;
-    // Küçük bir neon parlama ekleyelim (Logo öne çıksın)
-    ctx.shadowColor = p.color === "#ffffff" ? "rgba(255,255,255,0.3)" : "rgba(255,69,0,0.5)";
-    ctx.shadowBlur = 4;
-    
-    ctx.fillText(p.text, startX + ctx.measureText(p.text).width / 2, CY + 2);
-    startX += ctx.measureText(p.text).width;
+    ctx.fillText(p.text, startX2 + ctx.measureText(p.text).width / 2, CY + 10);
+    startX2 += ctx.measureText(p.text).width;
   });
+
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 }
 
@@ -1245,7 +1259,7 @@ function showResult() {
     } else {
       rTitle.textContent = 'TEBRİKLER';
       rText.style.display = 'block';
-      rText.innerHTML = `Çarktan başarıyla <b>${seg.prize}</b> kazandın!<br>Ödül, COIN Cüzdanına eklendi.`;
+      rText.innerHTML = `Çarktan başarıyla <b>${seg.prize}</b> kazandın!<br>Ödül, cüzdanına eklendi.`;
       rBtn.textContent = 'MAĞAZAYA GİT';
       rBtn.onclick = () => { closeModal(); openStore(); };
       
