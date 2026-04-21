@@ -644,9 +644,9 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 
 <canvas id="confetti"></canvas>
 
-<!-- Ses Efektleri (Telif Ücretsiz / CDN) -->
-<audio id="buySound" src="https://assets.mixkit.co/active_storage/sfx/2017/2017-preview.mp3" preload="auto"></audio>
-<audio id="winSound" src="https://assets.mixkit.co/active_storage/sfx/2015/2015-preview.mp3" preload="auto"></audio>
+<!-- Ses Efektleri (Optimize Edilmiş Metal Para Sesi) -->
+<audio id="buySound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_3334208a3c.mp3" preload="auto"></audio>
+<audio id="winSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_3334208a3c.mp3" preload="auto"></audio>
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -1026,9 +1026,12 @@ async function submitPurchase() {
     });
     const data = await res.json();
     if(res.ok) {
-      // Başarılı alım sesi
+      // Tok metal para sesi
       const audio = document.getElementById('buySound');
-      if(audio) { audio.currentTime = 0; audio.play().catch(()=>{}); }
+      if(audio) { 
+        audio.currentTime = 0; 
+        setTimeout(() => { audio.play().catch(()=>{}); }, 0); 
+      }
       
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
@@ -1160,9 +1163,12 @@ function showResult() {
   animateSpotlight(angle,idx);
   
   if(seg.win){
-    // Kazanç sesi (Para sesi)
+    // Tok metal para sesi
     const winAudio = document.getElementById('winSound');
-    if(winAudio) { winAudio.currentTime = 0; winAudio.play().catch(()=>{}); }
+    if(winAudio) { 
+      winAudio.currentTime = 0; 
+      setTimeout(() => { winAudio.play().catch(()=>{}); }, 0);
+    }
     
     const rTitle = document.getElementById('rTitle');
     const rText = document.getElementById('rText');
