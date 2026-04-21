@@ -141,7 +141,7 @@ canvas#wheel {
 
 .btn-body {
   position: relative; overflow: hidden;
-  background: linear-gradient(180deg, #FF9153 0%, #FF2E00 100%);
+  background: linear-gradient(180deg, #FF6A00 0%, #FF4500 100%);
   color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.9);
   font-family: inherit; font-size: 28px; font-weight: 900;
   letter-spacing: 4px; text-transform: uppercase;
@@ -316,7 +316,7 @@ canvas#wheel {
 .rcard-title { font-size: 32px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(255,69,0,0.6); }
 .rcard-badge {
   display: inline-block;
-  background: linear-gradient(180deg, #FF9153 0%, #FF2E00 100%);
+  background: linear-gradient(180deg, #FF6A00 0%, #FF4500 100%);
   color: #fff; font-size: 16px; font-weight: 900;
   padding: 10px 30px; border-radius: 40px; letter-spacing: 1px;
   text-transform: uppercase;
@@ -328,7 +328,7 @@ canvas#wheel {
 .rcard-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 24px; }
 .rcard-btn {
   width: 100%;
-  background: linear-gradient(180deg, #FF9153 0%, #FF2E00 100%);
+  background: linear-gradient(180deg, #FF6A00 0%, #FF4500 100%);
   color: #fff; font-family: inherit; font-size: 16px; font-weight: 900;
   letter-spacing: 1px; text-transform: uppercase;
   border: 1px solid #FF9153;
@@ -439,6 +439,14 @@ canvas#wheel {
 .card-bass { background: radial-gradient(circle at 30% 30%, #00f2fe, #4facfe, #001220); }
 .card-gates { background: radial-gradient(circle at 30% 30%, #ffcc00, #ff8c00, #2c004d); }
 .card-vip { background: linear-gradient(135deg, #1c1c1c 0%, #333 50%, #000 100%); border-color: #ffd70044; }
+.card-diamond { 
+  background: radial-gradient(circle at 30% 30%, #00d2ff, #3a7bd5, #0a192f); 
+  border: 2px solid #fff;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.8), inset 0 0 15px rgba(255,255,255,0.4);
+}
+.card-diamond::before {
+  content: '✦'; position: absolute; top: 5px; right: 8px; color: #fff; font-size: 10px; opacity: 0.8;
+}
 
 .si-icon-svg { width: 55%; height: 55%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
 
@@ -483,7 +491,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
   filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.4)); /* Parlama azaltıldı */
 }
 .logo .bet, .logo .spin {
-  background: linear-gradient(180deg, #ff9153, #ff5e00);
+  background: linear-gradient(180deg, #FF6A00, #FF4500);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -523,6 +531,9 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 </head>
 <body>
 <div id="loader-screen">
+  <div class="logo" style="margin-bottom: 40px; transform: scale(1.15);">
+    <span class="bet">bet</span><span class="or">or</span><span class="spin">spin</span><span class="dot">.</span>
+  </div>
   <div class="loader-wheel"></div>
   <div class="loader-text">Çark Hazırlanıyor...</div>
 </div>
@@ -551,76 +562,31 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 <div class="store-overlay" id="storeOverlay">
   <div class="store-modal">
     <div class="store-header">
+      <button class="store-close" style="left:0; right:auto; font-size: 10px; width: auto; padding: 0 10px;" onclick="scrollToHistory()">GEÇMİŞ 🕒</button>
       <h2>MAĞAZA</h2>
       <button class="store-close" onclick="closeStore()">X</button>
     </div>
-    <div class="store-body" id="storeItems">
-      <div class="store-item">
-        <div class="si-card card-gates">
-          <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff" shadow="0 0 10px #fff"/>
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#FFD700" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="si-info"><h3>100 Freespin</h3><p>Gate Of Olympus Oyununda Geçerli</p></div>
-        <button class="si-buy" onclick="buyItem('freespin_100', 750)">750</button>
+    <div class="store-body" id="storeItemsContainer">
+      <div id="storeItems">
+        <!-- JS ile dolacak -->
       </div>
-
-      <div class="store-item">
-        <div class="si-card card-bass">
-          <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="5" width="18" height="14" rx="2" fill="rgba(255,255,255,0.15)" stroke="#fff" stroke-width="1.5"/>
-            <path d="M7 8h10M7 12h10M7 16h10" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
-            <text x="12" y="14" font-family="Montserrat" font-weight="900" font-size="7" fill="#fff" text-anchor="middle" letter-spacing="1">777</text>
-            <path d="M21 8l2 2-2 2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="si-info"><h3>100₺ Bonus Buy</h3><p>Sweet Bonanza Oyununda Geçerli</p></div>
-        <button class="si-buy" onclick="buyItem('bonusbuy_100', 750)">750</button>
+      
+      <div class="history-section" id="historySection">
+        <div class="history-title">Satınalım Geçmişi</div>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>İçerik</th>
+              <th>Tarih</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody id="historyList">
+            <!-- JS ile dolacak -->
+          </tbody>
+        </table>
       </div>
-
-      <div class="store-item" style="border: 1px solid rgba(255, 215, 0, 0.5); background: linear-gradient(45deg, rgba(26,23,22,0.8), rgba(45,36,0,0.8)); box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.1);">
-        <div class="si-card card-vip">
-          <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#FFD700"/>
-            <circle cx="12" cy="19" r="2" fill="#FFD700"/>
-          </svg>
-        </div>
-        <div class="si-info"><h3 style="color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.9);">Vip Hediye Bonusu</h3><p style="color: #FFD700; opacity: 0.8;">Tüm Slot Alanlarında Geçerli</p></div>
-        <button class="si-buy" style="background: linear-gradient(180deg, #FFD700, #b39700); color: #000; text-shadow: none;" onclick="buyItem('vip_bonus', 1250)">1250</button>
-      </div>
-
-      <div class="store-item">
-        <div class="si-card" style="background: radial-gradient(circle at 30% 30%, #27ae60, #1e8449, #0a3d1d);">
-          <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="6" width="18" height="12" rx="3" stroke="#fff" stroke-width="1.5" fill="none"/>
-            <text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="7" fill="#fff" text-anchor="middle">TL</text>
-          </svg>
-        </div>
-        <div class="si-info"><h3>500₺ Nakit Hediye</h3><p>Direkt çekim</p></div>
-        <button class="si-buy" onclick="buyItem('cash_500', 3000)">3000</button>
-      </div>
-
-      <div class="store-item">
-        <div class="si-card card-gates" style="background: radial-gradient(circle at 30% 30%, #e67e22, #d35400, #5a2a00);">
-          <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff"/>
-          </svg>
-        </div>
-        <div class="si-info"><h3>200 Freespin</h3><p>Sugar Rush Oyununda Geçerli</p></div>
-        <button class="si-buy" onclick="buyItem('freespin_200', 1500)">1500</button>
-      </div>
-
-      <div class="store-item">
-        <div class="si-card card-bass" style="background: radial-gradient(circle at 30% 30%, #9b59b6, #8e44ad, #2c003d);">
-          <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="4" width="20" height="16" rx="5" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" fill="none"/>
-            <text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="4.5" fill="#fff" text-anchor="middle">SUPER</text>
-          </svg>
-        </div>
-        <div class="si-info"><h3>200₺ Bonus Buy</h3><p>The Dog House Oyununda Geçerli</p></div>
-        <button class="si-buy" onclick="buyItem('bonusbuy_200', 1500)">1500</button>
-      </div>
+    </div>
     </div>
     
     <div class="store-body" id="storePrompt" style="display:none; text-align:center; padding: 20px 0;">
@@ -750,13 +716,13 @@ const ADMIN_ID = 6943377103;
 
 // ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['+1','FREESPIN'],          bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'+1 Freespin' },
-  { lines:['200','COIN'],              bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'200 COIN'    },
-  { lines:['150','COIN'],              bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'150 COIN'    },
-  { lines:['100','COIN'],              bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'100 COIN'    },
-  { lines:['75','COIN'],               bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'75 COIN'     },
-  { lines:['50','COIN'],               bg:'#202020', stroke:'#FF2E00', tc:'#ffffff', icon:'', win:true,  prize:'50 COIN'     },
-  { lines:['25','COIN'],               bg:'#101010', stroke:'#FF5800', tc:'#ffffff', icon:'', win:true,  prize:'25 COIN'     },
+  { lines:['+1','FREESPIN'],          bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'+1 Freespin' },
+  { lines:['200','COIN'],              bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', icon:'', win:true,  prize:'200 COIN'    },
+  { lines:['150','COIN'],              bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'150 COIN'    },
+  { lines:['100','COIN'],              bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', icon:'', win:true,  prize:'100 COIN'    },
+  { lines:['75','COIN'],               bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'75 COIN'     },
+  { lines:['50','COIN'],               bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', icon:'', win:true,  prize:'50 COIN'     },
+  { lines:['25','COIN'],               bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'25 COIN'     },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
@@ -1107,6 +1073,74 @@ async function checkSpinRight() {
 // --- MAĞAZA DÜKKANI SİSTEMİ ---
 function openStore() {
   document.getElementById('storeOverlay').classList.add('show');
+  renderStore();
+  loadPurchaseHistory();
+}
+
+function scrollToHistory() {
+  const el = document.getElementById('historySection');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderStore() {
+  const container = document.getElementById('storeItems');
+  // Ürünler (Pahalıdan ucuza sıralı)
+  const items = [
+    { id: 'cash_500', name: '500₺ Nakit Hediye', desc: 'Direkt çekim', price: 3000, cardClass: 'card-diamond', icon: 'TL' },
+    { id: 'vip_bonus', name: 'Vip Hediye Bonusu', desc: 'Tüm Slot Alanlarında Geçerli', price: 2000, cardClass: 'card-vip', icon: 'VIP' },
+    { id: 'freespin_200', name: '200 Freespin', desc: 'Sugar Rush Oyununda Geçerli', price: 1500, cardClass: 'card-gates', icon: 'FS' },
+    { id: 'bonusbuy_200', name: '200₺ Bonus Buy', desc: 'The Dog House Oyununda Geçerli', price: 1500, cardClass: '', icon: 'SUPER' },
+    { id: 'freespin_100', name: '100 Freespin', desc: 'Gate Of Olympus Oyununda Geçerli', price: 750, cardClass: 'card-gates', icon: 'FS' },
+    { id: 'bonusbuy_100', name: '100₺ Bonus Buy', desc: 'Sweet Bonanza Oyununda Geçerli', price: 750, cardClass: 'card-bass', icon: 'BB' }
+  ];
+
+  container.innerHTML = items.map(item => `
+    <div class="store-item" style="${item.id === 'cash_500' ? 'background: linear-gradient(135deg, rgba(0,210,255,0.15), transparent); border-color: rgba(0,210,255,0.4);' : ''}">
+      <div class="si-card ${item.cardClass}" style="${item.id === 'freespin_200' ? 'background: radial-gradient(circle at 30% 30%, #e67e22, #d35400, #5a2a00);' : ''}">
+        <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          ${item.id === 'vip_bonus' ? '<path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#FFD700"/><circle cx="12" cy="19" r="2" fill="#FFD700"/>' : 
+            item.id === 'freespin_200' || item.id === 'freespin_100' ? '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff"/>' :
+            item.id === 'bonusbuy_200' ? '<rect x="2" y="4" width="20" height="16" rx="5" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" fill="none"/><text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="4.5" fill="#fff" text-anchor="middle">SUPER</text>' :
+            item.id === 'bonusbuy_100' ? '<rect x="3" y="5" width="18" height="14" rx="2" fill="rgba(255,255,255,0.15)" stroke="#fff" stroke-width="1.5"/><text x="12" y="14" font-family="Montserrat" font-weight="900" font-size="7" fill="#fff" text-anchor="middle">777</text>' :
+            '<rect x="2" y="5" width="20" height="14" rx="3" stroke="#fff" stroke-width="1.5"/><text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="8" fill="#fff" text-anchor="middle">TL</text>'
+          }
+        </svg>
+      </div>
+      <div class="si-info"><h3>${item.name}</h3><p>${item.desc}</p></div>
+      <button class="si-buy" onclick="buyItem('${item.id}', ${item.price})">
+        <svg class="b-heart-icon" viewBox="0 0 32 32" style="width:14px; height:14px; margin-right:4px;">
+          <path d="M16 28.5L14.5 27.1C9.1 22.2 5.5 19 5.5 15C5.5 11.7 8.1 9.1 11.4 9.1C13.2 9.1 15 10 16.1 11.4C17.2 10 19 9.1 20.8 9.1C24.1 9.1 26.7 11.7 26.7 15C26.7 19 23.1 22.2 17.7 27.1L16 28.5Z" fill="rgba(255,255,255,0.9)"/>
+          <text x="16" y="19" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="9" fill="#FF4500">b</text>
+        </svg>
+        ${item.price}
+      </button>
+    </div>
+  `).join('');
+}
+
+async function loadPurchaseHistory() {
+  const list = document.getElementById('historyList');
+  if (!USER_ID) return;
+  
+  try {
+    const res = await fetch(`/api/get_history?user_id=${USER_ID}`);
+    const data = await res.json();
+    
+    if (!data || data.length === 0) {
+      list.innerHTML = '<tr><td colspan="3" class="empty-history">Henüz satın alım gerçekleştirmediniz.</td></tr>';
+      return;
+    }
+    
+    list.innerHTML = data.map(order => `
+      <tr>
+        <td>${order.content}</td>
+        <td>${order.date}</td>
+        <td class="${order.status === 'Beklemede' ? 'status-pending' : 'status-approved'}">${order.status}</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    console.error("Geçmiş yükleme hatası:", e);
+  }
 }
 function closeStore() {
   document.getElementById('storeOverlay').classList.remove('show');
@@ -1157,28 +1191,8 @@ async function submitPurchase() {
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
       closePrompt();
-      closeStore();
-      
-      const rTitle = document.getElementById('rTitle');
-      const rText = document.getElementById('rText');
-      const rBtn = document.getElementById('rBtn');
-      const rTop = document.getElementById('rTop');
-      const rBadge = document.getElementById('rBadge');
-      const pBox = document.getElementById('promoBox');
-      
-      rTop.className = 'rcard-top';
-      rBadge.style.display = 'inline-block';
-      rBadge.textContent = 'Siparişiniz Alındı!';
-      rTitle.textContent = 'TEBRİKLER';
-      rText.style.display = 'block';
-      rText.innerHTML = `Ödülünüz ayrılmıştır!<br><br>Kalite standartlarımız gereği <b style="color:#FF5800;">${cUser}</b> kullanıcı adlı hesabınıza <b>bu gece saat 00:00'da</b> otomatik olarak yüklenecektir.`;
-      
-      if (pBox) pBox.style.display = 'none';
-      rBtn.textContent = 'SİTEYE GİT VE OYNA';
-      rBtn.onclick = goSite;
-      
-      document.getElementById('overlay').classList.add('show');
-      confetti();
+      loadPurchaseHistory(); // Geçmişi tazele
+      alert("Satın alım başarılı! Ödülünüz incelenip hesabınıza eklenecektir.");
     } else {
       alert("Hata: " + (data.reason === 'insufficient_funds' ? "Yetersiz bakiye." : "İşlem reddedildi."));
     }
