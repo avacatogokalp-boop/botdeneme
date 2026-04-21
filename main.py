@@ -281,16 +281,22 @@ def api_use_spin():
     use_spin(user_id)
 
     PRIZES = [
-        {"win": True, "prize": "+1 Freespin", "amount": 0},
-        {"win": True, "prize": "200 COIN", "amount": 200},
-        {"win": True, "prize": "150 COIN", "amount": 150},
-        {"win": True, "prize": "100 COIN", "amount": 100},
-        {"win": True, "prize": "75 COIN", "amount": 75},
-        {"win": True, "prize": "50 COIN", "amount": 50},
-        {"win": True, "prize": "25 COIN", "amount": 25},
+        {"win": True, "prize": "+1 Freespin", "amount": 0},   # %10
+        {"win": True, "prize": "200 COIN", "amount": 200},    # %10
+        {"win": True, "prize": "150 COIN", "amount": 150},    # %30
+        {"win": True, "prize": "100 COIN", "amount": 100},    # %30
+        {"win": True, "prize": "75 COIN", "amount": 75},      # %10
+        {"win": True, "prize": "50 COIN", "amount": 50},      # %5
+        {"win": True, "prize": "25 COIN", "amount": 25},      # %5
     ]
     
-    index = random.randint(0, 6)
+    # RTP Olasılıkları (Toplam 100): 
+    # [+1 FS: 10, 200: 10, 150: 30, 100: 30, 75: 10, 50: 5, 25: 5]
+    weights = [10, 10, 30, 30, 10, 5, 5]
+    
+    # Ağırlıklı seçim yapalım
+    indices = list(range(len(PRIZES)))
+    index = random.choices(indices, weights=weights, k=1)[0]
     result = PRIZES[index]
     prize = result["prize"]
     win = result["win"]
