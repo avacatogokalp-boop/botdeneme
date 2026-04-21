@@ -89,14 +89,14 @@ body {
   position: absolute; top: -14px; left: 50%;
   transform-origin: 50% 10px;
   transform: translateX(-50%) rotate(0deg);
-  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 20;
   display: flex; flex-direction: column; align-items: center;
   filter: drop-shadow(0 15px 15px rgba(0,0,0,0.95)) drop-shadow(0 4px 6px rgba(255,69,0,0.6));
 }
 .pointer.ticking {
-  transform: translateX(-50%) rotate(-35deg);
-  transition: transform 0.02s ease-out;
+  transform: translateX(-50%) rotate(-30deg);
+  transition: transform 0.03s ease-out;
 }
 .ptr-ball {
   width: 24px; height: 24px; border-radius: 50%;
@@ -1457,7 +1457,7 @@ async function spin() {
   const finalAngle = -Math.PI/2 - (targetIdx * ARC + randomOffset) + (K * 2 * Math.PI);
   const total = finalAngle - angle;
 
-  const dur=12353, start=angle; let t0=null;
+  const dur=15000, start=angle; let t0=null;
   function frame(ts){
     if(!t0) t0=ts;
     const prog=Math.min((ts-t0)/dur,1);
@@ -1469,7 +1469,7 @@ async function spin() {
   }
   requestAnimationFrame(frame);
 }
-function easeOut(t){ return 1-Math.pow(1-t,7); }
+function easeOut(t){ return 1-Math.pow(1-t,5); }
 
 function showResult() {
   const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
@@ -1629,10 +1629,16 @@ function animatePointerTick() {
   const ptr = document.querySelector('.pointer');
   if(!ptr) return;
   ptr.classList.remove('ticking');
-  void ptr.offsetWidth; // Zıplamayı sıfırla (reflow)
+  void ptr.offsetWidth; 
   ptr.classList.add('ticking');
-  clearTimeout(ptr.tickTimeout);
-  ptr.tickTimeout = setTimeout(() => ptr.classList.remove('ticking'), 30);
+  
+  // Önceki timeout'u temizle
+  if(ptr.tickTimeout) clearTimeout(ptr.tickTimeout);
+  
+  // Daha uzun bir eşik (okun geri dönmesine izin ver)
+  ptr.tickTimeout = setTimeout(() => {
+    ptr.classList.remove('ticking');
+  }, 40);
 }
 
 function playTick(){
