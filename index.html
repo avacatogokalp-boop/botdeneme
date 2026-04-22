@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -39,10 +38,8 @@ body {
   display: flex; flex-direction: column; align-items: center;
   min-height: 100vh;
   padding: 65px 16px 40px;
-  filter: saturate(1.15) contrast(1.25); /* Yüksek Kontrast, Net Renkler */
+  filter: saturate(1.15) contrast(1.25);
 }
-
-/* Eski logo kodları temizlendi */
 
 .logo-line {
   width: 100px; height: 3px;
@@ -73,8 +70,8 @@ body {
   position: absolute; inset: -10px; border-radius: 50%;
   background: conic-gradient(#FF3300, #FF6600, #ffffff, #FF6600, #FF3300, #990000, #FF3300);
   animation: spinRing 5s linear infinite;
-  opacity: 0.9; 
-  filter: blur(0.8px) brightness(1.2); /* Pus kaldırıldı, keskinlik artırıldı */
+  opacity: 0.9;
+  filter: blur(0.8px) brightness(1.2);
 }
 .ring-glow-mask { position: absolute; inset: -5px; border-radius: 50%; background: #0d0806; }
 @keyframes spinRing { to { transform: rotate(360deg); } }
@@ -164,10 +161,10 @@ canvas#wheel {
   transform: rotate(45deg) translateX(-150%);
   animation: shineBtn 5s infinite; pointer-events: none;
 }
-#spinBtn:active:not(:disabled) .btn-body { 
-  transform: translateY(8px); 
+#spinBtn:active:not(:disabled) .btn-body {
+  transform: translateY(8px);
   box-shadow: 0 0px 0 #7a0b00, 0 5px 10px rgba(0,0,0,0.8), 0 0 40px rgba(255,60,0,0.8);
-  filter: brightness(1.2); 
+  filter: brightness(1.2);
 }
 #spinBtn:disabled .btn-body { opacity: 0.4; cursor: not-allowed; animation: none; box-shadow: none; border-color: transparent; }
 
@@ -197,10 +194,7 @@ canvas#wheel {
   transition: all .2s;
 }
 .invite-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.97); }
-.invite-badge {
-  color: #ffffff;
-  font-weight: 800;
-}
+.invite-badge { color: #ffffff; font-weight: 800; }
 
 .no-spin-banner {
   display: none;
@@ -249,7 +243,6 @@ canvas#wheel {
   cursor: pointer; display: block; width: 100%;
 }
 
-/* --- KAZANANLAR BANNER --- */
 .marquee-wrapper {
   width: 100%; overflow: hidden; background: #130f0d;
   border: 1px solid rgba(255, 88, 0, 0.15); border-radius: 8px;
@@ -270,7 +263,7 @@ canvas#wheel {
 .marquee-content span i { color: #FF5800; font-style: normal; font-weight: 900; margin: 0 5px; }
 @keyframes scroll-marquee {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } 
+  100% { transform: translateX(-50%); }
 }
 
 .overlay {
@@ -364,7 +357,6 @@ canvas#wheel {
 }
 .kapat-btn:active { color: #fff; }
 
-/* --- TOP NAV & WALLET --- */
 .top-nav {
   position: absolute; top: 15px; left: 15px; right: 15px;
   display: flex; justify-content: space-between; align-items: center;
@@ -386,10 +378,9 @@ canvas#wheel {
 }
 .wallet-icon { font-size: 16px; margin-right: 2px; }
 
-/* --- STORE PAGE (NEW TAB ILLUSION) --- */
 .store-overlay {
-  display: none; position: fixed; inset: 0; 
-  background: radial-gradient(ellipse at center, #2b0a00 0%, #0d0806 100%); 
+  display: none; position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, #2b0a00 0%, #0d0806 100%);
   z-index: 300; align-items: flex-start; justify-content: center; overflow-y: auto;
 }
 .store-overlay.show { display: flex; }
@@ -405,9 +396,9 @@ canvas#wheel {
   padding: 0 0 30px 0; display: flex; justify-content: center; align-items: center; position: relative;
 }
 .store-header h2 { margin: 0; font-size: 28px; font-weight: 900; color: #FF5800; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(255,88,0,0.5); }
-.store-close { 
-  position: absolute; right: 0; background: rgba(255,88,0,0.1); border: 1px solid rgba(255,88,0,0.3); 
-  width: 36px; height: 36px; border-radius: 12px; font-size: 16px; font-weight: 900; 
+.store-close {
+  position: absolute; right: 0; background: rgba(255,88,0,0.1); border: 1px solid rgba(255,88,0,0.3);
+  width: 36px; height: 36px; border-radius: 12px; font-size: 16px; font-weight: 900;
   color: #FF5800; cursor: pointer; display: flex; align-items: center; justify-content: center;
 }
 .store-body { padding: 0; display: flex; flex-direction: column; gap: 15px; overflow: visible; }
@@ -418,14 +409,12 @@ canvas#wheel {
   transition: all 0.3s;
 }
 .store-item:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,88,0,0.3); transform: translateY(-3px); }
-.si-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin-bottom: 15px; }
 .si-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin-bottom: 12px; }
 .si-info h3 { margin: 0 0 4px; font-size: 14px; color: #fff; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.8); line-height: 1.2; }
 .si-info p { margin: 0; font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.3; }
 
-/* -- KODLA TASARLANAN OYUN KARTLARI -- */
 .si-card {
-  width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; 
+  width: 100%; aspect-ratio: 1 / 1; border-radius: 12px;
   margin-bottom: 12px; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 15px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.05);
@@ -440,12 +429,8 @@ canvas#wheel {
 
 .card-bass { background: radial-gradient(circle at 30% 30%, #00f2fe, #4facfe, #001220); }
 .card-gates { background: radial-gradient(circle at 30% 30%, #ffcc00, #ff8c00, #2c004d); }
-.card-vip { background: linear-gradient(135deg, #1c1c1c 0%, #333 50%, #000 100%); border-color: #ffd70044; }
-.si-icon-svg { width: 55%; height: 55%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
-
-/* --- ULTIMATE DIAMOND CARD --- */
-.card-diamond { 
-  background: radial-gradient(circle at 30% 30%, #00d2ff, #3a7bd5, #0a192f); 
+.card-diamond {
+  background: radial-gradient(circle at 30% 30%, #00d2ff, #3a7bd5, #0a192f);
   border: 2px solid #fff;
   box-shadow: 0 0 30px rgba(0, 210, 255, 0.4), inset 0 0 20px rgba(255,255,255,0.3);
   animation: diamondPulse 3s infinite ease-in-out;
@@ -454,10 +439,8 @@ canvas#wheel {
   0%, 100% { box-shadow: 0 0 25px rgba(0, 210, 255, 0.4), inset 0 0 20px rgba(255,255,255,0.3); }
   50% { box-shadow: 0 0 45px rgba(0, 210, 255, 0.7), inset 0 0 30px rgba(255,255,255,0.5); }
 }
-
-/* --- PRESTIGE VIP CARD --- */
-.card-vip { 
-  background: linear-gradient(135deg, #1c1c1c 0%, #444 50%, #000 100%); 
+.card-vip {
+  background: linear-gradient(135deg, #1c1c1c 0%, #444 50%, #000 100%);
   border: 2px solid #ffd700;
   box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
   animation: vipGlow 4s infinite alternate;
@@ -466,14 +449,13 @@ canvas#wheel {
   from { border-color: #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
   to { border-color: #fffb00; box-shadow: 0 0 35px rgba(255, 215, 0, 0.5); }
 }
-
-/* --- OUTER FRAME GLOWS --- */
 .item-card-diamond { border-color: rgba(0, 210, 255, 0.6) !important; box-shadow: 0 0 15px rgba(0, 210, 255, 0.1); }
 .item-card-vip { border-color: rgba(255, 215, 0, 0.6) !important; box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); }
 
+.si-icon-svg { width: 55%; height: 55%; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
 .si-buy {
-  background: linear-gradient(180deg, #FF4500, #b33900); border: 1px solid rgba(255,255,255,0.2); 
-  border-radius: 10px; color: #fff; padding: 10px 10px; font-weight: 900; font-size: 14px; 
+  background: linear-gradient(180deg, #FF4500, #b33900); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px; color: #fff; padding: 10px 10px; font-weight: 900; font-size: 14px;
   cursor: pointer; white-space: nowrap; box-shadow: 0 4px 15px rgba(255,69,0,0.4);
   text-shadow: 0 1px 3px rgba(0,0,0,0.6);
   width: 100%; transition: transform 0.2s;
@@ -481,34 +463,29 @@ canvas#wheel {
 .si-buy:active { transform: scale(0.95); }
 .si-buy:disabled { background: #333; color: #888; box-shadow: none; cursor: not-allowed; border: 1px solid #222; }
 
+/* storePrompt artık store-modal içinde doğru konumda */
 #storePrompt {
   position: absolute;
-  top: 85px; left: 0; right: 0; bottom: 0;
-  background: rgba(13, 8, 6, 0.92);
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(13, 8, 6, 0.95);
   backdrop-filter: blur(10px);
   z-index: 100;
-  border-radius: 20px;
-  padding: 40px 20px;
+  border-radius: 0;
+  padding: 60px 20px 20px;
   display: none;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   animation: promptFade 0.3s ease;
 }
 @keyframes promptFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- HISTORY CARDS (NEW STYLE) --- */
 .history-section { border-top: 2px solid rgba(255,100,0,0.3); margin-top: 40px; padding-top: 30px; width: 100%; }
 .history-title { font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; margin-bottom: 15px; text-align: left; letter-spacing: 1px; }
 .history-item {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+  border-radius: 16px; padding: 16px; margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
   transition: all 0.3s;
 }
 .history-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,100,0,0.2); }
@@ -516,9 +493,9 @@ canvas#wheel {
 .hi-name { color: #fff; font-size: 14px; font-weight: 800; line-height: 1.2; }
 .hi-date { color: rgba(255,255,255,0.3); font-size: 10px; font-weight: 600; text-transform: uppercase; }
 .hi-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.hi-price { 
-  background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px; 
-  color: #fff; font-size: 13px; font-weight: 900; 
+.hi-price {
+  background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px;
+  color: #fff; font-size: 13px; font-weight: 900;
   display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.05);
 }
 .status-tag { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -527,60 +504,44 @@ canvas#wheel {
 .empty-history { padding: 40px 0; color: rgba(255,255,255,0.4); font-weight: 800; text-align: center; font-size: 15px; }
 
 canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400; }
-/* --- B HEART ICON --- */
+
 .b-heart-icon {
   width: 24px; height: 24px;
   filter: drop-shadow(0 0 5px rgba(255, 69, 0, 0.4));
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 4px;
+  display: inline-block; vertical-align: middle; margin-right: 4px;
 }
-/* --- LOGO BRANDING --- */
+
 .logo {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 900;
-  font-size: 42px;
-  letter-spacing: -2px;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 42px;
+  letter-spacing: -2px; margin-bottom: 2px;
+  display: flex; align-items: center; justify-content: center;
   text-transform: lowercase;
-  filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.4)); /* Parlama azaltıldı */
+  filter: drop-shadow(0 0 6px rgba(255, 69, 0, 0.4));
 }
 .logo .bet, .logo .spin {
   background: linear-gradient(180deg, #FF6A00, #FF4500);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 .logo .or { color: #ffffff; text-shadow: 0 0 8px rgba(255,255,255,0.3); }
 .logo .dot { color: #ffffff; }
 
-/* --- LOADING SCREEN --- */
 #loader-screen {
-  position: fixed; inset: 0;
-  background: #0d0806;
+  position: fixed; inset: 0; background: #0d0806;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 9999;
-  transition: opacity 0.6s ease;
+  z-index: 9999; transition: opacity 0.6s ease;
 }
 .loader-wheel {
-  width: 60px; height: 60px;
-  border-radius: 50%;
+  width: 60px; height: 60px; border-radius: 50%;
   background: conic-gradient(#FF4500, #FFAC00, #FF4500, #990000, #FF4500);
   animation: miniSpin 1s linear infinite;
-  position: relative;
-  box-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
-  border: 4px solid #111;
+  position: relative; box-shadow: 0 0 20px rgba(255, 69, 0, 0.4); border: 4px solid #111;
 }
 .loader-wheel::after {
   content: ''; position: absolute; inset: 15px; border-radius: 50%; background: #0d0806;
 }
 .loader-text {
-  margin-top: 20px;
-  color: #fff; font-size: 14px; font-weight: 800;
-  letter-spacing: 2px; text-transform: uppercase;
-  animation: loaderPulse 1.5s infinite;
+  margin-top: 20px; color: #fff; font-size: 14px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase; animation: loaderPulse 1.5s infinite;
 }
 @keyframes miniSpin { to { transform: rotate(360deg); } }
 @keyframes loaderPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
@@ -617,8 +578,9 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
   </div>
 </div>
 
+<!-- MAĞAZA OVERLAY — storePrompt artık bu div'in içinde doğru yerde -->
 <div class="store-overlay" id="storeOverlay">
-  <div class="store-modal" style="max-height: 85vh;">
+  <div class="store-modal">
     <div class="store-header" style="justify-content: space-between; padding: 15px 20px;">
       <div class="wallet-box" style="margin: 0; padding: 5px 12px; height: 32px; font-size: 14px;">
         <svg class="b-heart-icon" viewBox="0 0 32 32" style="width: 18px; height: 18px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));">
@@ -631,22 +593,15 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
       <button class="store-close" onclick="closeStore()">X</button>
     </div>
     <div class="store-body" id="storeItemsContainer">
-      <div id="storeItems">
-        <!-- JS ile dolacak -->
-      </div>
-      
+      <div id="storeItems"></div>
       <div class="history-section" id="historySection">
         <div class="history-title">Satınalım Geçmişi</div>
         <div id="siteUserDisplay" style="color: rgba(255,100,0,0.8); font-size: 13px; font-weight: 700; margin: -5px 0 20px 0; display: none;">Site Hesabınız: <span id="currentSiteUser" style="color: #fff;">---</span></div>
-        
-        <div id="historyList">
-          <!-- JS ile dolacak (Kartlar) -->
-        </div>
+        <div id="historyList"></div>
       </div>
     </div>
-    </div>
-    
-    <div class="store-body" id="storePrompt" style="display:none; text-align:center; padding: 20px 0;">
+    <!-- storePrompt doğru yerde: store-modal içinde, store-body'nin kardeşi -->
+    <div id="storePrompt" style="display:none; text-align:center;">
       <p style="color:#FFF; font-size:14px; opacity:0.9; margin-bottom:15px; font-weight:600;">Hediyenin yükleneceği <br><span style="color:#FF5800;">BetorSpin Site Kullanıcı Adınızı</span> girin:</p>
       <input type="text" id="casinoUsername" placeholder="Site Kullanıcı Adınız" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,88,0,0.5); color:#FFF; padding:15px; border-radius:12px; font-size:16px; outline:none; text-align:center; font-family:'Montserrat', sans-serif; font-weight:700; box-shadow:inset 0 0 15px rgba(0,0,0,0.5);">
       <div style="display:flex; gap:10px; margin-top:20px;">
@@ -687,7 +642,6 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
       <span>E*** mağazadan <i>VİP HEDİYE</i> aldı!</span>
       <span>S***** <i>+1 SPİN</i> kazandı!</span>
       <span>B**** <i>200 COIN</i> kazandı!</span>
-      <!-- Çift kopya (Sonsuz kayma illüzyonu için zorunlu) -->
       <span>A***** <i>100 COIN</i> kazandı!</span>
       <span>G**** mağazadan <i>100 FREESPIN</i> aldı!</span>
       <span>M****** <i>50 COIN</i> kazandı!</span>
@@ -737,18 +691,15 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 
 <canvas id="confetti"></canvas>
 
-<!-- Ses Efektleri (Kod ile üretiliyor, dış dosyaya ihtiyaç yok) -->
-
 <script>
 const tg = window.Telegram?.WebApp;
-if (tg) { 
-  tg.ready(); 
-  tg.expand(); 
-  tg.setHeaderColor('#0d0806'); 
-  tg.setBackgroundColor('#0d0806'); 
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#0d0806');
+  tg.setBackgroundColor('#0d0806');
 }
 
-// ── Yükleme ekranı yönetimi ──────────────────────────────────────────
 function hideLoader() {
   const loader = document.getElementById('loader-screen');
   if (loader) {
@@ -756,11 +707,6 @@ function hideLoader() {
     setTimeout(() => { loader.style.display = 'none'; }, 600);
   }
 }
-
-// Zorunlu gösterim (görsellik için) + Fallback
-window.addEventListener('load', () => {
-  setTimeout(hideLoader, 2000);
-});
 
 const urlParams = new URLSearchParams(window.location.search);
 const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.id || null;
@@ -770,23 +716,23 @@ const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
 let lastWonCode = "";
 let pendingBoscoinUpdate = null;
 let WALLET_BALANCE = 0;
+let idleRaf = null;
+let countdownInterval = null;
 
-// ── Çark dilimleri ────────────────────────────────────────────────────
 const SEGS = [
-  { lines:['+1','FREESPIN'],          bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'+1 Freespin' },
-  { lines:['200','COIN'],              bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', icon:'', win:true,  prize:'200 COIN'    },
-  { lines:['150','COIN'],              bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'150 COIN'    },
-  { lines:['100','COIN'],              bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', icon:'', win:true,  prize:'100 COIN'    },
-  { lines:['75','COIN'],               bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'75 COIN'     },
-  { lines:['50','COIN'],               bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', icon:'', win:true,  prize:'50 COIN'     },
-  { lines:['25','COIN'],               bg:'#101010', stroke:'#FF4500', tc:'#ffffff', icon:'', win:true,  prize:'25 COIN'     },
+  { lines:['+1','FREESPIN'], bg:'#101010', stroke:'#FF4500', tc:'#ffffff', win:true, prize:'+1 Freespin' },
+  { lines:['200','COIN'],    bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', win:true, prize:'200 COIN'    },
+  { lines:['150','COIN'],    bg:'#101010', stroke:'#FF4500', tc:'#ffffff', win:true, prize:'150 COIN'    },
+  { lines:['100','COIN'],    bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', win:true, prize:'100 COIN'    },
+  { lines:['75','COIN'],     bg:'#101010', stroke:'#FF4500', tc:'#ffffff', win:true, prize:'75 COIN'     },
+  { lines:['50','COIN'],     bg:'#202020', stroke:'#FF6A00', tc:'#ffffff', win:true, prize:'50 COIN'     },
+  { lines:['25','COIN'],     bg:'#101010', stroke:'#FF4500', tc:'#ffffff', win:true, prize:'25 COIN'     },
 ];
 
 const N=SEGS.length, ARC=(2*Math.PI)/N;
 const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
 const sc=document.getElementById('spotlight'), sctx=sc.getContext('2d');
 
-// -- HD CANVAS (Retina Scaling) --
 const dpr = window.devicePixelRatio || 1;
 cv.width = 286 * dpr; cv.height = 286 * dpr;
 sc.width = 286 * dpr; sc.height = 286 * dpr;
@@ -796,14 +742,12 @@ ctx.scale(dpr, dpr); sctx.scale(dpr, dpr);
 
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
-let dur = 12000; 
+const dur = 12000;
 let lastTickTime = 0;
-const MIN_TICK_GAP = 70; 
+const MIN_TICK_GAP = 70;
 let lastTickProgress = null;
 const TICK_INTERVAL = (2 * Math.PI) / N;
-let countdownInterval = null;
 
-// ── SİSTEM FONKSİYONLARI ──────────────────────────────────────────────
 function vibrate(type = 'light') {
   if (!tg || !tg.HapticFeedback) return;
   try {
@@ -814,7 +758,6 @@ function vibrate(type = 'light') {
   } catch(e) {}
 }
 
-// ── SES SİSTEMİ (Sentetik / Kodla Üretiliyor) ───────────────────────
 let audioCtx = null;
 function initAudio() {
   if (audioCtx) return;
@@ -836,8 +779,8 @@ function playSynth(type) {
       gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
       osc.start(); osc.stop(now + 0.04);
     } else if (type === 'win') {
-      osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); // C5
-      osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.5); // C6
+      osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.5);
       gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.5);
       osc.start(); osc.stop(now + 0.5);
     } else if (type === 'lose') {
@@ -858,7 +801,13 @@ function playSynth(type) {
   } catch(e) {}
 }
 
-function playSfx(type) { playSynth(type); }
+// tüm playSfx çağrıları artık doğru isimlere yönleniyor
+function playSfx(type) {
+  if (type === 'errorSound') playSynth('click');
+  else if (type === 'buySound') playSynth('buy');
+  else if (type === 'clickSound') playSynth('click');
+  else playSynth(type);
+}
 function playTick() { playSynth('tick'); vibrate('light'); }
 function playWin() { playSynth('win'); vibrate('success'); }
 function playLose() { playSynth('lose'); vibrate('error'); }
@@ -869,7 +818,6 @@ async function unlockAudio() {
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   vibrate('light');
   hideLoader();
-  
   document.body.removeEventListener('touchstart', unlockAudio);
   document.body.removeEventListener('mousedown', unlockAudio);
   document.body.removeEventListener('click', unlockAudio);
@@ -879,34 +827,35 @@ document.body.addEventListener('touchstart', unlockAudio, {passive: false});
 document.body.addEventListener('mousedown', unlockAudio);
 document.body.addEventListener('click', unlockAudio);
 
+// yükleme ekranı — tek bir load listener
+window.addEventListener('load', () => {
+  setTimeout(hideLoader, 2000);
+});
 
+const loaderFinal = document.getElementById('loader-screen');
+if (loaderFinal) {
+  loaderFinal.addEventListener('click', unlockAudio);
+  loaderFinal.addEventListener('touchstart', unlockAudio);
+}
 
 function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
 
 function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
-  // Admin kontrolü backend'den gelen spinnAllowed üzerinden otomatik halloluyor.
-  
   let lastSpin = localStorage.getItem(getSpinKey());
-  
-  // Eğer localStorage'da kayıt yoksa ama yine de hakkı kalmamışsa (başka cihazdan girmiş vs),
-  // sayacı tam 24 saat sonrasına ayarlıyoruz.
   if (!lastSpin) {
     lastSpin = Date.now().toString();
     localStorage.setItem(getSpinKey(), lastSpin);
   }
-  
   const target = new Date(parseInt(lastSpin) + (24 * 60 * 60 * 1000));
   const diff = target - new Date();
-  
-  if (diff <= 0) { 
-    clearInterval(countdownInterval); 
-    countdownInterval = null; 
-    checkSpinRight(); 
-    return; 
+  if (diff <= 0) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    checkSpinRight();
+    return;
   }
-  
   const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
   const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
   const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
@@ -923,203 +872,133 @@ function stopCountdown() {
 
 function draw(a, t=0) {
   ctx.clearRect(0,0,286,286);
-  // 1. Dilim Zeminleri ve Derinlikli Gradient (Inner Shadow İlüzyonu)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, e=s+ARC, seg=SEGS[i];
-    
-    // Her dilime 3D eğimli çukur hissi veren custom gradient
     const segGrd = ctx.createRadialGradient(CX, CY, R*0.3, CX, CY, R);
     segGrd.addColorStop(0, seg.bg);
-    segGrd.addColorStop(0.8, '#181818'); // Dışa doğru kararma (Çukur hissi)
+    segGrd.addColorStop(0.8, '#181818');
     segGrd.addColorStop(1, '#000000');
-    
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,s,e); ctx.closePath();
     ctx.fillStyle = segGrd; ctx.fill();
-    
-    // Hafif parlayan iç ışık (Vurgu)
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R-3,s,e); ctx.closePath();
     ctx.fillStyle = 'rgba(255,100,0,0.05)'; ctx.fill();
   }
-
-  // 2. Altın Mekanik Çıtalar (Dividers)
   for(let i=0;i<N;i++){
     const a2=a+i*ARC;
     const endX = CX+R*Math.cos(a2), endY = CY+R*Math.sin(a2);
-    
-    // Çıta gölgesi (Derinlik)
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX-2, endY-2);
     ctx.strokeStyle='rgba(0,0,0,0.9)'; ctx.lineWidth=4; ctx.stroke();
-    
-    // Altın/Turuncu ışıltılı ana çıta
     const lineGrd = ctx.createLinearGradient(CX, CY, endX, endY);
-    lineGrd.addColorStop(0, '#2b0a00'); // Merkeze yakın koyu
-    lineGrd.addColorStop(0.5, '#FF5800'); // Ortada güçlü parlama
-    lineGrd.addColorStop(1, '#FF2E00'); // Kenara yakın turuncu-kırmızı
-    
+    lineGrd.addColorStop(0, '#2b0a00');
+    lineGrd.addColorStop(0.5, '#FF5800');
+    lineGrd.addColorStop(1, '#FF2E00');
     ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(endX, endY);
     ctx.strokeStyle = lineGrd; ctx.lineWidth = 2.5; ctx.stroke();
-    
-    // Çıta üzeri keskin beyaz/sarı yansıma
-    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2)); 
+    ctx.beginPath(); ctx.moveTo(CX+10*Math.cos(a2), CY+10*Math.sin(a2));
     ctx.lineTo(endX*0.8, endY*0.8);
     ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.5; ctx.stroke();
   }
-
-  // 3. 3D BOMBE OLUŞTURUCU KÜRESEL GÖLGE EFEKTİ (DOME EFFECT)
   const domeGrd = ctx.createRadialGradient(CX - R*0.35, CY - R*0.35, 0, CX, CY, R);
-  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)'); 
-  domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');        
-  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');       
-  
+  domeGrd.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
+  domeGrd.addColorStop(0.35, 'rgba(0, 0, 0, 0)');
+  domeGrd.addColorStop(1, 'rgba(0, 0, 0, 0.9)');
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = domeGrd; ctx.fill();
-
-  // 3.5. ALTIN/TURUNCU İÇ ÇERÇEVE (Inner Ring - Dilimlerle göbek arasına)
   const innerRimGrd = ctx.createLinearGradient(CX-40, CY-40, CX+40, CY+40);
   innerRimGrd.addColorStop(0, '#FF5800');
   innerRimGrd.addColorStop(0.3, '#FF2E00');
   innerRimGrd.addColorStop(0.6, '#202020');
   innerRimGrd.addColorStop(1, '#FF5800');
-  
   ctx.beginPath(); ctx.arc(CX, CY, 42, 0, 2*Math.PI);
   ctx.strokeStyle = innerRimGrd; ctx.lineWidth = 4; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, 44, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 2; ctx.stroke();
-
-  // 4. YAZILAR (Gölgelerin üstünde parlak durmaları için)
   for(let i=0;i<N;i++){
     const s=a+i*ARC, seg=SEGS[i];
-    ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2); 
-    ctx.textAlign='center'; 
+    ctx.save(); ctx.translate(CX,CY); ctx.rotate(s+ARC/2);
+    ctx.textAlign='center';
     const ls=seg.lines.filter(l=>l);
-    
-    // Uzun yazılar (ör. KAYBETTİN) için fontu biraz daha küçült
     let fs = 12.5;
     if (ls.length > 1) fs = 10.5;
     if (ls[0].length >= 8) fs = 9.5;
-    
     ctx.font=`900 ${fs}px 'Montserrat', sans-serif`;
-    
     const lh=fs+3.5, oy=-(ls.length-1)*lh/2;
-    // Dış ve iç kenarın tam ortasında (wedge / dilim merkezinde) hizala:
-    const textX = 96; 
-    
+    const textX = 96;
     if (seg.lines.includes('VİP')) {
-      // VİP yazısı için özel ALTIN parlama ve renk
-      ctx.shadowColor = '#ffa600';
-      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#ffa600'; ctx.shadowBlur = 12;
       ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
-      
       const goldGrd = ctx.createLinearGradient(textX - 20, -10, textX + 20, 10);
       goldGrd.addColorStop(0, '#fff4cc');
       goldGrd.addColorStop(0.5, '#ffd700');
       goldGrd.addColorStop(1, '#ff8c00');
       ctx.fillStyle = goldGrd;
     } else {
-      // Standart Keskin Metalik Yazı Stili Drop-Shadow
-      ctx.shadowColor = 'rgba(0,0,0,0.95)';
-      ctx.shadowBlur = 5;
+      ctx.shadowColor = 'rgba(0,0,0,0.95)'; ctx.shadowBlur = 5;
       ctx.shadowOffsetX = 1; ctx.shadowOffsetY = 3;
       ctx.fillStyle = seg.tc;
     }
-    
     ls.forEach((l,li)=>ctx.fillText(l,textX,oy+li*lh+fs*0.35));
     ctx.restore();
   }
-
-  // 4.5. CAM PARLAMASI (Glossy Tabaka)
   const glassGrd = ctx.createLinearGradient(CX - R*0.6, CY - R*0.8, CX + R*0.8, CY + R*0.8);
-  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)'); // Üst köşe parlaması
+  glassGrd.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
   glassGrd.addColorStop(0.4, 'rgba(255, 255, 255, 0.04)');
   glassGrd.addColorStop(0.45, 'transparent');
   glassGrd.addColorStop(1, 'transparent');
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.fillStyle = glassGrd; ctx.fill();
-
-  // 5. METALİK/TURUNCU DIŞ ÇERÇEVE (Kalın Lüks Kasa)
   const dx = R * Math.cos(t), dy = R * Math.sin(t);
   const rimGrd = ctx.createLinearGradient(CX-dx, CY-dy, CX+dx, CY+dy);
   rimGrd.addColorStop(0, '#101010');
-  rimGrd.addColorStop(0.3, '#FF5800'); // Işık yansıması (Glow)
+  rimGrd.addColorStop(0.3, '#FF5800');
   rimGrd.addColorStop(0.5, '#000000');
   rimGrd.addColorStop(0.8, '#FF2E00');
   rimGrd.addColorStop(1, '#101010');
-  
   ctx.beginPath(); ctx.arc(CX, CY, R, 0, 2*Math.PI);
   ctx.strokeStyle = rimGrd; ctx.lineWidth = 14; ctx.stroke();
-
-  // Kasa iç yansıma detayı
   ctx.beginPath(); ctx.arc(CX, CY, R-7, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)'; ctx.lineWidth = 3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX, CY, R-8, 0, 2*Math.PI);
   ctx.strokeStyle = 'rgba(255, 120, 0, 0.6)'; ctx.lineWidth = 1; ctx.stroke();
-
-  // 6. CASINO LED AMPULLERİ ÇERÇEVESİ (Buls/Rim Lights)
   const numBulbs = 36;
   for(let j=0; j<numBulbs; j++) {
-      const bAngle = j * (2 * Math.PI / numBulbs);
-      const bx = CX + (R - 3) * Math.cos(bAngle);
-      const by = CY + (R - 3) * Math.sin(bAngle);
-      
-      // Işıkların dönüyormuş gibi yanıp sönmesini sağlayan sinüs dalgası
-      const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2; 
-      
-      ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
-      ctx.fillStyle = `rgba(255, 88, 0, ${0.4 + glowLevel * 0.6})`;
-      ctx.shadowColor = '#FF2E00';
-      ctx.shadowBlur = glowLevel * 8;
-      ctx.fill();
-      ctx.shadowBlur = 0;
+    const bAngle = j * (2 * Math.PI / numBulbs);
+    const bx = CX + (R - 3) * Math.cos(bAngle);
+    const by = CY + (R - 3) * Math.sin(bAngle);
+    const glowLevel = (Math.sin(t*10 + bAngle*4) + 1) / 2;
+    ctx.beginPath(); ctx.arc(bx, by, 1.8, 0, 2*Math.PI);
+    ctx.fillStyle = `rgba(255, 88, 0, ${0.4 + glowLevel * 0.6})`;
+    ctx.shadowColor = '#FF2E00'; ctx.shadowBlur = glowLevel * 8;
+    ctx.fill(); ctx.shadowBlur = 0;
   }
-
-  // 7. MERKEZ GÖBEK (Neon Işıklı 3D Vida)
-  ctx.shadowColor = 'rgba(0,0,0,0.95)';
-  ctx.shadowBlur = 15;
+  ctx.shadowColor = 'rgba(0,0,0,0.95)'; ctx.shadowBlur = 15;
   ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
-  
   const centerBase = ctx.createRadialGradient(CX-15, CY-15, 2, CX, CY, 38);
   centerBase.addColorStop(0, '#552200');
   centerBase.addColorStop(0.5, '#170b07');
   centerBase.addColorStop(1, '#000000');
   ctx.beginPath(); ctx.arc(CX, CY, 36, 0, 2*Math.PI);
   ctx.fillStyle = centerBase; ctx.fill();
-  
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 0;
-
-  // ZIT DÖNEN IŞIKLI MEKANİK HALKA
   ctx.save();
   ctx.translate(CX, CY);
-  const rotA = -a * 1.5; // Çarkın yönüne tam ters ve daha hızlı
-  ctx.rotate(rotA);
-  
+  ctx.rotate(-a * 1.5);
   const cRim = ctx.createLinearGradient(-35, -35, 35, 35);
   cRim.addColorStop(0, '#FF5800'); cRim.addColorStop(0.5, '#000000'); cRim.addColorStop(1, '#FF2E00');
-  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI); // Çizim 0,0 merkezli yapılıyor translate yüzünden
+  ctx.beginPath(); ctx.arc(0, 0, 36, 0, 2*Math.PI);
   ctx.strokeStyle = cRim; ctx.lineWidth = 5; ctx.stroke();
-
-  // Mekanik dişli çiviler
   for(let j=0; j<8; j++) {
-      ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
-      ctx.fillStyle = '#FF5800'; ctx.fill();
+    ctx.beginPath(); ctx.arc(33 * Math.cos(j*Math.PI/4), 33 * Math.sin(j*Math.PI/4), 2.5, 0, 2*Math.PI);
+    ctx.fillStyle = '#FF5800'; ctx.fill();
   }
-  ctx.restore(); // Matrix geri yükleniyor ki yazılar ters dönmesin
-
-  // İç koruyucu halka statik
+  ctx.restore();
   ctx.beginPath(); ctx.arc(CX,CY,31,0,2*Math.PI);
   ctx.strokeStyle='rgba(0,0,0, 0.8)'; ctx.lineWidth=3; ctx.stroke();
   ctx.beginPath(); ctx.arc(CX,CY,30,0,2*Math.PI);
   ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
-
-  // "betorspin." Yüzen LOGO Yazı (Alt Alta)
-  ctx.textAlign='center';
-  ctx.textBaseline='middle';
-  ctx.font='900 14px Montserrat, sans-serif'; 
-  
-  // SATIR 1: betor
-  const topParts = [
-    { text: "bet", color: "#ff9153" },
-    { text: "or", color: "#ffffff" }
-  ];
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font='900 14px Montserrat, sans-serif';
+  const topParts = [{ text: "bet", color: "#ff9153" }, { text: "or", color: "#ffffff" }];
   let topW = 0;
   topParts.forEach(p => { topW += ctx.measureText(p.text).width; });
   let startX1 = CX - topW / 2;
@@ -1128,12 +1007,7 @@ function draw(a, t=0) {
     ctx.fillText(p.text, startX1 + ctx.measureText(p.text).width / 2, CY - 7);
     startX1 += ctx.measureText(p.text).width;
   });
-
-  // SATIR 2: spin.
-  const botParts = [
-    { text: "spin", color: "#ff9153" }, // BET ile ayı renk yapıldı
-    { text: ".", color: "#ffffff" }
-  ];
+  const botParts = [{ text: "spin", color: "#ff9153" }, { text: ".", color: "#ffffff" }];
   let botW = 0;
   botParts.forEach(p => { botW += ctx.measureText(p.text).width; });
   let startX2 = CX - botW / 2;
@@ -1142,7 +1016,6 @@ function draw(a, t=0) {
     ctx.fillText(p.text, startX2 + ctx.measureText(p.text).width / 2, CY + 10);
     startX2 += ctx.measureText(p.text).width;
   });
-
   ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
 }
 
@@ -1150,34 +1023,21 @@ function drawSpotlight(a, idx, alpha) {
   sctx.clearRect(0,0,286,286);
   if(alpha<=0) return;
   sctx.save();
-  
-  // Dış metal rimi maskelemek için yarıçap R-5
   sctx.fillStyle=`rgba(0,0,0,${alpha*0.72})`;
   sctx.beginPath(); sctx.arc(CX,CY,R-5,0,2*Math.PI); sctx.fill();
-  
   const s=a+idx*ARC, e=s+ARC;
-  
-  // Kazanan dilimi kes maskele
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
   sctx.fillStyle=`rgba(255,255,255,${alpha})`; sctx.fill();
   sctx.restore();
-  
-  // Renkli Vurgu (Spotlight glow)
   sctx.save();
   sctx.globalAlpha=alpha*0.9;
   const seg=SEGS[idx], mid=s+ARC/2;
   const grd=sctx.createRadialGradient(CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),2,CX+(R*0.6)*Math.cos(mid),CY+(R*0.6)*Math.sin(mid),R*0.5);
   grd.addColorStop(0,seg.tc+'aa'); grd.addColorStop(1,'transparent');
-  
   sctx.beginPath(); sctx.moveTo(CX,CY); sctx.arc(CX,CY,R-5,s,e); sctx.closePath();
-  sctx.fillStyle=grd; 
-  sctx.globalCompositeOperation='source-over'; 
-  sctx.fill();
+  sctx.fillStyle=grd; sctx.globalCompositeOperation='source-over'; sctx.fill();
   sctx.restore();
-
-  // En son, merkezdeki vidayı (bolt) tamamen maskeden çıkar
-  // Taşan renkli vurguyu da temizlemiş oluruz
   sctx.save();
   sctx.globalCompositeOperation='destination-out';
   sctx.beginPath(); sctx.arc(CX, CY, 38, 0, 2*Math.PI); sctx.fill();
@@ -1197,18 +1057,16 @@ async function checkSpinRight() {
     const data = await res.json();
     if(data.allowed) enableSpin(data.spins);
     else disableSpin();
-    
     if(data.boscoin !== undefined && !spinning) {
       WALLET_BALANCE = data.boscoin;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
     }
-  } catch(e) { 
-    disableSpin(); 
+  } catch(e) {
+    disableSpin();
     document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
   }
 }
 
-// --- MAĞAZA DÜKKANI SİSTEMİ ---
 function openStore() {
   document.getElementById('storeOverlay').classList.add('show');
   document.getElementById('storeWalletBalance').textContent = WALLET_BALANCE;
@@ -1216,28 +1074,21 @@ function openStore() {
   loadPurchaseHistory();
 }
 
-function scrollToHistory() {
-  const el = document.getElementById('historySection');
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
 function renderStore() {
   const container = document.getElementById('storeItems');
-  // Ürünler (Pahalıdan ucuza sıralı)
   const items = [
-    { id: 'cash_500', name: '500₺ Nakit Hediye', desc: 'Direkt çekim', price: 3000, cardClass: 'card-diamond', icon: 'TL' },
-    { id: 'vip_bonus', name: 'Vip Hediye Bonusu', desc: 'Tüm Slot Alanlarında Geçerli', price: 2000, cardClass: 'card-vip', icon: 'VIP' },
-    { id: 'freespin_200', name: '200 Freespin', desc: 'Sugar Rush Oyununda Geçerli', price: 1500, cardClass: 'card-gates', icon: 'FS' },
-    { id: 'bonusbuy_200', name: '200₺ Bonus Buy', desc: 'The Dog House Oyununda Geçerli', price: 1500, cardClass: '', icon: 'SUPER' },
-    { id: 'freespin_100', name: '100 Freespin', desc: 'Gate Of Olympus Oyununda Geçerli', price: 750, cardClass: 'card-gates', icon: 'FS' },
-    { id: 'bonusbuy_100', name: '100₺ Bonus Buy', desc: 'Sweet Bonanza Oyununda Geçerli', price: 750, cardClass: 'card-bass', icon: 'BB' }
+    { id: 'cash_500',    name: '500₺ Nakit Hediye',  desc: 'Direkt çekim',                      price: 3000, cardClass: 'card-diamond' },
+    { id: 'vip_bonus',   name: 'Vip Hediye Bonusu',  desc: 'Tüm Slot Alanlarında Geçerli',       price: 2000, cardClass: 'card-vip'     },
+    { id: 'freespin_200',name: '200 Freespin',        desc: 'Sugar Rush Oyununda Geçerli',        price: 1500, cardClass: 'card-gates'   },
+    { id: 'bonusbuy_200',name: '200₺ Bonus Buy',     desc: 'The Dog House Oyununda Geçerli',     price: 1500, cardClass: ''             },
+    { id: 'freespin_100',name: '100 Freespin',        desc: 'Gate Of Olympus Oyununda Geçerli',  price: 750,  cardClass: 'card-gates'   },
+    { id: 'bonusbuy_100',name: '100₺ Bonus Buy',     desc: 'Sweet Bonanza Oyununda Geçerli',    price: 750,  cardClass: 'card-bass'    }
   ];
-
   container.innerHTML = items.map(item => `
     <div class="store-item ${item.cardClass ? 'item-' + item.cardClass : ''}">
       <div class="si-card ${item.cardClass}" style="${item.id === 'freespin_200' ? 'background: radial-gradient(circle at 30% 30%, #e67e22, #d35400, #5a2a00);' : ''}">
         <svg class="si-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          ${item.id === 'vip_bonus' ? '<path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#FFD700"/><circle cx="12" cy="19" r="2" fill="#FFD700"/>' : 
+          ${item.id === 'vip_bonus' ? '<path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z" fill="#FFD700"/><circle cx="12" cy="19" r="2" fill="#FFD700"/>' :
             item.id === 'freespin_200' || item.id === 'freespin_100' ? '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#fff"/>' :
             item.id === 'bonusbuy_200' ? '<rect x="2" y="4" width="20" height="16" rx="5" stroke="rgba(255,255,255,0.8)" stroke-width="1.8" fill="none"/><text x="12" y="12" dominant-baseline="central" font-family="Montserrat" font-weight="900" font-size="4.5" fill="#fff" text-anchor="middle">SUPER</text>' :
             item.id === 'bonusbuy_100' ? '<rect x="3" y="5" width="18" height="14" rx="2" fill="rgba(255,255,255,0.15)" stroke="#fff" stroke-width="1.5"/><text x="12" y="14" font-family="Montserrat" font-weight="900" font-size="7" fill="#fff" text-anchor="middle">777</text>' :
@@ -1260,32 +1111,25 @@ function renderStore() {
 async function loadPurchaseHistory() {
   const list = document.getElementById('historyList');
   if (!USER_ID) return;
-  
   try {
     const res = await fetch(`/api/get_history?user_id=${USER_ID}`);
     const data = await res.json();
-    
     if (!data || data.length === 0) {
-      list.innerHTML = '<tr><td colspan="3" class="empty-history">Henüz satın alım gerçekleştirmediniz.</td></tr>';
+      list.innerHTML = '<div class="empty-history">Henüz satın alım gerçekleştirmediniz.</div>';
       return;
     }
-    
-    if (data && data.length > 0) {
-      const display = document.getElementById('siteUserDisplay');
-      const nameSpan = document.getElementById('currentSiteUser');
-      if (display && nameSpan) {
-        display.style.display = 'block';
-        nameSpan.textContent = data[0].site_user || '---';
-      }
+    const display = document.getElementById('siteUserDisplay');
+    const nameSpan = document.getElementById('currentSiteUser');
+    if (display && nameSpan) {
+      display.style.display = 'block';
+      nameSpan.textContent = data[0].site_user || '---';
     }
-
     list.innerHTML = data.map(order => {
       let priceMatch = "---";
       if(order.content.includes("100 Freespin") || order.content.includes("100₺ Bonus Buy")) priceMatch = "750";
-      else if(order.content.includes("Vip Hediye") ) priceMatch = "2000";
+      else if(order.content.includes("Vip Hediye")) priceMatch = "2000";
       else if(order.content.includes("200 Freespin") || order.content.includes("200₺ Bonus Buy")) priceMatch = "1500";
       else if(order.content.includes("500₺ Nakit")) priceMatch = "3000";
-
       return `
       <div class="history-item">
         <div class="hi-content">
@@ -1294,25 +1138,25 @@ async function loadPurchaseHistory() {
         </div>
         <div class="hi-stats">
           <div class="hi-price">
-            <svg class="b-heart-icon" viewBox="0 0 32 32" style="width:12px; height:12px; margin:0; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8));">
+            <svg class="b-heart-icon" viewBox="0 0 32 32" style="width:12px; height:12px; margin:0;">
               <path fill="url(#heartGrd)" d="M16 28.5L14.1 26.8C7.1 20.6 2.5 16.1 2.5 10.5C2.5 5.9 6.1 2.5 10.5 2.5C13.1 2.5 15.5 3.7 17 5.7C18.5 3.7 20.9 2.5 23.5 2.5C27.9 2.5 31.5 5.9 31.5 10.5C31.5 16.1 26.9 20.6 19.9 26.8L16 28.5Z" />
               <text x="16" y="19" font-family="Montserrat" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">b</text>
             </svg>
             ${priceMatch}
           </div>
-          <div class="status-tag ${order.status === 'Beklemede' ? 'status-pending' : 'status-approved'}">
-            ${order.status}
-          </div>
+          <div class="status-tag ${order.status === 'Beklemede' ? 'status-pending' : 'status-approved'}">${order.status}</div>
         </div>
-      </div>
-    `;}).join('');
+      </div>`;
+    }).join('');
   } catch (e) {
     console.error("Geçmiş yükleme hatası:", e);
   }
 }
+
 function closeStore() {
   document.getElementById('storeOverlay').classList.remove('show');
 }
+
 let pendingItemId = null;
 function buyItem(itemId, price) {
   if(!USER_ID) return;
@@ -1322,7 +1166,6 @@ function buyItem(itemId, price) {
     alert("Yetersiz COIN! Önce çarkı çevirip bakiye biriktirmelisin.");
     return;
   }
-  
   pendingItemId = itemId;
   document.getElementById('casinoUsername').value = '';
   document.getElementById('storePrompt').style.display = 'flex';
@@ -1335,17 +1178,12 @@ function closePrompt() {
 
 async function submitPurchase() {
   const cUser = document.getElementById('casinoUsername').value.trim();
-  if(!cUser) { 
+  if(!cUser) {
     playSfx('errorSound');
-    vibrate('warning');
-    alert("Lütfen site kullanıcı adınızı girin!"); 
-    return; 
+    vibrate('error');
+    alert("Lütfen site kullanıcı adınızı girin!");
+    return;
   }
-  
-  // Mobil ses kilidini açmak için sesi burada "uyandırıyoruz"
-  const audio = document.getElementById('buySound');
-  if(audio) { audio.load(); audio.muted = true; audio.play().then(() => { audio.pause(); audio.muted = false; }).catch(()=>{}); }
-  
   try {
     const res = await fetch('/api/buy_item', {
       method: 'POST',
@@ -1354,36 +1192,29 @@ async function submitPurchase() {
     });
     const data = await res.json();
     if(res.ok) {
-      // Başarı sesi ve titreşimi
       playSfx('buySound');
       vibrate('success');
-      
       WALLET_BALANCE = data.new_balance;
       document.getElementById('walletBalance').textContent = WALLET_BALANCE;
       document.getElementById('storeWalletBalance').textContent = WALLET_BALANCE;
-      
       closePrompt();
       closeStore();
-      loadPurchaseHistory(); // Geçmişi tazele
-      
+      loadPurchaseHistory();
       const rTitle = document.getElementById('rTitle');
       const rText = document.getElementById('rText');
       const rBtn = document.getElementById('rBtn');
       const rTop = document.getElementById('rTop');
       const rBadge = document.getElementById('rBadge');
       const pBox = document.getElementById('promoBox');
-      
       rTop.className = 'rcard-top';
       rBadge.style.display = 'inline-block';
       rBadge.textContent = 'SİPARİŞİNİZ ALINDI!';
       rTitle.textContent = 'TEBRİKLER';
       rText.style.display = 'block';
       rText.innerHTML = `Ödülünüz ayrılmıştır!<br><br>Kalite standartlarımız gereği <b style="color:#FF5800;">${cUser}</b> kullanıcı adlı hesabınıza <b>bu gece saat 00:00'da</b> otomatik olarak yüklenecektir.`;
-      
       if (pBox) pBox.style.display = 'none';
       rBtn.textContent = 'SİTEYE GİT VE OYNA';
       rBtn.onclick = goSite;
-      
       document.getElementById('overlay').classList.add('show');
       confetti();
     } else {
@@ -1415,11 +1246,8 @@ function disableSpin() {
 
 checkSpinRight();
 
-// Arkadaş davetinden gelebilecek ekstra hakları algılaması için arka plan kontrolü
 setInterval(() => {
-  if (!spinAllowed && USER_ID && !spinning) {
-    checkSpinRight();
-  }
+  if (!spinAllowed && USER_ID && !spinning) checkSpinRight();
 }, 5000);
 
 async function spin() {
@@ -1429,9 +1257,7 @@ async function spin() {
   document.getElementById('spinBtn').disabled=true;
   document.getElementById('spinInfo').textContent='SONUÇ BEKLENİYOR...';
   cancelAnimationFrame(idleRaf);
-
   let targetIdx = -1;
-
   if(USER_ID) {
     try {
       const res = await fetch('/api/use_spin', {
@@ -1447,11 +1273,7 @@ async function spin() {
         return;
       }
       targetIdx = backendData.segment_index;
-      if (backendData.boscoin !== undefined) {
-        pendingBoscoinUpdate = backendData.boscoin;
-      }
-
-      // Yerel kaydı her zaman yapıyoruz, backend zaten yetkiyi yönetiyor.
+      if (backendData.boscoin !== undefined) pendingBoscoinUpdate = backendData.boscoin;
       localStorage.setItem(getSpinKey(), Date.now().toString());
     } catch(e) {
       document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
@@ -1460,18 +1282,14 @@ async function spin() {
       return;
     }
   } else {
-    // Misafir (Kimlik yok)
     targetIdx = Math.floor(Math.random() * N);
   }
-
   document.getElementById('spinInfo').textContent='İYİ ŞANSLAR!';
   playSpinStart();
-  
   const randomOffset = (Math.random() * 0.8 + 0.1) * ARC;
   const K = Math.ceil(angle / (Math.PI * 2)) + 12 + Math.floor(Math.random() * 3);
   const finalAngle = -Math.PI/2 - (targetIdx * ARC + randomOffset) + (K * 2 * Math.PI);
   const total = finalAngle - angle;
-
   const start=angle; let t0=null;
   function frame(ts){
     if(!t0) t0=ts;
@@ -1480,11 +1298,7 @@ async function spin() {
     draw(angle, ts * 0.005);
     checkTick(angle);
     if(prog<1) requestAnimationFrame(frame);
-    else { 
-      spinning=false; 
-      showResult(); 
-      startIdle(); 
-    }
+    else { spinning=false; showResult(); startIdle(); }
   }
   requestAnimationFrame(frame);
 }
@@ -1495,7 +1309,6 @@ function showResult() {
   const norm=((-Math.PI/2-angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
   const idx=Math.floor(norm/ARC)%N, seg=SEGS[idx];
   animateSpotlight(angle,idx);
-  
   const rTitle = document.getElementById('rTitle');
   const rText = document.getElementById('rText');
   const rBtn = document.getElementById('rBtn');
@@ -1503,13 +1316,10 @@ function showResult() {
   const promoBox = document.getElementById('promoBox');
 
   if(seg.win){
-    playWin();
-    confetti();
-    
+    playWin(); confetti();
     document.getElementById('rTop').className='rcard-top';
     document.getElementById('rBadge').style.display='inline-block';
     document.getElementById('rBadge').textContent=seg.prize;
-    
     if (seg.prize === '+1 Spin') {
       rTitle.textContent = 'EKSTRA ŞANS!';
       rText.innerHTML = 'Harika! Çarkı çevirmek için anında<br><b>+1 HAK</b> daha kazandın.';
@@ -1526,7 +1336,6 @@ function showResult() {
         rBtn.textContent = 'MAĞAZAYA GİT';
         rBtn.onclick = () => { playSfx('clickSound'); closeModal(); openStore(); };
       }
-      
       if (promoBox) promoBox.style.display = 'none';
       if (pendingBoscoinUpdate !== null) {
         WALLET_BALANCE = pendingBoscoinUpdate;
@@ -1546,12 +1355,9 @@ function showResult() {
     if (promoBox) promoBox.style.display = 'none';
   }
 
-  // Ödül ekranını görünür yap
+  // overlay'i sadece class ile aç — inline style kullanma
   setTimeout(() => {
-    if (overlay) {
-      overlay.style.display = 'flex';
-      overlay.classList.add('show');
-    }
+    if (overlay) overlay.classList.add('show');
   }, 800);
 
   setTimeout(() => { checkSpinRight(); }, 1000);
@@ -1560,20 +1366,14 @@ function showResult() {
 function copyCode() {
   if (!lastWonCode) return;
   const btn = document.getElementById('promoCopyBtn');
-  
   const finishCopy = () => {
     btn.textContent = 'KOPYALANDI!';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = 'KOPYALA';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(() => { btn.textContent = 'KOPYALA'; btn.classList.remove('copied'); }, 2000);
   };
-
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(lastWonCode).then(finishCopy);
   } else {
-    // For older webview compatibility
     const tempInput = document.createElement("input");
     tempInput.value = lastWonCode;
     document.body.appendChild(tempInput);
@@ -1607,8 +1407,11 @@ function goSiteDirect(){
   else window.open('https://cutt.ly/7tF5Ow3K','_blank');
 }
 
+// KAPAT BUTONU DÜZELTİLDİ — inline style da temizleniyor
 function closeModal() {
-  document.getElementById('overlay').classList.remove('show');
+  const overlay = document.getElementById('overlay');
+  overlay.classList.remove('show');
+  overlay.style.display = '';
 }
 
 function confetti(){
@@ -1639,6 +1442,7 @@ function confetti(){
   cancelAnimationFrame(raf); go();
   setTimeout(()=>{cancelAnimationFrame(raf);cx2.clearRect(0,0,cc.width,cc.height);},5000);
 }
+
 function animatePointerTick() {
   const ptr = document.querySelector('.pointer');
   if(!ptr) return;
@@ -1649,7 +1453,6 @@ function animatePointerTick() {
   ptr.tickTimeout = setTimeout(() => { ptr.classList.remove('ticking'); }, 50);
 }
 
-
 function checkTick(a){
   const progress = (a + Math.PI/2) / TICK_INTERVAL;
   if(lastTickProgress === null) lastTickProgress = Math.floor(progress);
@@ -1657,13 +1460,12 @@ function checkTick(a){
     lastTickProgress++;
     const now = performance.now();
     if (now - lastTickTime > MIN_TICK_GAP) {
-      playTick(); 
+      playTick();
       animatePointerTick();
       lastTickTime = now;
     }
   }
 }
-
 
 function startIdle(){
   if(spinning) return;
@@ -1699,30 +1501,11 @@ function initEmbers() {
   b();
 }
 initEmbers();
-window.addEventListener('resize', () => { 
-  const c=document.getElementById('embers'); 
+
+window.addEventListener('resize', () => {
+  const c=document.getElementById('embers');
   if(c){ c.width=window.innerWidth; c.height=window.innerHeight; }
 });
-
-// Uygulama açılışında yükleme ekranını kaldır
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('loader-screen');
-    if (loader) {
-      loader.classList.add('loader-fade');
-      setTimeout(() => { loader.style.display = 'none'; }, 600);
-      console.log("Loading ekranı kaldırıldı.");
-    }
-  }, 1000);
-});
-
-// Eğer yükleme ekranı takılırsa, dokunulduğunda kaldırılması için (Emniyet)
-const loaderFinal = document.getElementById('loader-screen');
-if (loaderFinal) {
-    loaderFinal.addEventListener('click', unlockAudio);
-    loaderFinal.addEventListener('touchstart', unlockAudio);
-}
-
 </script>
 </body>
 </html>
