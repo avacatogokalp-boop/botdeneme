@@ -463,20 +463,22 @@ canvas#wheel {
 .si-buy:active { transform: scale(0.95); }
 .si-buy:disabled { background: #333; color: #888; box-shadow: none; cursor: not-allowed; border: 1px solid #222; }
 
-/* storePrompt artık store-modal içinde doğru konumda */
+/* storePrompt — ekranın ortasında sabit duran overlay */
 #storePrompt {
-  position: absolute;
+  position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(13, 8, 6, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 100;
-  border-radius: 0;
-  padding: 60px 20px 20px;
+  background: rgba(13, 8, 6, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 500;
+  padding: 20px;
   display: none;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   animation: promptFade 0.3s ease;
 }
+#storePrompt > * { width: 100%; max-width: 320px; }
 @keyframes promptFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 .history-section { border-top: 2px solid rgba(255,100,0,0.3); margin-top: 40px; padding-top: 30px; width: 100%; }
