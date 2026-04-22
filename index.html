@@ -736,12 +736,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 
 <canvas id="confetti"></canvas>
 
-<!-- Ses Efektleri -->
-<audio id="tickSound" src="/1.wav" preload="auto"></audio>
-<audio id="winSound" src="/2.wav" preload="auto"></audio>
-<audio id="errorSound" src="/4.flac" preload="auto"></audio>
-<audio id="clickSound" src="/5.wav" preload="auto"></audio>
-<audio id="buySound" src="/3.wav" preload="auto"></audio>
+<!-- Ses Efektleri (Kod ile üretiliyor, dış dosyaya ihtiyaç yok) -->
 
 <script>
 const tg = window.Telegram?.WebApp;
@@ -770,7 +765,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const USER_ID = parseInt(urlParams.get('user_id')) || tg?.initDataUnsafe?.user?.id || null;
 const USER_NAME = tg?.initDataUnsafe?.user?.first_name || 'Gezgin';
 const USER_USERNAME = tg?.initDataUnsafe?.user?.username || '';
-const ADMIN_ID = 7129532581; 
 
 let lastWonCode = "";
 let pendingBoscoinUpdate = null;
@@ -816,31 +810,59 @@ function vibrate(type = 'light') {
   } catch(e) {}
 }
 
-function playSfx(id) {
-  const a = document.getElementById(id);
-  if (a) { 
-    a.muted = false;
-    a.currentTime = 0; 
-    a.play().catch(() => {});
-  }
+// ── SES SİSTEMİ (Sentetik / Kodla Üretiliyor) ───────────────────────
+let audioCtx = null;
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-function playTick() { vibrate('light'); } 
-function playWin() { playSfx('winSound'); vibrate('success'); }
-function playLose() { playSfx('errorSound'); vibrate('error'); }
-function playSpinStart() { playSfx('clickSound'); vibrate('medium'); }
+function playSynth(type) {
+  try {
+    initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
+
+    if (type === 'tick') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now);
+      osc.frequency.exponentialRampToValueAtTime(40, now + 0.04);
+      gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+      osc.start(); osc.stop(now + 0.04);
+    } else if (type === 'win') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.5); // C6
+      gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.5);
+      osc.start(); osc.stop(now + 0.5);
+    } else if (type === 'lose') {
+      osc.type = 'sawtooth'; osc.frequency.setValueAtTime(110, now);
+      osc.frequency.linearRampToValueAtTime(55, now + 0.3);
+      gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.3);
+      osc.start(); osc.stop(now + 0.3);
+    } else if (type === 'click') {
+      osc.type = 'sine'; osc.frequency.setValueAtTime(800, now);
+      gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+      osc.start(); osc.stop(now + 0.05);
+    } else if (type === 'buy') {
+      osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+      gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0, now + 0.2);
+      osc.start(); osc.stop(now + 0.2);
+    }
+  } catch(e) {}
+}
+
+function playSfx(type) { playSynth(type); }
+function playTick() { playSynth('tick'); vibrate('light'); }
+function playWin() { playSynth('win'); vibrate('success'); }
+function playLose() { playSynth('lose'); vibrate('error'); }
+function playSpinStart() { playSynth('click'); vibrate('medium'); }
 
 async function unlockAudio() {
-  const sounds = ['tickSound','winSound','errorSound','clickSound','buySound'];
-  sounds.forEach(id => {
-    const a = document.getElementById(id);
-    if (a) { 
-        a.play().then(() => { 
-            a.pause(); 
-            a.currentTime = 0; 
-        }).catch(() => {}); 
-    }
-  });
+  initAudio();
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   vibrate('light');
   hideLoader();
   
@@ -853,15 +875,14 @@ document.body.addEventListener('touchstart', unlockAudio, {passive: false});
 document.body.addEventListener('mousedown', unlockAudio);
 document.body.addEventListener('click', unlockAudio);
 
-let WALLET_BALANCE = 0;
-let countdownInterval=null;
+
 
 function getSpinKey(){ return `last_spin_${USER_ID || 'guest'}`; }
 
 function updateCountdown() {
   const el = document.getElementById('nsCountdown');
   if (!el) return;
-  if(USER_ID === ADMIN_ID) return; // Adminler için sayaca ihtiyaç yok
+  // Admin kontrolü backend'den gelen spinnAllowed üzerinden otomatik halloluyor.
   
   let lastSpin = localStorage.getItem(getSpinKey());
   
@@ -1426,9 +1447,8 @@ async function spin() {
         pendingBoscoinUpdate = backendData.boscoin;
       }
 
-      if (USER_ID !== ADMIN_ID) {
-        localStorage.setItem(getSpinKey(), Date.now().toString());
-      }
+      // Yerel kaydı her zaman yapıyoruz, backend zaten yetkiyi yönetiyor.
+      localStorage.setItem(getSpinKey(), Date.now().toString());
     } catch(e) {
       document.getElementById('spinInfo').textContent = 'BAĞLANTI HATASI';
       spinning = false;
