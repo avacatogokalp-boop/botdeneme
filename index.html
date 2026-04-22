@@ -737,7 +737,6 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 <canvas id="confetti"></canvas>
 
 <!-- Ses Efektleri -->
-<audio id="tickSound" src="/1.wav" preload="auto"></audio>
 <audio id="winSound" src="/2.wav" preload="auto"></audio>
 <audio id="errorSound" src="/4.flac" preload="auto"></audio>
 <audio id="clickSound" src="/5.wav" preload="auto"></audio>
@@ -868,7 +867,7 @@ function playSfx(id) {
 async function unlockAudio() {
   getACtx();
   loadClick();
-  const sounds = ['tickSound','winSound','errorSound','clickSound','buySound'];
+  const sounds = ['winSound','errorSound','clickSound','buySound'];
   sounds.forEach(id => {
     const a = document.getElementById(id);
     if (a) { 
@@ -1694,8 +1693,8 @@ function playLose(){
   vibrate('error');
 }
 function playSpinStart(){
-  playSfx('clickSound');
-  playSfx('tickSound'); // 1.wav (Uzun ses) burada bir kez çalacak
+  playClick(); // Yeni tık sesini bir kez başlat
+  // playSfx('tickSound'); // Eski 1.wav devredışı
   vibrate('medium');
 }
 
