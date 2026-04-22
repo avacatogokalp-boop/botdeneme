@@ -737,6 +737,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 400;
 <canvas id="confetti"></canvas>
 
 <!-- Ses Efektleri -->
+<audio id="tickSound" src="/1.wav" preload="auto"></audio>
 <audio id="winSound" src="/2.wav" preload="auto"></audio>
 <audio id="errorSound" src="/4.flac" preload="auto"></audio>
 <audio id="clickSound" src="/5.wav" preload="auto"></audio>
@@ -797,45 +798,42 @@ ctx.scale(dpr, dpr); sctx.scale(dpr, dpr);
 
 const CX=143, CY=143, R=138;
 let angle=0, spinning=false, spinAllowed=false;
-let dur = 12000; // 12 Saniye Sabit
+let dur = 12000; 
 let lastTickTime = 0;
-const MIN_TICK_GAP = 50; // Yeni tık sesi için daha hassas gap
+const MIN_TICK_GAP = 70; 
 
-// -- YENİ SES MOTORU (AudioContext) --
-const CLICK_B64 = "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";
-let clickBuffer = null;
-
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let actx = null;
-
-function getACtx() {
-  if (!actx) actx = new AudioCtx();
-  if (actx.state === 'suspended') actx.resume();
-  return actx;
+function playSfx(id) {
+  const a = document.getElementById(id);
+  if (a) { 
+    a.muted = false;
+    a.currentTime = 0; 
+    a.play().catch(e => {});
+  }
 }
 
-function b64ToArrayBuffer(b64) {
-  const bin = atob(b64);
-  const buf = new ArrayBuffer(bin.length);
-  const view = new Uint8Array(buf);
-  for (let i = 0; i < bin.length; i++) view[i] = bin.charCodeAt(i);
-  return buf;
-}
-
-async function loadClick() {
-  const ac = getACtx();
-  const ab = b64ToArrayBuffer(CLICK_B64);
-  clickBuffer = await ac.decodeAudioData(ab);
-  console.log("Kristal tık sesi yüklendi.");
-}
-
-function playClick() {
-  if (!clickBuffer) return;
-  const ac = getACtx();
-  const source = ac.createBufferSource();
-  source.buffer = clickBuffer;
-  source.connect(ac.destination);
-  source.start(0);
+// -- KRİSTAL TIK SESİ MOTORU (Tamamen Sentetik) --
+let audioCtx = null;
+function playCrystalTick() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'sine'; // Kristal ses için sinüs dalgası
+    osc.frequency.setValueAtTime(1200, audioCtx.currentTime); // Tiz bir başlangıç
+    osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.04); // Hızlı düşüş (tok ses)
+    
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04); // 40ms içinde sönümlenme
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.04);
+  } catch(e) {}
 }
 
 let pendingBoscoinUpdate = null;
@@ -848,7 +846,7 @@ function vibrate(type = 'light') {
     else if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
     else if (type === 'warning') tg.HapticFeedback.notificationOccurred('warning');
     else if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
-  } catch (e) {}
+  } catch(e) {}
 }
 
 function playSfx(id) {
@@ -856,18 +854,13 @@ function playSfx(id) {
   if (a) { 
     a.muted = false;
     a.currentTime = 0; 
-    const p = a.play();
-    if (p !== undefined) {
-      p.catch(e => {
-        console.log("Ses oynatılamadı. Etkileşim bekleniyor.");
-      });
-    }
+    a.play().catch(e => {
+        console.log("Ses oynatılamadı:", e);
+    });
   }
 }
 async function unlockAudio() {
-  getACtx();
-  loadClick();
-  const sounds = ['winSound','errorSound','clickSound','buySound'];
+  const sounds = ['tickSound','winSound','errorSound','clickSound','buySound'];
   sounds.forEach(id => {
     const a = document.getElementById(id);
     if (a) { 
@@ -1671,21 +1664,7 @@ function animatePointerTick() {
 }
 
 function playTick(){
-  if (!clickBuffer) return;
-  const ac = getACtx();
-  const src = ac.createBufferSource();
-  const gain = ac.createGain();
-  src.buffer = clickBuffer;
-  
-  // Çark yavaşladıkça sesin de hafif azalıp pesleşmesi için (Opsiyonel)
-  src.playbackRate.value = 1.0; 
-  gain.gain.value = 0.6; // Kullanıcı ayarlarındaki hacim
-  
-  src.connect(gain);
-  gain.connect(ac.destination);
-  src.start();
-  
-  // playSfx('clickSound'); // Eski ses devredışı
+  playCrystalTick(); 
   vibrate('light');
 }
 function playWin(){
@@ -1697,8 +1676,8 @@ function playLose(){
   vibrate('error');
 }
 function playSpinStart(){
-  playClick(); // Yeni tık sesini bir kez başlat
-  // playSfx('tickSound'); // Eski 1.wav devredışı
+  playSfx('clickSound');
+  playCrystalTick();
   vibrate('medium');
 }
 
