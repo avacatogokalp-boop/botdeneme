@@ -882,6 +882,10 @@ async function unlockAudio() {
   document.body.removeEventListener('touchstart', unlockAudio);
   document.body.removeEventListener('mousedown', unlockAudio);
   document.body.removeEventListener('click', unlockAudio);
+  
+  // Yükleme ekranını gizle ve uygulamayı aç
+  const overlay = document.getElementById('overlay');
+  if (overlay) overlay.style.display = 'none';
 }
 document.body.addEventListener('touchstart', unlockAudio, {passive: false});
 document.body.addEventListener('mousedown', unlockAudio);
