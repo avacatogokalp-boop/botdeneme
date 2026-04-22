@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -798,6 +799,9 @@ let angle=0, spinning=false, spinAllowed=false;
 let dur = 12000; 
 let lastTickTime = 0;
 const MIN_TICK_GAP = 70; 
+let lastTickProgress = null;
+const TICK_INTERVAL = (2 * Math.PI) / N;
+let countdownInterval = null;
 
 // ── SİSTEM FONKSİYONLARI ──────────────────────────────────────────────
 function vibrate(type = 'light') {
@@ -1645,8 +1649,7 @@ function animatePointerTick() {
   ptr.tickTimeout = setTimeout(() => { ptr.classList.remove('ticking'); }, 50);
 }
 
-let lastTickProgress=null;
-const TICK_INTERVAL=(2*Math.PI)/N;
+
 function checkTick(a){
   const progress = (a + Math.PI/2) / TICK_INTERVAL;
   if(lastTickProgress === null) lastTickProgress = Math.floor(progress);
@@ -1661,7 +1664,7 @@ function checkTick(a){
   }
 }
 
-let idleRaf=null;
+
 function startIdle(){
   if(spinning) return;
   const ts = performance.now();
