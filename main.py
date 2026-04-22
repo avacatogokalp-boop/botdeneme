@@ -10,6 +10,7 @@ import random
 import csv
 import io
 from flask import Flask, send_from_directory, request, jsonify, Response
+from concurrent.futures import ThreadPoolExecutor
 
 TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
@@ -17,14 +18,18 @@ GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
 ADMIN_IDS = [6943377103, 8284892694, 6659874588]  # Şefin ve ekibin ID'leri
+message_executor = ThreadPoolExecutor(max_workers=20)
 
 db_lock = threading.Lock()
 
 DB_PATH = "/var/data/database.sqlite" if os.path.isdir("/var/data") else "database.sqlite"
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA cache_size=2000")
     return conn
 
 def init_db():
@@ -360,7 +365,7 @@ def api_use_spin():
         except Exception as e:
             print(f"Hata: {e}")
 
-    threading.Thread(target=delayed_message, daemon=True).start()
+    message_executor.submit(delayed_message)
 
     return jsonify({
         "ok": True,
@@ -781,4 +786,4 @@ if __name__ == "__main__":
     t = threading.Thread(target=run_bot, daemon=True)
     t.start()
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, threaded=True)
