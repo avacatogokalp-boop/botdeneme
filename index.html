@@ -1010,11 +1010,11 @@ function draw(a, t=0) {
     ctx.fillText(p.text, startX1 + ctx.measureText(p.text).width / 2, CY - 7);
     startX1 += ctx.measureText(p.text).width;
   });
-  const botParts = [{ text: "spin", color: "#ff9153" }, { text: ".", color: "#ffffff" }];
+  const botParts = [{ text: "spin", color: "#ff9153" }];
   let botW = 0;
   botParts.forEach(p => { botW += ctx.measureText(p.text).width; });
   let startX2 = CX - botW / 2;
-  topParts.forEach(p => {
+  botParts.forEach(p => {
     ctx.fillStyle = p.color;
     ctx.fillText(p.text, startX2 + ctx.measureText(p.text).width / 2, CY + 10);
     startX2 += ctx.measureText(p.text).width;
