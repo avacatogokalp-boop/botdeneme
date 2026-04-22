@@ -1760,6 +1760,24 @@ window.addEventListener('resize', () => {
   const c=document.getElementById('embers'); 
   if(c){ c.width=window.innerWidth; c.height=window.innerHeight; }
 });
+// Uygulama açılışında yükleme ekranını kaldır
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader-screen');
+    if (loader) {
+      loader.classList.add('loader-fade');
+      console.log("Loading ekranı kaldırıldı.");
+    }
+  }, 1000);
+});
+
+// Eğer yükleme ekranı takılırsa, dokunulduğunda kaldırılması için (Emniyet)
+const loader = document.getElementById('loader-screen');
+if (loader) {
+    loader.addEventListener('click', unlockAudio);
+    loader.addEventListener('touchstart', unlockAudio);
+}
+
 </script>
 </body>
 </html>
