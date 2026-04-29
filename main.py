@@ -17,7 +17,7 @@ SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
 GIF_URL = "https://i.ibb.co/4gSMcJH9/0421-ezgif-com-video-to-gif-converter-1.gif"
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
-ADMIN_IDS = [8284892694, 6659874588]  # Şefin ve ekibin ID'leri
+ADMIN_IDS = [6943377103, 8284892694, 6659874588]  # Şefin ve ekibin ID'leri
 message_executor = ThreadPoolExecutor(max_workers=20)
 
 db_lock = threading.Lock()
@@ -67,6 +67,18 @@ def init_db():
             c.execute("ALTER TABLE spin_logs ADD COLUMN status TEXT DEFAULT 'processed'")
         except sqlite3.OperationalError:
             pass
+            
+        try:
+            c.execute("ALTER TABLE users ADD COLUMN last_harvest_time TEXT DEFAULT '2026-01-01 00:00:00'")
+        except sqlite3.OperationalError:
+            pass
+            
+        c.execute('''CREATE TABLE IF NOT EXISTS user_quests (
+            user_id INTEGER,
+            quest_id TEXT,
+            date_time TEXT,
+            PRIMARY KEY (user_id, quest_id)
+        )''')
             
         conn.commit()
         conn.close()
@@ -208,7 +220,7 @@ def excel_indir():
     return Response(
         si.getvalue().encode('utf-8-sig'),
         mimetype="text/csv",
-        headers={"Content-Disposition": "attachment; filename=BetorSpin_Rapor_2026.csv"}
+        headers={"Content-Disposition": "attachment; filename=FarmSpin_Rapor_2026.csv"}
     )
 
 @app.route('/admin/kullanici_raporu')
@@ -286,13 +298,13 @@ def api_use_spin():
     use_spin(user_id)
 
     PRIZES = [
-        {"win": True, "prize": "+1 Freespin", "amount": 0},   # %10
+        {"win": True, "prize": "+1 Spin", "amount": 0},   # %10
         {"win": True, "prize": "200 COIN", "amount": 200},    # %10
         {"win": True, "prize": "150 COIN", "amount": 150},    # %30
         {"win": True, "prize": "100 COIN", "amount": 100},    # %30
         {"win": True, "prize": "75 COIN", "amount": 75},      # %10
         {"win": True, "prize": "50 COIN", "amount": 50},      # %5
-        {"win": True, "prize": "25 COIN", "amount": 25},      # %5
+        {"win": False, "prize": "TİLKİ!", "amount": -50},     # %5 (Was 25 COIN)
     ]
     
     # RTP Olasılıkları (Toplam 100): 
@@ -313,11 +325,16 @@ def api_use_spin():
         conn = get_db()
         c = conn.cursor()
         
-        if amount > 0:
-            c.execute("UPDATE users SET boscoin = boscoin + ? WHERE id = ?", (amount, user_id))
-            
         c.execute("SELECT boscoin FROM users WHERE id = ?", (user_id,))
         current_boscoin = c.fetchone()["boscoin"]
+        
+        if amount > 0:
+            c.execute("UPDATE users SET boscoin = boscoin + ? WHERE id = ?", (amount, user_id))
+            current_boscoin += amount
+        elif amount < 0:
+            new_amount = max(0, current_boscoin + amount)
+            c.execute("UPDATE users SET boscoin = ? WHERE id = ?", (new_amount, user_id))
+            current_boscoin = new_amount
         
         # Log Kaydı
         log_prize = prize if prize else "KAYBETTİN"
@@ -334,26 +351,26 @@ def api_use_spin():
         conn.commit()
         conn.close()
 
-    if prize == "+1 Freespin":
+    if prize == "+1 Spin":
         add_bonus_spin(user_id, 1)
 
     def delayed_message():
         time.sleep(12.5)
         try:
             if win and prize:
-                if prize == "+1 Freespin":
+                if prize == "+1 Spin":
                     bot.send_message(
                         user_id,
-                        f"*Tebrikler {name}!*\n\n*+1 Freespin* kazandın! Çarkı tekrar çevirebilirsin.",
+                        f"*Tebrikler {name}!*\n\n*+1 Spin* kazandın! Çarkı tekrar çevirebilirsin.",
                         parse_mode="Markdown",
-                        reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Şans Çarkını Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
+                        reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Çarkı Tekrar Çevir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
                     )
                 else:
                     bot.send_message(
                         user_id,
-                        f"*Tebrikler {name}!*\n\nÇarktan *{prize}* kazandın! Puan cüzdanına başarıyla yüklendi.\nMağazaya uğrayıp hediyeni almayı unutma!",
+                        f"*Tebrikler {name}!*\n\nÇarktan *{prize}* kazandın! Coin cüzdanına başarıyla yüklendi.\nMağazaya uğrayıp çiftliğin için hayvan almayı unutma!",
                         parse_mode="Markdown",
-                        reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Uygulamaya Dön ve Mağazaya Gir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
+                        reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton("Çiftliğe Dön ve Mağazaya Gir", web_app=WebAppInfo(url=f"{MINI_APP_URL}?user_id={user_id}")))
                     )
             else:
                 bot.send_message(
@@ -380,15 +397,15 @@ def api_buy_item():
     data = request.get_json(silent=True) or {}
     user_id = data.get('user_id')
     item_id = data.get('item_id')
-    casino_user = data.get('casino_user', 'Bilinmiyor')
+    farm_name = data.get('farm_name', 'Bilinmiyor')
     
     STORE = {
-        "cash_500":    {"price": 3000, "name": "500₺ Nakit Hediye (Direkt Çekim)", "code": "COINCASH"},
-        "vip_bonus":    {"price": 2000, "name": "Vip Hediye Bonusu (Tüm Slotlar)", "code": "COINVIP"},
-        "freespin_200": {"price": 1500, "name": "200 Freespin (Sugar Rush)", "code": "COINFS200S"},
-        "bonusbuy_200": {"price": 1500, "name": "200₺ Bonus Buy (The Dog House)", "code": "COINBB200D"},
-        "freespin_100": {"price": 750,  "name": "100 Freespin (Gate Of Olympus)", "code": "COINFS100G"},
-        "bonusbuy_100": {"price": 750,  "name": "100₺ Bonus Buy (Sweet Bonanza)", "code": "COINBB100S"}
+        "at":    {"price": 3000, "name": "At (Çiftlik Hayvanı)", "code": "FARM_AT"},
+        "inek":    {"price": 2000, "name": "İnek (Çiftlik Hayvanı)", "code": "FARM_INEK"},
+        "kopek": {"price": 1500, "name": "Köpek (Çiftlik Hayvanı)", "code": "FARM_KOPEK"},
+        "domuz": {"price": 1000, "name": "Domuz (Çiftlik Hayvanı)", "code": "FARM_DOMUZ"},
+        "koyun": {"price": 750,  "name": "Koyun (Çiftlik Hayvanı)", "code": "FARM_KOYUN"},
+        "tavuk": {"price": 500,  "name": "Tavuk (Çiftlik Hayvanı)", "code": "FARM_TAVUK"}
     }
     
     if not user_id or item_id not in STORE:
@@ -412,7 +429,7 @@ def api_buy_item():
         c.execute("UPDATE users SET boscoin = ? WHERE id = ?", (new_balance, user_id))
         
         c.execute("INSERT INTO spin_logs (user_id, name, prize, date_time, status) VALUES (?, ?, ?, ?, ?)", 
-                 (user_id, user_name_val, f"SİPARİŞ (K.Adı: {casino_user}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S"), 'pending'))
+                 (user_id, user_name_val, f"SİPARİŞ (Çiftlik: {farm_name}): {item['name']}", datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S"), 'pending'))
                  
         conn.commit()
         conn.close()
@@ -422,10 +439,10 @@ def api_buy_item():
             admin_msg = (
                 f"🚨 *YENİ MAĞAZA SİPARİŞİ*\n\n"
                 f"👤 *Telegram İsim:* {user_name_val} (`{user_id}`)\n"
-                f"🎮 *Site K.Adı:* `{casino_user}`\n"
+                f"🚜 *Çiftlik Adı:* `{farm_name}`\n"
                 f"🎁 *Sipariş:* {item['name']}\n"
                 f"💰 *Kalan Cüzdan:* {new_balance} COIN\n\n"
-                f"_(Kullanıcının ödülünü hesabına tanımlayabilirsiniz)_"
+                f"_(Kullanıcının hayvanını çiftliğine tanımlayabilirsiniz)_"
             )
             bot.send_message(ADMIN_IDS[0], admin_msg, parse_mode="Markdown")
     except Exception as e:
@@ -456,8 +473,8 @@ def api_get_history():
     for r in rows:
         raw_prize = r["prize"]
         site_user = "Bilinmiyor"
-        if "K.Adı: " in raw_prize and "): " in raw_prize:
-            site_user = raw_prize.split("K.Adı: ", 1)[1].split("):", 1)[0]
+        if "Çiftlik: " in raw_prize and "): " in raw_prize:
+            site_user = raw_prize.split("Çiftlik: ", 1)[1].split("):", 1)[0]
             contents = raw_prize.split("): ", 1)[-1]
         elif ": " in raw_prize:
             contents = raw_prize.split(": ", 1)[-1]
@@ -473,6 +490,193 @@ def api_get_history():
         
     return jsonify(history)
 
+@app.route('/api/get_farm', methods=['GET'])
+def api_get_farm():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({})
+        
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT prize FROM spin_logs WHERE user_id = ? AND prize LIKE 'SİPARİŞ%'", (user_id,))
+        rows = c.fetchall()
+        c.execute("SELECT name FROM users WHERE id = ?", (user_id,))
+        user_row = c.fetchone()
+        conn.close()
+        
+    farm_inventory = {
+        "At": 0, "İnek": 0, "Köpek": 0, "Domuz": 0, "Koyun": 0, "Tavuk": 0
+    }
+    
+    farm_name = user_row["name"] if user_row else "Çiftliğim"
+    for r in rows:
+        raw_prize = r["prize"]
+        if "): " in raw_prize:
+            animal_prize = raw_prize.split("): ", 1)[-1]
+            animal_name = animal_prize.split(" (")[0]
+            if animal_name in farm_inventory:
+                farm_inventory[animal_name] += 1
+            elif animal_prize in farm_inventory:
+                farm_inventory[animal_prize] += 1
+                
+        if "Çiftlik: " in raw_prize and "): " in raw_prize:
+            farm_name = raw_prize.split("Çiftlik: ", 1)[1].split("):", 1)[0]
+            
+    return jsonify({
+        "farm_name": farm_name,
+        "inventory": farm_inventory
+    })
+
+@app.route('/api/get_leaderboard', methods=['GET'])
+def api_get_leaderboard():
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT user_id, name, prize FROM spin_logs WHERE prize LIKE 'SİPARİŞ%'")
+        rows = c.fetchall()
+        conn.close()
+        
+    prices = { "At": 3000, "İnek": 2000, "Köpek": 1500, "Domuz": 1000, "Koyun": 750, "Tavuk": 500 }
+    
+    user_powers = {}
+    for r in rows:
+        uid = r["user_id"]
+        uname = r["name"]
+        raw_prize = r["prize"]
+        
+        animal_name = None
+        if "): " in raw_prize:
+            animal_prize = raw_prize.split("): ", 1)[-1]
+            animal_name = animal_prize.split(" (")[0]
+            
+        power = prices.get(animal_name, 0) if animal_name else 0
+        
+        if uid not in user_powers:
+            user_powers[uid] = {"name": uname, "power": 0}
+        user_powers[uid]["power"] += power
+        
+    sorted_users = sorted(user_powers.values(), key=lambda x: x["power"], reverse=True)
+    top_5 = sorted_users[:5]
+    
+    return jsonify(top_5)
+
+@app.route('/api/harvest', methods=['POST'])
+def api_harvest():
+    data = request.get_json(silent=True) or {}
+    user_id = data.get('user_id')
+    if not user_id: return jsonify({"ok": False})
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT last_harvest_time, boscoin FROM users WHERE id = ?", (user_id,))
+        user_row = c.fetchone()
+        
+        if not user_row:
+            conn.close()
+            return jsonify({"ok": False})
+            
+        last_harvest_str = user_row["last_harvest_time"] or "2026-01-01 00:00:00"
+        try:
+            last_harvest_dt = datetime.strptime(last_harvest_str, "%Y-%m-%d %H:%M:%S")
+            last_harvest_dt = last_harvest_dt.replace(tzinfo=timezone(timedelta(hours=3)))
+        except:
+            last_harvest_dt = datetime.now(timezone(timedelta(hours=3)))
+            
+        now_dt = datetime.now(timezone(timedelta(hours=3)))
+        diff_hours = (now_dt - last_harvest_dt).total_seconds() / 3600.0
+        
+        # Max 24 saat birikebilir
+        if diff_hours > 24: diff_hours = 24
+        elif diff_hours < 0: diff_hours = 0
+        
+        # Get Animals
+        c.execute("SELECT prize FROM spin_logs WHERE user_id = ? AND prize LIKE 'SİPARİŞ%'", (user_id,))
+        rows = c.fetchall()
+        
+        rates = { "At": 30, "İnek": 20, "Köpek": 15, "Domuz": 10, "Koyun": 7.5, "Tavuk": 5 }
+        hourly_rate = 0
+        for r in rows:
+            raw_prize = r["prize"]
+            animal_name = None
+            if "): " in raw_prize:
+                animal_prize = raw_prize.split("): ", 1)[-1]
+                animal_name = animal_prize.split(" (")[0]
+            hourly_rate += rates.get(animal_name, 0) if animal_name else 0
+            
+        generated_coin = int(hourly_rate * diff_hours)
+        
+        if generated_coin > 0:
+            new_boscoin = user_row["boscoin"] + generated_coin
+            new_time_str = now_dt.strftime("%Y-%m-%d %H:%M:%S")
+            c.execute("UPDATE users SET boscoin = ?, last_harvest_time = ? WHERE id = ?", (new_boscoin, new_time_str, user_id))
+            conn.commit()
+            
+        conn.close()
+        
+    return jsonify({"ok": True, "earned": generated_coin, "rate": hourly_rate})
+
+@app.route('/api/get_quests', methods=['GET'])
+def api_get_quests():
+    user_id = request.args.get('user_id')
+    if not user_id: return jsonify([])
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute("SELECT quest_id FROM user_quests WHERE user_id = ?", (user_id,))
+        completed_quests = {row["quest_id"] for row in c.fetchall()}
+        
+        c.execute("SELECT prize FROM spin_logs WHERE user_id = ? AND prize LIKE 'SİPARİŞ%'", (user_id,))
+        bought_animals_count = len(c.fetchall())
+        
+        c.execute("SELECT COUNT(*) as spins FROM spin_logs WHERE user_id = ? AND prize NOT LIKE 'SİPARİŞ%'", (user_id,))
+        spin_count = c.fetchone()["spins"]
+        conn.close()
+        
+    quests = [
+        {"id": "q1", "title": "İlk Hayvanı Al", "desc": "Çiftliğine ilk hayvanını satın al.", "target": 1, "progress": bought_animals_count, "reward": "+1 SPİN"},
+        {"id": "q2", "title": "Acemi Çiftçi", "desc": "Çarkı toplam 5 kez çevir.", "target": 5, "progress": spin_count, "reward": "500 COIN"},
+        {"id": "q3", "title": "Büyük Çiftlik", "desc": "Çiftliğinde 5 hayvan barındır.", "target": 5, "progress": bought_animals_count, "reward": "+2 SPİN"}
+    ]
+    
+    for q in quests:
+        q["completed"] = q["id"] in completed_quests
+        q["can_claim"] = (not q["completed"]) and (q["progress"] >= q["target"])
+        
+    return jsonify(quests)
+
+@app.route('/api/claim_quest', methods=['POST'])
+def api_claim_quest():
+    data = request.get_json(silent=True) or {}
+    user_id = data.get('user_id')
+    quest_id = data.get('quest_id')
+    if not user_id or not quest_id: return jsonify({"ok": False})
+    
+    with db_lock:
+        conn = get_db()
+        c = conn.cursor()
+        
+        c.execute("SELECT 1 FROM user_quests WHERE user_id = ? AND quest_id = ?", (user_id, quest_id))
+        if c.fetchone():
+            conn.close()
+            return jsonify({"ok": False, "reason": "already_claimed"})
+            
+        c.execute("INSERT INTO user_quests (user_id, quest_id, date_time) VALUES (?, ?, ?)", 
+                 (user_id, quest_id, datetime.now(timezone(timedelta(hours=3))).strftime("%Y-%m-%d %H:%M:%S")))
+                 
+        if quest_id == "q1":
+            c.execute("UPDATE users SET bonus_spins = bonus_spins + 1 WHERE id = ?", (user_id,))
+        elif quest_id == "q2":
+            c.execute("UPDATE users SET boscoin = boscoin + 500 WHERE id = ?", (user_id,))
+        elif quest_id == "q3":
+            c.execute("UPDATE users SET bonus_spins = bonus_spins + 2 WHERE id = ?", (user_id,))
+            
+        conn.commit()
+        conn.close()
+        
+    return jsonify({"ok": True})
 
 # ── /start ────────────────────────────────────────────────────────────
 @bot.message_handler(commands=['start'])
@@ -542,10 +746,10 @@ def start(message):
         ))
 
         text = (
-            "🦁 *BetorSpin VIP Sadakat Dünyasına Hoş Geldiniz!*\n\n"
+            "🚜 *FarmSpin Çiftlik Dünyasına Hoş Geldiniz!*\n\n"
             f"{spin_status}\n\n"
-            "Her gün çarkı çevirin, COIN biriktirin ve mağazadan ödülünüzü alın. "
-            "Kazandığınız tüm hediyeler, kalite standartlarımız gereği her gece saat *00:00*'da aktif BetorSpin hesabınıza otomatik olarak tanımlanır!"
+            "Her gün çarkı çevirin, COIN biriktirin ve mağazadan çiftliğiniz için hayvanlar alın. "
+            "Kazandığınız hayvanlar en kısa sürede çiftliğinize teslim edilir!"
         )
 
         try:
@@ -585,7 +789,7 @@ def davet(message):
         f"• Mevcut bonus spin: *{bonus}*",
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup().add(
-            InlineKeyboardButton("Linki Paylaş", switch_inline_query=f"Betorspin Şans Çarkı'nı dene! {invite_link}")
+            InlineKeyboardButton("Linki Paylaş", switch_inline_query=f"FarmSpin Çiftlik Çarkı'nı dene! {invite_link}")
         )
     )
 
@@ -679,7 +883,7 @@ def admin_bekleyenler(message):
             
         si = io.StringIO()
         cw = csv.writer(si)
-        cw.writerow(["Kayit ID", "Kullanici ID", "Telegram Isim", "Siparis ve Site K.Adi", "Tarih"])
+        cw.writerow(["Kayit ID", "Kullanici ID", "Telegram Isim", "Siparis ve Ciftlik Adi", "Tarih"])
         for r in rows:
             cw.writerow([r['id'], r['user_id'], r['name'], r['prize'], r['date_time']])
             
@@ -720,11 +924,11 @@ def admin_siparis_onayla(message):
         
         # Site linkini buton olarak ekle
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("Siteye Git ve Kontrol Et", url=SITE_LINKI))
+        markup.add(InlineKeyboardButton("Çiftliğine Git ve Kontrol Et", url=SITE_LINKI))
         
         msg_text = (
-            "🎁 *Müjde! Bekleyen ödülünüz BetorSpin hesabınıza tanımlanmıştır.*\n\n"
-            "Hemen siteye giriş yaparak bakiyenizi veya freespinlerinizi kontrol edebilirsiniz. Bol şanslar dileriz! 🎁"
+            "🎁 *Müjde! Bekleyen hayvanlarınız çiftliğinize ulaştı.*\n\n"
+            "Hemen çiftliğinize giriş yaparak kontrol edebilirsiniz. Bol şanslar dileriz! 🚜"
         )
         
         for u in users_to_notify:
