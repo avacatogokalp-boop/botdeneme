@@ -14,7 +14,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 TOKEN = os.environ.get("BOT_TOKEN")
 SITE_LINKI = "https://cutt.ly/7tF5Ow3K"
-GIF_URL = 
 RENDER_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://botdeneme.onrender.com")
 MINI_APP_URL = f"{RENDER_URL}/wheel"
 ADMIN_IDS = [6943377103, 8284892694, 6659874588]  # Şefin ve ekibin ID'leri
